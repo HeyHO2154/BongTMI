@@ -1,0 +1,15 @@
+방법 3: create-react-app 대신 Vite 사용
+React 프로젝트를 설정할 때 Vite를 사용하면 의존성 충돌을 피할 수 있습니다. Vite는 더 가볍고 빠르며, TypeScript를 기본적으로 지원합니다.
+
+Vite 프로젝트 생성:
+
+bash
+코드 복사
+npm create vite@latest my-react-app -- --template react-ts
+cd my-react-app
+npm install
+프로젝트 실행:
+
+bash
+코드 복사
+npm run dev
