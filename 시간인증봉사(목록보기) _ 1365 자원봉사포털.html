@@ -1,0 +1,5795 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do -->
+<html lang="ko" class="js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- 	<meta charset="utf-8"> -->
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	
+		
+			<title>시간인증봉사(목록보기) | 1365 자원봉사포털</title>
+		
+		
+	
+	<link rel="shortcut icon" href="https://www.1365.go.kr/web/vols/images/ico/favicon.ico" type="images/x-ico">
+	<link rel="stylesheet" type="text/css" href="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/swiper.min.css">
+	<link rel="stylesheet" type="text/css" href="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/base.css">
+	<link rel="stylesheet" type="text/css" href="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/common.css">
+	<link rel="icon" sizes="192x192" href="https://www.1365.go.kr/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="192x192" href="https://www.1365.go.kr/apple-touch-icon.png">
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/jquery-1.12.4.min.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/common.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/vols_common.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/calendar.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/miya_validator.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/netfunnel.js.다운로드"></script><link rel="preconnect" href="https://fonts.gstatic.com/"><link type="text/css" rel="stylesheet" href="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/css">
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/jsbn.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/prng4.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/rng.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/rsa.js.다운로드"></script>
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/rsaEnc.js.다운로드"></script>
+	<script defer="" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/swiper.min.js.다운로드"></script>
+	
+	<script type="text/javascript">
+	$( document ).ready(function() {
+		
+		//웹접근성 메뉴클릭 후 (2017-03-28 Lee)
+		$(document).on('click', '.action_btn', function() {
+			if ($(this).closest('li').hasClass('on')) {
+				$('.stat', this).text('닫기');
+			} else {
+				$('.stat', this).text('열기');
+			}
+		});
+
+		// 하단 문의전화 안내 팝업
+		$('button[id^="btnCallList"]').on('click', function(){
+			window.open("/vols/callListPopup.do", "callListPop", "height=700px, width=745px, scrollbars=yes");
+		});
+
+		// 봉사봇 팝업
+		$('.btn1365bot, span[class="btn1365botIcon"], #btn1365botTop').on('click', function(){
+			window.open('/vols/cmmn/chatbot.do','1365Chatbot','width=500 height=700 resizable=1');
+		});
+
+		// 영어 매뉴얼 팝업
+		$(".engManual").on("click", function(){
+			var winWidth = $(window).width() / 1.2;
+			var winHeight = winWidth / 1.282;
+			if(winHeight > $(window).height()) {
+				winHeight = $(window).height();
+			}
+			window.open('/vols/engPop.do','engManual','width='+winWidth+' height='+winHeight+' resizable=1 scrollbars=yes');
+		});
+
+		// 하단 태극기 팝업
+		$('#btnTaegukgi').on('click', function(){
+			window.open("http://www.mois.go.kr/frt/sub/popup/p_taegugki_banner/screen.do", "taegukgiPop", "height=699px, width=886px, resizable=no, status=no");
+		})
+		//선택된 메뉴의 순번
+		var menuOrdr = 0;
+		//20191204 하상록 - 3depth 메뉴 생성으로 인하여 스크립트 에러 발생 처리(3depth 메뉴 클릭하여 on일 경우 length값이 2, 2depth 클릭시 length값이1)
+		if($('.cont ul li.on').length > 1){
+			// menuOrdr = $('.cont ul li.on').parents('li').find('input').val()-1;
+// 			var matchLi = $('.cont ul li.on').parents('li')[0].id;
+			var matchLi2 = $('div.cont ul li.on').attr("data-id");
+			var indexLnb = 1;
+			$('.menu_list > li').each(function(index){
+				if($(this).attr('data-id') === matchLi2){
+					menuOrdr = indexLnb - 1;
+				}
+				 if($(this).attr('data-id') != undefined){
+					if($(this).attr('data-id').length){indexLnb++;}
+					}
+				 
+					 
+			});
+		}else if($('.cont ul li.on').length == 1){
+			if($('.menu_list li.on').length > 0){
+				menuOrdr = false;
+			}else{
+				menuOrdr = $('.menu_list li.on').find('input').val()-1;
+			}
+		}
+		
+
+		$('[data-module="accordion"]').accordion({
+			// 메뉴 클릭 시 콜백
+		    onItemClick : function(e, target, index){
+
+		    },
+		    // 메뉴 닫힐때 콜백
+		    onItemClose : function(index, target){
+
+		    },
+
+		    // 활성화 뎁스
+		    initialOpenIndex : menuOrdr,
+		    singleItemOpen :true
+		});
+
+		//20191206 하상록 - 상단 검색 layout팝업 호출
+		$(".all_search").add(".top_search_open").on("click", function(){
+			$("div[id=sitemap]").hide();
+			$("div[id=top_search]").show();
+			$("#totSearchKeyword").focus();
+		});
+		$("#closeSearch").on("click", function(){
+			$("div[id=top_search]").hide();
+			$(".all_search").focus();
+		});
+
+		//20191209 하상록 - 상단헤더 메뉴 영역 이벤트(전체메뉴 출력)
+/* 		$("div[id=headerWrap] > div.header_wrap > div.gnb_wrap> div.gnb > ul > li.gnb_depth1 ").on("mouseover", function(){
+			$("div[id=top_search]").hide();
+			$("div[id=sitemap]").show();
+		});
+		$("div[id=sitemap] > div.sitemap").on("mouseleave", function(){
+			$("div[id=sitemap]").hide();
+
+		}); */
+	});
+
+	function fn_callList(){
+		window.open("/vols/callListPopup.do", "callListPop", "height=700px, width=745px, scrollbars=yes");
+	}
+
+	//웹접근성 메뉴시작후 정보가져오기(2017-03-28 Lee)
+	window.onload=function(){
+		$('.menu_list>li').each(function(i) {
+			if ($('.cont', this).is(':visible')) {
+				$('.stat', this).text('닫기');
+				//console.log('열려있음'+ i);
+			}
+		});
+	}
+
+	//디지털원패스
+	
+	/* 20210819 상단 디지털원패스 버튼 로그인페이지로 이동
+ 	$(document).ready(function() {
+		if(navigator.userAgent.indexOf('APPLICATION_ANDROID')<0 && navigator.userAgent.indexOf('APPLICATION_IOS')<0){
+			$.ajax({
+				url : "https://saml.onepass.go.kr/resources/js/client/onepass-client-1.0.0.js",
+				type : "GET",
+				dataType : "script",
+				success : function(data) {
+					onepassClientLoad(); //20180427 스크립트 오류로 막음
+					//onepassClientLoad1(); //20180427 스크립트 오류로 막음
+				},
+				error : function(data) {
+				}
+			});
+		}
+	}); */
+	
+
+	var onepass;
+	function onepassClientLoad() {
+		
+		$('.onepass').css("display","block");
+		$('head').append('<link type="text/css" rel="stylesheet" href="https://saml.onepass.go.kr/resources/css/client/onepass-client-1.0.0.css"/>');
+		onepass = new OnepassClientUtil();
+		onepass.idpUrl = 'https://saml.onepass.go.kr';
+		onepass.loadLoginbtn('onepassLogin');
+
+		$("#onepassLogin a").eq(1).css("display","none");
+		$("#onepassLogin a").eq(0).empty();
+		$("#onepassLogin a").eq(0).attr("class","btn data_modify");
+		$("#onepassLogin a").eq(0).append("<span>디지털원패스</span>");
+		$("#onepassLogin a").attr("tabindex", 0);
+		$("#onepassLogin").keyup(function(e) {
+	 		if (e.keyCode == 13) $(this).click();
+		});
+	}
+	</script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/web/mngr/js/html5.js"></script>
+<script type="text/javascript" src="/web/mngr/js/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<!--//script 영역-->
+</head>
+<body>
+<!-- skip navigation -->
+<div class="skipNavi">
+	<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#content">본문으로 바로가기</a>
+</div>
+
+<div id="bodyWrap">
+<!-- 값 확인 : Debug용 -->
+
+
+
+
+
+
+<!-- header -->
+    <div id="headerWrap">
+        <div class="header_wrap">
+            <div class="top_wrap">
+                <!-- logo -->
+                <h1><a href="https://www.1365.go.kr/vols/main.do"><img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/logo.png" alt="1365 자원봉사 포털"></a></h1>
+                <!-- global menu -->
+                <div class="gloval_nav">
+                    <ul>
+                        <li class="on"><a href="https://www.1365.go.kr/vols/main.do">1365 자원봉사포털<span class="haze">선택 됨</span></a></li>
+                        <li><a href="https://www.nanumkorea.go.kr/" class="gibu_btn_blue">1365 기부포털</a></li>
+                    </ul>
+                </div>
+                <!--// global menu -->
+                <div class="util_menu_wrap">
+                	
+						
+							<dl class="util">
+								<dt class="haze">유틸메뉴</dt>
+								<dd class="bot"><a href="javascript:;" id="btn1365botTop" title="새창열림"><span>1365봉사봇</span></a></dd>
+								<dd class="engManual"><a href="javascript:;" title="새창열림"><span>ENGLISH</span></a></dd>
+								<!-- <dd class="onepass"><div id="onepassLogin"></div></dd> -->
+		<!-- 					<dd class="faq"><a href="/vols/P9450/bbs/bbs.do?bbsNo=991000"><span>FAQ</span></a></dd> -->
+								<dd class="login"><a href="https://www.1365.go.kr/vols/P9910/mber/volsLogin.do"><span>로그인</span></a></dd>
+								<dd class="join"><a href="https://www.1365.go.kr/vols/P9940/mber/volsMber.do"><span>회원가입</span></a></dd>
+							</dl>
+						
+						
+					
+                    <a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#contentsWrap" class="menu_close mobile_only"><span class="haze">유틸메뉴 닫기</span></a><!-- tablet, mobile only -->
+                </div>
+            </div>
+            <!--  top Menu Start-->
+            <div class="gnb_wrap">
+                <div class="gnb">
+                    <ul>
+                    	
+							
+								<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1472176598342/wpge/volsinfo1365.do" class="gnblink">봉사안내</a></li>
+							
+						
+							
+								<li class="gnb_depth1 selected"><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do" class="gnblink">봉사참여</a></li>
+							
+						
+							
+								<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1472177522467/srvcgud/volsStats.do" class="gnblink">봉사정보</a></li>
+							
+						
+							
+								<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/P9410/bbs/bbs.do?bbsNo=991000&amp;titleNm=%EB%AA%A9%EB%A1%9D" class="gnblink">고객센터</a></li>
+							
+						
+							
+								<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1569310787340/mypage/svcrltSttus.do" class="gnblink">나의 자원봉사</a></li>
+							
+						
+							
+						
+							
+						
+							
+						
+                    </ul>
+                </div>
+            </div>
+            <a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#sitemap" id="topSearchOpen" class="top_search_open mobile_only"><span>유틸메뉴 열기</span></a><!-- tablet, mobile only -->
+            <a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#top_search" title="1365 자원봉사포털 검색" class="all_search"><img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/search_header.png" alt="검색"></a>
+            <a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#sitemap" class="all_menu_open pc_only">
+            	<span class="txt" style="font-weight: normal;">전체메뉴 <i class="hazeTxt">열기</i></span></a><!-- tablet, mobile only -->
+            <a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#sitemap" class="all_menu_open mobile_only" id="allMenuOpen"><span class="txt haze">전체메뉴 <i class="hazeTxt">열기</i></span></a>
+            <!--             /vols/P9810/sitegud/volsSitemap.do 추후 전체메뉴는 사이트맵 이동으로 변경, 상단 탑메뉴 마우스 오버시 drop down형식 메뉴 로 대체 -->
+            <!--  top Menu End-->
+        </div>
+    </div>
+    <!--// header -->
+
+    <!-- contents -->
+    <div id="contentsWrap">
+        <div id="location_wrap">
+            <div class="location">
+                <ul class="locatopn_inner">
+                        <li class="deps0 pc_only"> <a href="https://www.1365.go.kr/vols/main.do" class="home"><span class="haze">home</span></a></li>
+					    <li class="deps1 dropdown pc_only" id="deps1"> 
+				            <span class="now" role="menu" tabindex="0"> 
+				                <span> 
+				                    <span class="m-deps1">
+				                    	
+				                    		
+				                    		
+					                    		봉사참여
+				                    		
+				                    	
+				                        <span class="mobile_only"><img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/ico_navi_deps1_m.png" alt=""></span> 
+				                        <span class="m-deps2 mobile_only">
+					                        
+					                    		
+					                    		
+						                    		개인봉사
+					                    		
+					                    		
+					                    	
+				                        </span>
+				                    </span><!-- 1dep : 모바일에서만 나오도록 처리 -->
+				                    <i class="haze"></i> 
+				                </span> 
+				            </span> 
+					        <div class="dropdown_menu ">
+						        <ul>
+	                            	
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1472176598342/wpge/volsinfo1365.do" class="gnblink">봉사안내</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do" class="gnblink">봉사참여</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1472177522467/srvcgud/volsStats.do" class="gnblink">봉사정보</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/P9410/bbs/bbs.do?bbsNo=991000&amp;titleNm=%EB%AA%A9%EB%A1%9D" class="gnblink">고객센터</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1569310787340/mypage/svcrltSttus.do" class="gnblink">나의 자원봉사</a></li>
+									
+								
+									
+								
+									
+								
+									
+								
+	                            </ul>
+					        </div>
+					    </li>    
+						<!-- 1~2뎁스   -->
+					    <li class="deps2 dropdown fa"><!-- .on : 메뉴열기 --> 
+				            <span class="now mobile_only" role="menu" id="deps2" tabindex="0"> 
+				                <span> 
+				                    <span class="m-deps1 mobile_only">
+										
+				                    		
+				                    		
+					                    		봉사참여
+				                    		
+				                    	
+				                    	<span><img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/ico_navi_deps1_m.png" alt=""></span>
+				                    </span>
+				                	<span class="m-deps2">
+				                		
+					                    		
+					                    		
+						                    		개인봉사
+					                    		
+					                    		
+					                    	
+				                	</span><!-- 1dep : 모바일에서만 나오도록 처리 -->
+				                	<i class="haze"></i> 
+				                </span> 
+				            </span> 
+                        <div class="dropdown_menu">
+                            <ul>
+                            	
+									
+								
+									
+										<li class="gnb_depth1 selected"><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do" class="gnblink">개인봉사</a></li>
+									
+								
+									
+								
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/P9230/partcptn/grpCptn.do?flag=B01" class="gnblink">기업·단체봉사</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1572312122596/partcptn/otherInsttCptn.do" class="gnblink">타기관 봉사정보</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/P9310/srvcgud/eduSearch.do" class="gnblink">자원봉사교육</a></li>
+									
+								
+									
+										<li class="gnb_depth1 "><a href="https://www.1365.go.kr/vols/1482213363360/bbs/bbs.do?bbsNo=990000&amp;titleNm=%EB%AA%A9%EB%A1%9D" class="gnblink">희망 봉사활동 제안</a></li>
+									
+								
+									
+								
+                            </ul>
+                        </div>
+					</li>
+					<!-- 1~2뎁스   -->
+					
+					<!--3뎁스  -->
+					
+						
+		                    <li class="deps3 dropdown on"> <!-- depth3의 .on은 모바일에서는 항상 붙도록 처리 (좌우터치스크롤처리)  on -->
+		                    	<span class="now" role="menu" tabindex="0"><span>시간인증봉사<i class="haze"></i></span></span>
+		                        <div class="dropdown_menu">
+		                            <ul>
+										
+											
+										
+											
+										
+											
+												<li class="on "><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do"><span>시간인증봉사</span></a></li>
+											
+										
+											
+												<li class=" "><a href="https://www.1365.go.kr/vols/1572247923954/partcptn/onlinePartCptn.do"><span>활동인증봉사</span></a></li>
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+		                            </ul>
+		                        </div>
+							</li>
+						
+						
+					
+                    <!--3뎁스  -->
+                    
+                    <!--4뎁스  -->
+                
+                       
+                 <!--4뎁스  -->
+                 
+                </ul>
+            </div>
+        </div>
+        <div id="contents" style="">
+        	<div id="sideMenu">
+				<h1>봉사참여</h1>
+				
+				<ul class="menu_list" data-module="accordion">
+					<!-- 2depth 우선적 호출 -->
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						 <!-- 하위 depth가 있을경우 -->
+							<li data-module="acc_elem" data-id="lnb_depth1">
+								<div class="tit">
+								<span>개인봉사
+								<input type="hidden" id="menuOrdr_2" name="menuOrdr" value="1">
+								</span>
+								<button type="button" class="action_btn" data-module="btn" data-module-open="개인봉사 열기" data-module-close="개인봉사 닫기">개인봉사 <span class="stat">열기</span></button>
+								</div>
+								<div class="cont" data-module="acc_cont">
+								<ul>
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+											<li class="on" data-id="lnb_depth1"><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do"><span>시간인증봉사<span class="haze">현재 페이지</span></span></a></li>
+										
+									<!-- 3depth 호출 -->
+										
+											<li data-id="lnb_depth1"><a href="https://www.1365.go.kr/vols/1572247923954/partcptn/onlinePartCptn.do"><span>활동인증봉사</span></a></li>
+										
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+									<!-- 3depth 호출 -->
+										
+									
+								</ul>
+								</div>
+							</li>
+						
+						
+					
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						
+						<!-- 하위 depth가 없을경우 -->
+							
+								
+								<li><a href="https://www.1365.go.kr/vols/P9230/partcptn/grpCptn.do?flag=B01"><span>기업·단체봉사<input type="hidden" id="menuOrdr_5" name="menuOrdr" value="2"></span></a></li>
+								
+								
+							
+							<!-- 승인신청시 공인인증갱신 메뉴 활성화 -->
+							
+						
+					
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						
+						<!-- 하위 depth가 없을경우 -->
+							
+								
+								<li><a href="https://www.1365.go.kr/vols/1572312122596/partcptn/otherInsttCptn.do"><span>타기관 봉사정보<input type="hidden" id="menuOrdr_6" name="menuOrdr" value="3"></span></a></li>
+								
+								
+							
+							<!-- 승인신청시 공인인증갱신 메뉴 활성화 -->
+							
+						
+					
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						
+						<!-- 하위 depth가 없을경우 -->
+							
+								
+								<li><a href="https://www.1365.go.kr/vols/P9310/srvcgud/eduSearch.do"><span>자원봉사교육<input type="hidden" id="menuOrdr_7" name="menuOrdr" value="4"></span></a></li>
+								
+								
+							
+							<!-- 승인신청시 공인인증갱신 메뉴 활성화 -->
+							
+						
+					
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						
+						<!-- 하위 depth가 없을경우 -->
+							
+								
+								<li><a href="https://www.1365.go.kr/vols/1482213363360/bbs/bbs.do?bbsNo=990000&amp;titleNm=%EB%AA%A9%EB%A1%9D"><span>희망 봉사활동 제안<input type="hidden" id="menuOrdr_8" name="menuOrdr" value="5"></span></a></li>
+								
+								
+							
+							<!-- 승인신청시 공인인증갱신 메뉴 활성화 -->
+							
+						
+					
+					
+					<!-- 2depth 우선적 호출 -->
+					
+					
+						
+						<!-- 하위 depth가 없을경우 -->
+							
+							<!-- 승인신청시 공인인증갱신 메뉴 활성화 -->
+							
+						
+					
+					
+					
+				</ul>
+				
+			</div>
+
+            <div class="content" id="content">
+                <div class="content_header">
+                    <h2 class="tit_lv1">시간인증봉사 
+                    	
+                    </h2>
+                    <div class="screen_controll" id="screenControll">
+                        <dl>
+                            <dt class="haze">화면 컨트롤</dt>
+                            <dd> <em class="haze">글자 크기 조정하기</em>
+                                <button type="button" title="현재화면 인쇄하기 새창열림" class="btn_print" onclick="javascript:goPrint();"><span>현재화면 인쇄하기</span></button>
+                            </dd>
+                            <!-- 글자 크기 -->
+							
+		<dd>
+			<em class="haze">글자 크기 조정하기</em>
+			<button type="button" class="btn_plus" onclick="zoomInAndOut(&#39;in&#39;); return false;"><span>화면 확대</span></button>
+			<button type="button" class="btn_minus" onclick="zoomInAndOut(&#39;out&#39;); return false;"><span>화면 축소</span></button>
+<!-- 			<button type="button" class="" onclick="zoomInAndOut('zoomOn'); return false;"><span>기본크기</span></button> -->
+<script type="text/javascript">
+	var zoom = 100;
+	var newZoom = 0;
+	
+	
+	var scale = 1;
+	
+	function fn_zoom() {
+
+		document.body.style.zoom = scale;
+
+		document.body.style.MozTransform = 'scale('+scale+')';  // Mozilla(firefox)
+		document.body.style.MozTransformOrigin = '0 0';
+// 		document.body.style.webkitTransform = 'scale('+scale+')';  // Webkit
+// 		document.body.style.webkitTransformOrigin = '0 0';
+// 		document.body.style.OTransform = 'scale('+scale+')';  // Opera
+// 		document.body.style.OTransformOrigin = '0 0';		
+	}
+	
+	function zoomInAndOut(string) {
+		
+		var ue = navigator.userAgent.toLowerCase();
+		if(ue.indexOf('firefox')!=-1) {
+			if('in' == string) {
+				scale += 0.05;
+				if(scale >= 1.8) {
+					alert('더이상 확대가 안됩니다');
+					return false;
+				}
+				fn_zoom();
+			} else if('out' == string) {
+				scale -= 0.05;
+				if(scale <= 0.8) {
+					alert('더이상 확대가 안됩니다');
+					return false;
+				}
+				fn_zoom();
+			}
+			
+		}
+		else if(ue.indexOf('opera')!=-1){ alert("익스플로러에서만 동작합니다."+"\n오페라 브라우저 메뉴 [보기]-[Zoom]을 이용하세요."); }
+		else if(ue.indexOf('safari')!=-1){ /* alert("익스플로러에서만 동작합니다."+"\n사파리 브라우저 메뉴 [보기]-[텍스트 크게]/[텍스트 작게]를 이용하세요."); */ }
+		else if(ue.indexOf('msie')!=-1){ alert("익스플로러에서만 동작합니다.\n"+ue+"\n브라우저 메뉴의 확대축소 기능을 이용하세요."); }
+		else {  }
+		var wrapper = document.getElementById("wrap");
+
+		if (string == "in") {
+
+			currZoom = parseInt(zoom, 10);
+
+			newZoom = currZoom + 5;
+			if (newZoom >= 180)
+			{
+				alert("더이상 확대가 안됩니다.");
+				return false;
+			}
+			if (newZoom > 10000){
+				return;
+			}
+			document.body.style.zoom = newZoom + "%";
+			zoom = newZoom;
+
+		}else if (string == "out") {
+			currZoom = parseInt(zoom, 10);
+
+			newZoom = currZoom - 5;
+
+			if (80 >= newZoom)
+			{
+				alert("더이상 축소가 안됩니다.");
+				return false;
+			}
+
+			if (1 > newZoom){
+				return;
+			}
+
+			document.body.style.zoom = newZoom + "%";
+			zoom = newZoom;
+		}else if (string = "zoomOn"){
+			currZoom = parseInt(zoom, 10);
+			newZoom = currZoom + 0;
+
+			document.body.style.zoom = "100%";
+			zoom = 100;
+		}
+	}
+</script>
+		</dd>
+
+							<!-- //글자 크기 -->
+                        </dl>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+	$(function() {
+		partcptn_init();
+		
+		if($("#hopea1").val() != "") {
+			$('#searchHopeArea1').trigger('change');
+		}
+	
+		// 검색어 폼에서 keyCode = 13(ENTER) 입력시 자동 검색.
+		$('form[name=frm] input[name=searchKeyword], #searchKeywordMobile, #searchNanmmbyNm, #searchNanmmbyNmMobile').keyup(function(e) {
+			if (e.keyCode == 13) {
+				$('#cPage').val('1');
+				$('#frm').attr('action', 'timeCptn.do');
+				$('#frm').submit();
+			}
+		});
+		
+		//봉사자유형
+		$('#adultPosblAt', '#adultPosblAtMobile').prop("checked",true);
+		$('#yngbgsPosblAt', '#yngbgsPosblAtMobile').prop("checked",true);
+		
+		if($("li.tab_list").hasClass("on")){
+			document.title = "시간인증봉사(목록보기) | 1365 자원봉사포털";
+		}
+		
+		var chkClickList = 0;
+		// 조회하기버튼
+		$('#btnSearch, #btnSearchMobile').on('click', function(){
+			// 선택한 버튼이 모바일일 경우 모바일 검색폼을 활용 하도록 한다.
+			var addMobile = $(this).prop("id").indexOf("Mobile") > -1 ? 'Mobile' : '';
+			if(!$('#adultPosblAt' + addMobile).is(":checked") && !$('#yngbgsPosblAt'+ addMobile).is(":checked")){
+				alert("봉사자유형을 선택 해주세요.");
+				$('#adultPosblAt'+ addMobile).focus();
+				return false;
+			}
+
+			if(!searchDateCheck($('#searchProgrmBgnde'+ addMobile).val(), $('#searchProgrmEndde'+ addMobile).val())) {
+				return false;
+			}
+			
+			$('#cPage').val('1');
+			$('#frm').attr('action', 'timeCptn.do');
+
+			if(chkClickList > 0){
+				alert("조회중입니다. 잠시만 기다려주세요.");
+			}else{
+				NetFunnel_Action({action_id:"wrkList"}, function(ev,ret){
+					chkClickList++;
+					$('#frm').submit();
+				});
+			}
+		});
+	});
+	
+	
+	function set_momthDate(month){
+		var d1 = new Date(new Date().getFullYear(), new Date().getMonth()+month,new Date().getDate());
+		var tdate = d1.getFullYear();
+		if(10 > d1.getMonth()){
+			tdate+= "0"+d1.getMonth();
+		}else{
+			tdate+=""+d1.getMonth();
+		}
+		if(10 > d1.getDate()){
+			tdate+= "0"+d1.getDate();
+		}else{
+			tdate+=""+d1.getDate();
+		}
+		return tdate;
+	}
+
+	function show(no){
+		$('#firstSearch').val('N');
+		$('#progrmRegistNo_'+no).val(no);
+		
+		document.frm.searchRcognSrvcTime.value = "";
+		document.frm.titleNm.value = '상세보기';
+		document.frm.action = "timeCptn.do?type=show&progrmRegistNo="+no+"";
+		document.frm.target = "_top";
+		document.frm.submit();
+	}
+	
+	function setUserLocaion(x, y) {
+		$("form[name=frm]").attr('action', 'timeCptn.do');
+		$("form[name=frm]").append("<input type='hidden' name='myLa' value="+x+" >");
+		$("form[name=frm]").append("<input type='hidden' name='myLo' value="+y+" >");
+		$("form[name=frm]").append("<input type='hidden' name='nrMyLt' value='Y' >");
+		$("form[name=frm]").append("<input type='hidden' name='osType' id='mblOSType'>");
+		$("form[name=frm] input[name=listType]").val("map");
+		if(navigator.userAgent.indexOf('APPLICATION_ANDROID')>-1) {
+			$("#mblOSType").val('A');
+		} else if(navigator.userAgent.indexOf('APPLICATION_IOS')>-1) {
+			$("#mblOSType").val('I');
+		}
+		$("form[name=frm]").submit();
+	}
+
+
+	function fnSetListType(listType){
+		$("form[name=frm]").attr('action', 'timeCptn.do');
+		$("form[name=frm] input[name=listType]").val(listType);
+		$("form[name=frm]").submit();
+	}
+
+	function fbNearMyLocation(){
+		$("form[name=frm]").attr('action', 'timeCptn.do');
+		$("form[name=frm] input[name=listType]").val("map");
+		$("form[name=frm]").append("<input type='hidden' name='myLa' value="+x+" >");
+		$("form[name=frm]").append("<input type='hidden' name='myLo' value="+y+" >");
+		$("form[name=frm]").append("<input type='hidden' name='nrMyLt' value='Y' >");
+		$("form[name=frm]").submit();
+	}
+
+	//바닥(페이징)
+	function fnPage(cPage){
+		$("form[name=frm]").attr('action', 'timeCptn.do');
+		$("form[name=frm] input[name=cPage]").val(cPage);
+	    $("form[name=frm]").submit();
+	}
+
+//]]>
+</script>
+	<div class="content_view">
+		<form method="post" name="frm" id="frm">
+			<input type="hidden" id="jsonUrl" name="jsonUrl" value="/vols/P9210/mber/volsMberJson.do">
+			<input type="hidden" id="cPage" name="cPage" value="1">
+			<input type="hidden" id="searchFlag" name="searchFlag" value="search">
+			<input type="hidden" id="requstSe" name="requstSe" value="">
+			<input type="hidden" id="reqConfirm" name="reqConfirm" value="">
+			<input type="hidden" id="firstSearch" name="firstSearch" value="">
+			<input type="hidden" id="hopea1" name="hopea1" value="">
+			<input type="hidden" id="hopea2" name="hopea2" value="">
+			<input type="hidden" id="flag" name="flag" value="A01">
+			<input type="hidden" id="listType" name="listType" value="">
+			<input type="hidden" name="searchRcognSrvcTime" value="">
+			<input type="hidden" id="titleNm" name="titleNm">
+
+		<div class="service_part">
+			<h3 class="tit_lv2">봉사조회</h3>
+			<div class="board_list2">
+				<table class="pc_only">
+					<caption>개인봉사 목록</caption>
+                	<thead>
+                    	<tr>
+                        	<th colspan="2"><label for="searchHopeArea1">봉사지역</label></th>
+                        	<th colspan="2"><label for="searchHopeSrvc1">봉사분야</label></th>
+                        	<th><label for="searchActOnline">활동구분</label></th>
+                        	<th><label for="searchSrvcTarget">봉사대상</label></th>
+                        	<th><label for="searchSrvcStts">모집상태</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                    		<td>
+                    			<div>
+                    				<!-- 봉사지역 시/도 선택 -->
+									<select id="searchHopeArea1" name="searchHopeArea1" title="봉사지역 시/도 선택" size="4">
+										<option value="" selected="selected">전체</option>
+										
+										
+										
+											
+												<option value="6110000">
+											
+											
+										
+												서울특별시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6260000">
+											
+											
+										
+												부산광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6270000">
+											
+											
+										
+												대구광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6280000">
+											
+											
+										
+												인천광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6290000">
+											
+											
+										
+												광주광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6300000">
+											
+											
+										
+												대전광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6310000">
+											
+											
+										
+												울산광역시
+											</option>
+										
+										
+										
+										
+											
+												<option value="5690000">
+											
+											
+										
+												세종특별자치시
+											</option>
+										
+										
+										
+										
+											
+												<option value="6410000">
+											
+											
+										
+												경기도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6420000">
+											
+											
+										
+												강원특별자치도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6430000">
+											
+											
+										
+												충청북도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6440000">
+											
+											
+										
+												충청남도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6450000">
+											
+											
+										
+												전북특별자치도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6460000">
+											
+											
+										
+												전라남도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6470000">
+											
+											
+										
+												경상북도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6480000">
+											
+											
+										
+												경상남도
+											</option>
+										
+										
+										
+										
+											
+												<option value="6500000">
+											
+											
+										
+												제주특별자치도
+											</option>
+										
+										
+									</select>
+                    			</div>
+                    		</td>
+                    		<td>
+                    			<div>
+                    				<!-- 봉사지역 시/군/구 선택 -->
+									<select id="searchHopeArea2" name="searchHopeArea2" title="봉사지역 시/군/구 선택" size="4">
+										<option value="" selected="">전체</option>
+									</select>
+                    			</div>
+                    		</td>
+                    		<td>
+                    			<div>
+                    				<!-- 봉사분야 대분류 선택 -->
+									<select id="searchHopeSrvc1" name="searchHopeSrvc1" title="봉사분야 대분류 선택" size="4">
+										<option value="" selected="selected">전체</option>
+										
+										
+											<option value="0100">
+												생활편의지원
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0200">
+												주거환경
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0300">
+												상담
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0400">
+												교육
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0500">
+												보건의료
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0600">
+												농어촌 봉사
+											</option>
+										
+										
+										
+										
+										
+										
+										
+											<option value="0700">
+												문화행사
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0800">
+												환경보호
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="0900">
+												행정보조
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1000">
+												안전.예방
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1100">
+												공익.인권
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1200">
+												재해ㆍ재난
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1300">
+												국제협력.해외봉사
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1400">
+												멘토링
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1500">
+												기타
+											</option>
+										
+										
+										
+										
+										
+											<option value="1700">
+												자원봉사교육
+											</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+											<option value="1800">
+												국제행사
+											</option>
+										
+										
+										
+										
+										
+										
+									</select>
+
+                    			</div>
+                    		</td>
+                    		<td>
+                    			<div>
+                    				<!-- 봉사분야 소분류 선택 -->
+									<select id="searchHopeSrvc2" name="searchHopeSrvc2" title="봉사분야 하위분류 선택" size="4">
+										<option value="" selected="selected">전체</option>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+									</select>
+								</div>
+							</td>
+							<td>
+								<div>
+									<!-- 활동구분 선택 -->
+									<select name="searchActOnline" id="searchActOnline" title="활동구분 선택" size="4">
+										<option value="" selected="selected">전체</option>
+										
+											
+												<option value="1">온라인</option>
+											
+										
+											
+										
+											
+												<option value="2">오프라인</option>
+											
+										
+											
+										
+											
+												<option value="3">온라인+오프라인</option>
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+											
+										
+									</select>
+								</div>
+							</td>
+							<td>
+								<div>
+									<!-- 봉사대상 선택 -->
+									<select name="searchSrvcTarget" id="searchSrvcTarget" title="봉사대상 선택" size="4">
+										<option value="" selected="selected">전체</option>
+										
+											
+										
+											
+												<option value="1">아동·청소년</option>
+											
+										
+											
+										
+											
+												<option value="2">장애인</option>
+											
+										
+											
+										
+											
+												<option value="3">노인</option>
+											
+										
+											
+												<option value="4">쪽방촌</option>
+											
+										
+											
+												<option value="5">다문화가정</option>
+											
+										
+											
+												<option value="6">여성</option>
+											
+										
+											
+												<option value="7">환경</option>
+											
+										
+											
+												<option value="8">사회적기업</option>
+											
+										
+											
+												<option value="9">고향봉사</option>
+											
+										
+											
+												<option value="99">기타</option>
+											
+										
+									</select>
+								</div>
+							</td>
+							<td>
+								<div>
+									<!-- 모집 상태 선택 -->
+									<select name="searchSrvcStts" id="searchSrvcStts" title="모집상태 선택" size="4" class="">
+										<option value="3">전체</option>
+										<option value="0" selected="">모집중</option>
+										<option value="1">모집완료</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="volunteer_data">
+			<!-- 검색 박스 -->
+			<div class="search_service mb05 pc_only">
+					<dl class="form_elem col01">
+						<dt class="label"><label for="searchProgrmBgnde">봉사기간</label></dt>
+						<dd data-module="datepicker">
+							<span class="datepicker">
+								<!--  이전 소스 <label class="haze" for="searchProgrmBgnde">봉사기간 시작날짜</label> -->
+								
+									
+									<span class="input_text"><input type="text" id="searchProgrmBgnde" name="searchProgrmBgnde" value="2025-01-14" title="봉사기간 시작날짜" maxlength="10" readonly="readonly"></span>
+								
+								
+								
+								<button type="button" class="date_select" onclick="openCalendar(document.getElementById(&#39;searchProgrmBgnde&#39;)); return false;"><span>시작날짜 선택</span></button>
+							</span>
+							<span class="symbol">~</span>
+							<span class="datepicker">
+								<label for="searchProgrmEndde" class="haze">봉사기간 종료날짜</label>
+								
+									
+										<span class="input_text"><input type="text" id="searchProgrmEndde" name="searchProgrmEndde" value="2025-04-14" title="봉사기간 종료날짜" maxlength="10" readonly="readonly"></span>
+									
+									
+								
+								<button type="button" class="date_select" onclick="openCalendar(document.getElementById(&#39;searchProgrmEndde&#39;)); return false;"><span>종료날짜 선택</span></button>
+							</span>
+						</dd>
+					</dl>
+					<dl class="form_elem col02">
+						<dt class="label"><label for="adultPosblAt">봉사자유형</label></dt>
+						<dd class="radio_group">
+							<span class="checks small">
+								<input name="adultPosblAt" id="adultPosblAt" value="Y" type="checkbox" checked="checked">
+								<label for="adultPosblAt">성인</label>
+							</span>
+							<span class="checks small">
+								<input name="yngbgsPosblAt" id="yngbgsPosblAt" value="Y" type="checkbox" checked="checked">
+								<label for="yngbgsPosblAt">청소년</label>
+							</span>
+						</dd>
+					</dl>
+					<dl class="form_elem col01">
+						<dt class="label"><label for="searchRequstSe">재난 일감</label></dt>
+						<dd class="radio_group">
+							<span class="checks small">
+								<input style="margin-right:0px;margin-left:2px;" type="checkbox" name="searchRequstSe" id="searchRequstSe" class="chk" checked="checked">
+								<label for="searchRequstSe">재난일감 포함</label>
+							</span>
+							<span class="checks small">
+								<input style="margin-right:0px;margin-left:2px;" type="checkbox" name="searchReqConfirm" id="searchReqConfirm" class="chk">
+								<label for="searchReqConfirm">재난</label>
+							</span>
+						</dd>
+					</dl>
+					<dl class="form_elem col02">
+						<dt class="label"><label for="searchRequstSe">요일</label></dt>
+						<dd class="radio_group">
+							<span class="checks small">
+								<input type="radio" name="searchWeek" id="searchWkAll" value="0" class="chk" checked="checked">
+								<label for="searchWkAll">전체</label>
+							</span>
+							<span class="checks small">
+								<input type="radio" name="searchWeek" id="searchWkday" value="1" class="chk">
+								<label for="searchWkday">평일</label>
+							</span>
+							<span class="checks small">
+								<input type="radio" name="searchWeek" id="searchWkend" value="2" class="chk">
+								<label for="searchWkend">주말</label>
+							</span>
+						</dd>
+					</dl>
+					<dl class="form_elem form_elem100">
+						<dt class="label"><label for="rcognSrvcTime">인정시간</label></dt>
+						<dd class="radio_group">
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime" value="0">
+								<label for="rcognSrvcTime">전체</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime1" value="1">
+								<label for="rcognSrvcTime1">1시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime2" value="2">
+								<label for="rcognSrvcTime2">2시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime3" value="3">
+								<label for="rcognSrvcTime3">3시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime4" value="4">
+								<label for="rcognSrvcTime4">4시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime5" value="5">
+								<label for="rcognSrvcTime5">5시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime6" value="6">
+								<label for="rcognSrvcTime6">6시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime7" value="7">
+								<label for="rcognSrvcTime7">7시간</label>
+							</span>
+						
+							<span class="checks small">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTime8" value="8">
+								<label for="rcognSrvcTime8">8시간 이상</label>
+							</span>
+						
+						</dd>
+					</dl> 
+					<dl class="form_elem col01">
+						<dt class="label"><label for="searchKeyword">봉사명</label></dt>
+						<dd class="input_01">
+							<span class="input_text"><input type="text" id="searchKeyword" name="searchKeyword" value="" maxlength="50" title="봉사명"></span>
+						</dd>
+					</dl>
+					<dl class="form_elem col02">
+						<dt class="label"><label for="searchNanmmbyNm"> 수요처명</label></dt>
+						<dd class="input_01">
+							<span class="input_text"><input type="text" id="searchNanmmbyNm" name="searchNanmmbyNm" value="" maxlength="50" title="수요처명 입력"></span>
+						</dd>
+					</dl>
+					<div class="btn_sec search_service_btn">
+						<button type="button" class="btn grey btn_orange" onclick="javascript:return false;" id="btnSearch"><span>검색</span></button>
+						<button type="button" class="btn white_small btn_gray" onclick="javascript:return false;" id="btnReset"><span>초기화</span></button>
+					</div>
+				</div>
+				<!--// 검색 박스 -->
+			</div>
+			</form>
+
+			<!-- mobile 모바일 검색 영역 -->
+			
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<script>
+function partcptn_init() {
+	$("#mobileSearchConditionOff").hide();
+	$("#mobileSearchConditionOff").on('click', function(){
+		$("#mobileSearchConditionOn").show();
+		$("#mobileSearchConditionOff").hide();
+		$("#mobileFrm").css("height", "170");
+		$("#mobileFrm").css("overflow", "hidden");
+	});
+
+	$("#mobileSearchConditionOn").on('click', function(){
+		$("#mobileSearchConditionOff").css('display', 'block');
+		$("#mobileSearchConditionOn").hide();
+		$("#mobileFrm").css("height", "");
+		$("#mobileFrm").css("overflow", "");
+	});
+	
+	// 봉사지역 대분류 변경시 봉사지역 소분류 변경 및 피씨/모바일 검색폼 동기화
+	$('#searchHopeArea1, #searchHopeArea1Mobile').on('change', function(){
+		var appd = '<option value="" selected>전체</option>';
+
+		$("#searchHopeArea1").val($(this).val());
+		$("#searchHopeArea1Mobile").val($(this).val());
+
+		if($(this).val() == ''){
+			$('#searchHopeArea2').children().remove();
+			$('#searchHopeArea2').append(appd);
+			$('#searchHopeArea2Mobile').children().remove();
+			$('#searchHopeArea2Mobile').append(appd);
+		}else{
+			$.post($('#jsonUrl').val(),
+					{
+						type	 : 'hopeAreaList'
+						, upper  : $(this).val()
+						, engnSe : '4'
+					},
+					function(json){
+						var agrs = json.list;
+						if($('#hopea2').val()!= "") {
+							appd = '<option value="">전체</option>';
+						}
+						for(var i=0; i < agrs.length; i++){
+							appd += '<option value="'+agrs[i].code + '"';
+							if(agrs[i].code == $('#hopea2').val()) {
+								appd += 'selected="selected"';
+							}
+							appd += '>' + agrs[i].codeNm + '</option>';
+						}
+
+						$('#searchHopeArea2').children().remove();
+						$('#searchHopeArea2').append(appd);
+						$('#searchHopeArea2Mobile').children().remove();
+						$('#searchHopeArea2Mobile').append(appd);
+					}, //결과처리
+			"json");
+		}
+	});
+	// 봉사지역 소분류 변경 및 피씨/모바일 검색폼 동기화
+	$('#searchHopeArea2, #searchHopeArea2Mobile').on('change', function(){
+
+		$("#searchHopeArea2").val($(this).val());
+		$("#searchHopeArea2Mobile").val($(this).val());
+	});
+
+	//희망분야 검색조건 변경 및 피씨/모바일 검색폼 동기화
+	$('#searchHopeSrvc1, #searchHopeSrvc1Mobile').on('change', function(){
+		var appd = '<option value="">전체</option>';
+
+		$("#searchHopeSrvc1").val($(this).val());
+		$("#searchHopeSrvc1Mobile").val($(this).val());
+
+		if($(this).val() == ''){
+			$('#searchHopeSrvc2').children().remove();
+			$('#searchHopeSrvc2').append(appd);
+			$('#searchHopeSrvc2Mobile').children().remove();
+			$('#searchHopeSrvc2Mobile').append(appd);
+		}else{
+			$.post($('#jsonUrl').val(),
+					{
+				type	 : 'hopeSrvcList'
+					, upper	 : $(this).val()
+					, srchLv : '2'
+					},
+					function(json){
+						var agrs = json.list;
+
+						for(var i=0; i < agrs.length; i++){
+							appd += '<option value="'+agrs[i].nanmClCode+'">';
+							appd += agrs[i].nanmClNm;
+							appd += '</option>';
+						}
+
+						$('#searchHopeSrvc2').children().remove();
+						$('#searchHopeSrvc2').append(appd);
+						$('#searchHopeSrvc2Mobile').children().remove();
+						$('#searchHopeSrvc2Mobile').append(appd);
+
+					}, //결과처리
+			"json");
+		}
+	});
+	//희망분야 소분류 변경시 피씨/모바일 검색폼 동기화
+	$('#searchHopeSrvc2, #searchHopeSrvc2Mobile').on('change', function(){
+		$("#searchHopeSrvc2, #searchHopeSrvc2Mobile").val($(this).val());
+	});
+
+	// 활동구분 피시/모바일 검색폼 동기화
+	$("#searchActOnline, #searchActOnlineMobile").change(function(){
+		$("#searchActOnline, #searchActOnlineMobile").val($(this).val());
+	});
+
+	// 봉사대상 피시/모바일 검색폼 동기화
+	$("#searchSrvcTarget, #searchSrvcTargetMobile").change(function(){
+		$("#searchSrvcTarget, #searchSrvcTargetMobile").val($(this).val());
+	});
+	
+	// 모집상태 피시/모바일 검색폼 동기화
+	$("#searchSrvcStts, #searchSrvcSttsMobile").change(function(){
+		$("#searchSrvcStts, #searchSrvcSttsMobile").val($(this).val());
+	});
+
+	// 봉사기간 값 직접 변경시 피씨/모바일 검색폼 동기화
+	$("#searchProgrmEndde, #searchProgrmEnddeMobile").on('change', function(){
+		$("#searchProgrmEndde, #searchProgrmEnddeMobile").val($(this).val());
+	});
+	$("#searchProgrmBgnde, #searchProgrmBgndeMobile").on('change', function(){
+		$("#searchProgrmBgnde, #searchProgrmBgndeMobile").val($(this).val());
+	});
+
+	// 봉사기간 datepicker 선택시 focus됨을 이용하여 피씨/모바일 검색폼 동기화
+	$("#searchProgrmEndde, #searchProgrmEnddeMobile").on('focus', function(){
+		$("#searchProgrmEndde, #searchProgrmEnddeMobile").val($(this).val());
+	});
+	$("#searchProgrmBgnde, #searchProgrmBgndeMobile").on('focus', function(){
+		$("#searchProgrmBgnde, #searchProgrmBgndeMobile").val($(this).val());
+	});
+
+	// 봉사자유형 체크시 피시/모바일 검색폼 동기화
+	$("#adultPosblAt, #adultPosblAtMobile").change(function(){
+		$("#adultPosblAt, #adultPosblAtMobile").prop("checked", $(this).is(":checked"));
+	});
+	$("#yngbgsPosblAt, #yngbgsPosblAtMobile").change(function(){
+		$("#yngbgsPosblAt, #yngbgsPosblAtMobile").prop("checked", $(this).is(":checked"));
+	});
+
+
+	//재난일감 포함 체크 상태에 따라 재난일감구분(requstSe)값 설정.  피씨/모바일 검색폼 동기화
+	$("#searchRequstSe, #searchRequstSeMobile").change(function(){
+		if($(this).is(":checked")){
+			$('#requstSe').val('Y');
+			$("#searchReqConfirm, #searchReqConfirmMobile").prop("checked",false);
+			$("#searchReqConfirm, #searchReqConfirmMobile").change();
+		}else{
+			$('#requstSe').val('N');
+		}
+		$("#searchRequstSe, #searchRequstSeMobile").prop("checked", $(this).is(":checked"));
+	});
+
+	//재난만 체크 상태에 따라 재난일감구분(requstSe)값 설정.  피씨/모바일 검색폼 동기화
+	$("#searchReqConfirm, #searchReqConfirmMobile").change(function(){
+		if($(this).is(":checked")){
+			$('#reqConfirm').val('Y');
+			$("#searchRequstSe, #searchRequstSeMobile").prop("checked",false);
+			$("#searchRequstSe, #searchRequstSeMobile").change();
+		}else{
+			$('#reqConfirm').val('N');
+		}
+		$("#searchReqConfirm, #searchReqConfirmMobile").prop("checked", $(this).is(":checked"));
+	});
+
+
+	// 검색 키워드 변경시 모바일 검색 키워드도 변경 되도록 함.
+	$("#searchKeyword, #searchKeywordMobile").on('change', function(){
+		$("#searchKeyword, #searchKeywordMobile").val($(this).val());
+	});
+
+	$("#searchNanmmbyNm, #searchNanmmbyNmMobile").on('change', function(){
+		$("#searchNanmmbyNm, #searchNanmmbyNmMobile").val($(this).val());
+	});
+
+	// 활동요일 radio button PC, Mobile 동기화
+	$("[name='searchWeek'], [name='searchWeekMobile']").on('change', function(){
+		$("input:radio[name ='searchWeekMobile']:input[value='" + $(this).val() + "']").prop("checked", true);
+		$("input:radio[name ='searchWeek']:input[value='" + $(this).val() + "']").prop("checked", true);
+	});
+	
+	// 인정시간 checkbox PC, Mobile 동기화
+	$("[name='rcognSrvcTime[]']").on('change', function(){
+		if(this.checked) {
+			$("input:checkbox[name ='rcognSrvcTime[]']:input[value='" + $(this).val() + "']").prop("checked", true);
+		} else {
+			$("input:checkbox[name ='rcognSrvcTime[]']:input[value='" + $(this).val() + "']").prop("checked", false);
+			$("#rcognSrvcTime, #rcognSrvcTimeMobile").prop("checked", false);	// unchecked가 있으면 전체선택 해제
+		}
+	});
+	
+	// 인정시간 checkbox PC, Mobile 동기화
+	$("#rcognSrvcTime, #rcognSrvcTimeMobile").on('change', function(){
+		if(this.checked) {
+			$("input:checkbox[name ='rcognSrvcTime[]']").prop("checked", true);
+		} else {
+			$("input:checkbox[name ='rcognSrvcTime[]']").prop("checked", false);
+		}
+	});
+	
+	// 초기화 선택시 피시/모바일 전부 리셋
+	$("#btnReset, #btnResetMobile").on('click', function(){
+
+		//지역1 웹
+		var Area1Index = $('#searchHopeArea1 option').index($('#searchHopeArea1 option:selected'));
+		$('#searchHopeArea1 > option:eq(0)').prop("selected",false);
+		$('#searchHopeArea1 > option:eq('+Area1Index+')').prop("selected",false);
+		$('#searchHopeArea1 > option:eq(0)').prop("selected",'selected');
+		//지역1 모바일
+		$('#searchHopeArea1Mobile > option:eq(0)').prop("selected",'selected');
+		
+		//지역2
+		$('#searchHopeArea2 option').remove();
+		$('#searchHopeArea2').append('<option value="" selected="selected">전체</option>');
+		//지역2 모바일
+		$('#searchHopeArea2Mobile option').remove();
+		$('#searchHopeArea2Mobile').append('<option value="" selected="selected">전체</option>');
+		//봉사분야1
+		var Area1Index = $('#searchHopeSrvc1 option').index($('#searchHopeSrvc1 option:selected'));
+		$('#searchHopeSrvc1 > option:eq(0)').prop("selected",false);
+		$('#searchHopeSrvc1 > option:eq('+Area1Index+')').prop("selected",false);
+		$('#searchHopeSrvc1 > option:eq(0)').prop("selected",'selected');
+		//지역1 모바일
+		$('#searchHopeSrvc1Mobile > option:eq(0)').prop("selected",'selected');
+		//지역2
+		$('#searchHopeSrvc2 option').remove();
+		$('#searchHopeSrvc2').append('<option value="" selected="selected">전체</option>');
+		//지역2 모바일
+		$('#searchHopeSrvc2Mobile option').remove();
+		$('#searchHopeSrvc2Mobile').append('<option value="" selected="selected">전체</option>');
+		
+		//활동구분
+		var Area1Index = $('#searchActOnline option').index($('#searchActOnline option:selected'));
+		$('#searchActOnline > option:eq(0)').prop("selected",false);
+		$('#searchActOnline > option:eq('+Area1Index+')').prop("selected",false);
+		$('#searchActOnline > option:eq(0)').prop("selected",'selected');
+		//활동구분모바일
+		$('#searchActOnlineMobile > option:eq(0)').prop("selected",'selected');
+		
+		//봉사대상
+		var Area1Index = $('#searchSrvcTarget option').index($('#searchSrvcTarget option:selected'));
+		$('#searchSrvcTarget > option:eq(0)').prop("selected",false);
+		$('#searchSrvcTarget > option:eq('+Area1Index+')').prop("selected",false);
+		$('#searchSrvcTarget > option:eq(0)').prop("selected",'selected');
+		//봉사대상모바일
+		$('#searchSrvcTargetMobile > option:eq(0)').prop("selected",'selected');
+		
+		//모집상태
+		var Area1Index = $('#searchSrvcStts option').index($('#searchSrvcStts option:selected'));
+		$('#searchSrvcStts > option:eq(1)').prop("selected",false);
+		$('#searchSrvcStts > option:eq('+Area1Index+')').prop("selected",false);
+		$('#searchSrvcStts > option:eq(1)').prop("selected",'selected');
+		//모집상태 모바일
+		$('#searchSrvcSttsMobile > option:eq(1)').prop("selected",'selected');
+		
+		//봉사기간
+		var today = '20250114';
+		$('#searchProgrmBgnde').val(today.substring(0,4)+"-"+today.substring(4,6)+"-"+today.substring(6,8));
+		var afDay = set_momthDate(4);
+		$('#searchProgrmEndde').val(afDay.substring(0,4)+"-"+afDay.substring(4,6)+"-"+afDay.substring(6,8));
+		var today = '20250114';
+		$('#searchProgrmBgndeMobile').val(today.substring(0,4)+"-"+today.substring(4,6)+"-"+today.substring(6,8));
+		var afDay = set_momthDate(4);
+		$('#searchProgrmEnddeMobile').val(afDay.substring(0,4)+"-"+afDay.substring(4,6)+"-"+afDay.substring(6,8));
+		
+		//봉사명
+		$('#searchKeyword, #searchKeywordMobile').val('');
+		//수요처명
+		$('#searchNanmmbyNm, #searchNanmmbyNmMobile').val('');
+		
+		//재난일감
+		$('#searchReqConfirm, #searchReqConfirmMobile').prop("checked",false);
+		$('#searchRequstSe, #searchRequstSeMobile').prop("checked",true);
+		
+		// 요일 (전체로 초기화)
+		$('#searchWkAll, #searchWkAllMobile').prop('checked', true);
+		// 인정시간 (체크 해제)
+		$('input[name="rcognSrvcTime[]"]').prop('checked', false);
+	});
+}
+</script>
+<!-- mobile 모바일 검색 영역 -->
+<div class="m_search_field mobile_only">
+	<form name="mobileFrm" id="mobileFrm" style="height: 170px; overflow: hidden;"><!-- 검색영역이 펼쳐졌을 경우 style 없어지도록. -->
+		<table>
+			<caption>봉사조회 선택입력화면</caption>
+			<tbody>
+				<tr>
+					<th scope="col" colspan="2"><label for="searchHopeArea1Mobile">봉사지역</label></th>
+				</tr>
+				<tr>
+					<td class="br">
+						<div>	
+							<select id="searchHopeArea1Mobile" name="searchHopeArea1Mobile" title="봉사지역 시/도 선택">
+								<option value="" selected="selected">전체</option>
+								
+								
+									
+										
+											<option value="6110000">
+										
+										
+									
+										서울특별시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6260000">
+										
+										
+									
+										부산광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6270000">
+										
+										
+									
+										대구광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6280000">
+										
+										
+									
+										인천광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6290000">
+										
+										
+									
+										광주광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6300000">
+										
+										
+									
+										대전광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6310000">
+										
+										
+									
+										울산광역시
+									</option>
+								
+								
+								
+									
+										
+											<option value="5690000">
+										
+										
+									
+										세종특별자치시
+									</option>
+								
+								
+								
+									
+										
+											<option value="6410000">
+										
+										
+									
+										경기도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6420000">
+										
+										
+									
+										강원특별자치도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6430000">
+										
+										
+									
+										충청북도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6440000">
+										
+										
+									
+										충청남도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6450000">
+										
+										
+									
+										전북특별자치도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6460000">
+										
+										
+									
+										전라남도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6470000">
+										
+										
+									
+										경상북도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6480000">
+										
+										
+									
+										경상남도
+									</option>
+								
+								
+								
+									
+										
+											<option value="6500000">
+										
+										
+									
+										제주특별자치도
+									</option>
+								
+								
+							</select>
+						</div>
+					</td>
+					<td>
+						<div>
+							<select id="searchHopeArea2Mobile" name="searchHopeArea2Mobile" title="봉사지역 시/군/구 선택">
+								<option value="" selected="">전체</option>
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" colspan="2"><label for="searchHopeSrvc1Mobile">봉사분야</label></th>
+				</tr>
+				<tr>
+					<td class="br">
+						<div>
+							<select id="searchHopeSrvc1Mobile" name="searchHopeSrvc1Mobile" title="봉사분야 대분류 선택">
+								<option value="" selected="selected">전체</option>
+								
+								
+									<option value="0100">
+										생활편의지원
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0200">
+										주거환경
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0300">
+										상담
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0400">
+										교육
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0500">
+										보건의료
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0600">
+										농어촌 봉사
+									</option>
+								
+								
+								
+								
+								
+								
+								
+									<option value="0700">
+										문화행사
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0800">
+										환경보호
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="0900">
+										행정보조
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1000">
+										안전.예방
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1100">
+										공익.인권
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1200">
+										재해ㆍ재난
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1300">
+										국제협력.해외봉사
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1400">
+										멘토링
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1500">
+										기타
+									</option>
+								
+								
+								
+								
+								
+									<option value="1700">
+										자원봉사교육
+									</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+									<option value="1800">
+										국제행사
+									</option>
+								
+								
+								
+								
+								
+								
+							</select>
+						</div>
+					</td>
+					<td>
+						<div>
+							<select id="searchHopeSrvc2Mobile" name="searchHopeSrvc2Mobile" title="봉사분야 하위분류 선택">
+								<option value="" selected="selected">전체</option>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" class="br"><label for="searchActOnlineMobile">활동구분</label></th>
+					<th scope="col"><label for="searchSrvcSttsMobile">모집상태</label></th>
+				</tr>
+				<tr>
+					<td class="br">
+						<div>
+							<select id="searchActOnlineMobile" name="searchActOnlineMobile" title="활동구분 선택">
+								<option value="" selected="selected">전체</option>
+								
+									
+										<option value="1">온라인</option>
+									
+								
+									
+								
+									
+										<option value="2">오프라인</option>
+									
+								
+									
+								
+									
+										<option value="3">온라인+오프라인</option>
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+							</select>
+						</div>
+					</td>
+					<td>
+						<div>
+							<select id="searchSrvcSttsMobile" name="searchSrvcSttsMobile" title="모집상태 분류 선택">
+								<option value="3">전체</option>
+								<option value="0" selected="">모집중</option>
+								<option value="1">모집완료</option>
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" colspan="2"><label for="searchProgrmBgndeMobile">봉사기간</label></th>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>
+							<span class="datepicker">
+								
+									
+										<span class="input_text"><input type="text" id="searchProgrmBgndeMobile" name="searchProgrmBgndeMobile" value="2025-01-14" title="봉사기간 시작날짜" maxlength="10" readonly="readonly"></span>
+									
+									
+									
+								
+								<button type="button" class="date_select" onclick="openCalendar(document.getElementById(&#39;searchProgrmBgndeMobile&#39;)); return false;"><span>시작날짜 선택</span></button>
+							</span>
+							<span class="symbol">~</span>
+							<span class="datepicker">
+								
+									
+										<span class="input_text"><input type="text" id="searchProgrmEnddeMobile" name="searchProgrmEnddeMobile" value="2025-04-14" title="봉사기간 종료날짜" maxlength="10" readonly="readonly"></span>
+									
+									
+									
+								
+								<button type="button" class="date_select" onclick="openCalendar(document.getElementById(&#39;searchProgrmEnddeMobile&#39;)); return false;"><span>종료날짜 선택</span></button>
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" class="br"><label for="adultPosblAtMobile">봉사자유형</label></th>
+					<th scope="col"><label for="searchWkAllMobile">요일</label></th>
+				</tr>
+				<tr>
+					<td class="br">
+						<div>
+							<span class="checks small"><input type="checkbox" id="adultPosblAtMobile" name="adultPosblAtMobile" checked="checked"><label for="adultPosblAtMobile">성인</label></span>
+							<span class="checks small"><input type="checkbox" id="yngbgsPosblAtMobile" name="yngbgsPosblAtMobile" checked="checked"><label for="yngbgsPosblAtMobile">청소년</label></span>
+						</div>
+					</td>
+					<td>
+						<div>
+							<span class="checks small">
+								<input type="radio" name="searchWeekMobile" id="searchWkAllMobile" value="0" checked="checked">
+								<label for="searchWkAllMobile">전체</label>
+							</span>
+							<span class="checks small">
+								<input type="radio" name="searchWeekMobile" id="searchWkdayMobile" value="1">
+								<label for="searchWkdayMobile">평일</label>
+							</span>
+							<span class="checks small">
+								<input type="radio" name="searchWeekMobile" id="searchWkendMobile" value="2">
+								<label for="searchWkendMobile">주말</label>
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" colspan="2"><label for="rcognSrvcTimeMobile">인정시간</label></th>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>
+							<span class="checks inline">
+								<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile" value="0">
+								<label for="rcognSrvcTime">전체</label>
+							</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile1" value="1">
+									<label for="rcognSrvcTime1">1</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile2" value="2">
+									<label for="rcognSrvcTime2">2</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile3" value="3">
+									<label for="rcognSrvcTime3">3</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile4" value="4">
+									<label for="rcognSrvcTime4">4</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile5" value="5">
+									<label for="rcognSrvcTime5">5</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile6" value="6">
+									<label for="rcognSrvcTime6">6</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile7" value="7">
+									<label for="rcognSrvcTime7">7</label>
+								</span>
+							
+								<span class="checks inline">
+									<input type="checkbox" name="rcognSrvcTime[]" id="rcognSrvcTimeMobile8" value="8">
+									<label for="rcognSrvcTime8">8 이상</label>
+								</span>
+							
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col" class="br"><label for="searchSrvcTargetMobile">봉사대상</label></th>
+					<th scope="col"><label for="searchSrvcTargetMobile">재난 일감</label></th>
+				</tr>
+				<tr>
+					<td class="br">
+						<div>
+							<span class="select_form loc01">
+								<select id="searchSrvcTargetMobile" name="searchSrvcTargetMobile" title="">
+									<option value="" selected="selected">전체</option>
+									
+										
+									
+										
+											<option value="1">아동·청소년</option>
+										
+									
+										
+									
+										
+											<option value="2">장애인</option>
+										
+									
+										
+									
+										
+											<option value="3">노인</option>
+										
+									
+										
+											<option value="4">쪽방촌</option>
+										
+									
+										
+											<option value="5">다문화가정</option>
+										
+									
+										
+											<option value="6">여성</option>
+										
+									
+										
+											<option value="7">환경</option>
+										
+									
+										
+											<option value="8">사회적기업</option>
+										
+									
+										
+											<option value="9">고향봉사</option>
+										
+									
+										
+											<option value="99">기타</option>
+										
+									
+								</select>
+							</span>
+						</div>
+					</td>
+					<td>
+						<div>
+							<span class="checks small"><input type="checkbox" id="searchRequstSeMobile" name="searchRequstSeMobile" checked="checked"><label for="searchRequstSeMobile">재난일감 포함</label></span>
+							<span class="checks small"><input type="checkbox" id="searchReqConfirmMobile" name="searchReqConfirmMobile"><label for="searchReqConfirmMobile">재난</label></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="text_box" colspan="2">
+						<div>
+							<span><input id="searchKeywordMobile" name="searchKeywordMobile" placeholder="봉사명을 입력하세요." value="" type="text"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="text_box" colspan="2">
+						<div>
+							<span><input id="searchNanmmbyNmMobile" name="searchNanmmbyNmMobile" placeholder="수요처명을 입력하세요." value="" type="text"></span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<a href="javascript:void(0);" id="mobileSearchConditionOn">검색조건열기</a>
+	<a href="javascript:void(0);" id="mobileSearchConditionOff" class="off" style="display: none;">검색조건닫기</a>
+	<div class="btn_sec search_service_btn">
+		<button type="button" class="btn grey btn_orange" id="btnSearchMobile"><span>검색</span></button>
+		<button type="button" style="margin-right: 6px;" class="btn white_small btn_gray" id="btnResetMobile"><span>초기화</span></button>
+		
+	</div>
+</div>
+            <!--// mobile 검색 영역 -->
+
+            <div class="tab_wrap type2">
+                <ul class="tab">
+                    <li class="tab_list on"><a href="javascript:void(0);" class="tab_link" onclick="fnSetListType(&#39;list&#39;);"><span>목록보기<span class="haze">선택됨</span></span></a></li>
+                    <li class="tab_list"><a href="javascript:void(0);" class="tab_link" onclick="fnSetListType(&#39;map&#39;);"><span>지도보기</span></a></li>
+                </ul>
+            </div>
+
+			<div class="board_header">
+				<!-- 검색 결과 숫자 카운트 -->
+				<div class="search_result">
+					<p>[전체 <em>6,254</em>건, 현재페이지 <em>1</em>/626]</p>
+				</div>
+				<!--// 검색 결과 숫자 카운트 -->
+			</div>
+			<div class="board_list board_list2 non_sub">
+				<ul class="list_wrap wrap2">
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3199605" name="progrmRegistNo" value="3199605">
+						<a href="javascript:show(3199605)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 온라인+오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 멘토링&nbsp;&gt;&nbsp;멘토링
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									[부산서구학교밖청소년지원센터] 검정고시 및 수능대비반 &amp; 활동보조 멘토 모집 
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-10-14
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2024-11-01
+										 ~    
+										      2025-02-01
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>9:00
+										 ~ 18:00
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>부산광역시 서구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>서구 학교 밖 청소년 지원센터(꿈드림)</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 8시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3199965" name="progrmRegistNo" value="3199965">
+						<a href="javascript:show(3199965)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 기타&nbsp;&gt;&nbsp;기타
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									강남논현데이케어센터-프로그램보조 및 행정봉사
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-10-12
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2024-10-14
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>13:00
+										 ~ 16:00
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 강남구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>강남논현데이케어센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 3시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3214399" name="progrmRegistNo" value="3214399">
+						<a href="javascript:show(3214399)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 교육&nbsp;&gt;&nbsp;방과후 교육
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									아주나무_이주배경청소년 축구교실 자원봉사 
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-11-12
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2024-12-03
+										 ~    
+										      2025-01-28
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>17:00
+										 ~ 19:00
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>경기도 안산시</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>아주나무</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 2시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3216574" name="progrmRegistNo" value="3216574">
+						<a href="javascript:show(3216574)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 생활편의지원&nbsp;&gt;&nbsp;청결지도
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									**시니어학교 어르신 이미용(컷트) 봉사**
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-11-18
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2024-11-25
+										 ~    
+										      2025-02-21
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>10:30
+										 ~ 16:30
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 강동구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>시니어학교 강동성내 데이케어센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 6시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3225886" name="progrmRegistNo" value="3225886">
+						<a href="javascript:show(3225886)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 문화행사&nbsp;&gt;&nbsp;행사보조
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									학령기장애인(아동 및 청소년)겨울방학 돌봄 프로그램 보조
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-09
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-22
+										 ~    
+										      2025-01-22
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>9:30
+										 ~ 15:30
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 금천구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>금천장애인가족지원센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 6시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3225896" name="progrmRegistNo" value="3225896">
+						<a href="javascript:show(3225896)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 문화행사&nbsp;&gt;&nbsp;행사보조
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									학령기장애인(아동 및 청소년)겨울방학 돌봄 프로그램 보조
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-09
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-24
+										 ~    
+										      2025-01-24
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>9:30
+										 ~ 15:30
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 금천구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>금천장애인가족지원센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 6시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3225927" name="progrmRegistNo" value="3225927">
+						<a href="javascript:show(3225927)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 문화행사&nbsp;&gt;&nbsp;행사보조
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									학령기장애인(아동 및 청소년)겨울방학 돌봄 프로그램 보조
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-09
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-23
+										 ~    
+										      2025-01-23
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>9:30
+										 ~ 15:30
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 금천구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>금천장애인가족지원센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 6시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3228487" name="progrmRegistNo" value="3228487">
+						<a href="javascript:show(3228487)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 보건의료&nbsp;&gt;&nbsp;기타
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									(오후)심폐소생술교육 및 홍보 활동
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-16
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-15
+										 ~    
+										      2025-01-15
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>15:00
+										 ~ 17:00
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 도봉구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>도봉구보건소의약과</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 2시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3229352" name="progrmRegistNo" value="3229352">
+						<a href="javascript:show(3229352)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 기타&nbsp;&gt;&nbsp;기타
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									겨울방학 자원봉사학교- 동춘2동(양말목만들기-기부하기)
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-17
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-17
+										 ~    
+										      2025-01-17
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>13:00
+										 ~ 15:00
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>인천광역시 연수구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>연수구자원봉사센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 2시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					
+						
+							
+							
+						
+						
+						
+					
+
+					<li>
+					<input type="hidden" id="progrmRegistNo_3229661" name="progrmRegistNo" value="3229661">
+						<a href="javascript:show(3229661)" class="list">
+							<div class="tag_g">
+								<!-- <span class="tag blue">시간인증</span> -->
+								<span class="ing blue"><!-- 봉사 분야 -->
+								시간인증 &nbsp;&nbsp;|&nbsp;&nbsp; 오프라인 &nbsp;&nbsp;|&nbsp;&nbsp; 문화행사&nbsp;&gt;&nbsp;행사보조
+								</span>
+							</div>
+							<dl class="txts">
+								<dt class="tit_board_list">
+									
+									학령기장애인(아동 및 청소년)겨울방학 돌봄 프로그램 보조
+								</dt>
+								<dd class="board_data normal time_cptn">
+									<dl>
+										<dt>[모집기간]</dt>
+										<dd>
+											  2024-12-18
+										 ~    
+										      2025-01-14
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사기간]</dt>
+										<dd>
+											  2025-01-16
+										 ~    
+										      2025-01-16
+										</dd>
+									</dl>
+									<dl>
+										<dt>[봉사시간]</dt>
+										<dd>9:30
+										 ~ 15:30
+										 </dd>
+									</dl>
+									<dl>
+										<dt>[등록기관]</dt>
+										<dd>서울특별시 금천구</dd>
+									</dl>
+									<dl>
+										<dt>[모집기관]</dt>
+										<dd>금천장애인가족지원센터</dd>
+									</dl>
+									<dl>
+										<dt>[인정시간]</dt>
+										<dd>최대 6시간</dd>
+									</dl>
+ 								</dd>
+							</dl>
+							<div class="close_dDay">
+								
+								
+								
+								
+								
+								
+								
+								<div class="tit">
+									 
+										금일<br>마감
+										
+										
+									
+								</div>
+								
+									
+										<div class="end">모집중</div>
+									
+									
+									
+								
+							</div>
+							<div class="float_txts mobile_only">
+								<div class="ing">
+								
+									금일<br>마감
+									
+									
+								
+								</div>
+								<div class="ing">
+									
+										
+											<span class="end">(모집중)</span>
+										
+										
+										
+									
+								</div>
+							</div>
+						</a>
+					</li>
+					
+					<!-- 검색 결과가 없을 경우 -->
+					
+					<!--// 검색 결과가 없을 경우 -->
+				</ul>
+			</div>
+			<div class="board_bottom">
+				<div class="paging">
+					<div class="pagiarea">
+						<div class="pagination">
+							<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=1" onclick="fnPage(1);return false;" class="btn_first"><span class="haze">처음 페이지</span></a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=1" onclick="fnPage(1);return false;" class="btn_prev"><span class="haze">이전 페이지</span></a>&nbsp;<strong class="page_num"><span class="haze">현재페이지</span>1</strong>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=2" onclick="fnPage(2);return false;" class="page_num">2</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=3" onclick="fnPage(3);return false;" class="page_num">3</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=4" onclick="fnPage(4);return false;" class="page_num">4</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=5" onclick="fnPage(5);return false;" class="page_num">5</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=6" onclick="fnPage(6);return false;" class="page_num">6</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=7" onclick="fnPage(7);return false;" class="page_num">7</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=8" onclick="fnPage(8);return false;" class="page_num">8</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=9" onclick="fnPage(9);return false;" class="page_num">9</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=10" onclick="fnPage(10);return false;" class="page_num">10</a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=11" onclick="fnPage(11);return false;" class="btn_next"><span class="haze">다음 페이지</span></a>&nbsp;<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?pageIndex=626" onclick="fnPage(626);return false;" class="btn_last"><span class="haze">마지막 페이지</span></a>&nbsp;
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--// contents :: End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+	</div>
+</div>
+<!--// contents :: End -->
+<!-- 20191204 하상록 - sitemap class 설정을 위한 추가 -->
+
+	
+	
+
+	
+	
+
+	
+	
+
+	
+		
+		
+	
+	
+
+	
+	
+		
+		
+		
+		
+		
+		
+	
+
+<!-- footer -->
+<div id="footer">
+	<div class="footer_wrap">
+		<div class="relative_site" style="position: relative;">
+			<div class="visual_wrap swiper-container swiper4 swiper-container-initialized swiper-container-horizontal">
+				 <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px);">
+					<div class="swiper-slide swiper-slide-active" style="width: 220px;">
+						<a href="http://www.mois.go.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site01.png" alt="행정안전부"></a>
+					</div>
+					<div class="swiper-slide swiper-slide-next" style="width: 220px;">
+						<a href="http://www.v1365.or.kr/main/main.php" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site02_01.png" alt="재단법인 한국중앙자원봉사센터"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://archives.v1365.or.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site07_01.png" alt="자원봉사 아카이브"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="https://direct.samsungfire.com/moi1365/index.html" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site08_02.png" alt="자원봉사종합보험 관리시스템 바로가기 삼성화재"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://www.neis.go.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site03.png" alt="나이스 National Education Infomation System"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://www.vms.or.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site04.png" alt="사회복지인증시스템"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://www.youth.go.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site05.png" alt="청소년자원봉사시스템"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://www.klid.or.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site09.png" alt="KLID한국지역정보개발원"></a>
+					</div>
+					<div class="swiper-slide" style="width: 220px;">
+						<a href="http://csv.culture.go.kr/" target="_blank" title="새창열림"><img loading="lazy" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_site11.png" alt="문화품앗e 문화체육자원봉사 매칭시스템"></a>
+					</div>
+				</div>
+			<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+			<div class="swiper-button-prev sbp4 swiper-prev prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+			<div class="swiper-button-next sbn4 swiper-next next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+		</div>
+		<div id="pfooter">
+            <div class="copyright"> <span class="footer_logo pc_only"><img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/footer_logo.png" alt="행정안전부"></span>
+                <div class="info"> 
+	                	<a href="https://www.1365.go.kr/vols/P9820/wpge/volsstplat.do">이용약관</a>
+	                	<a href="https://www.1365.go.kr/vols/P9830/wpge/volsindvdlpolcy.do"><strong>개인정보처리방침</strong></a>
+	                	<a href="https://www.1365.go.kr/vols/P9840/wpge/volscpyrhtpcy.do">저작권정책</a>
+						<a href="https://www.1365.go.kr/vols/P9850/wpge/volscolctreject.do">이메일주소수집거부</a>
+                    <div>
+                    	<a href="https://www.1365.go.kr/vols/1472176623798/wpge/volsguide1365.do"><span style="margin-right:5px;color:#888;font-size:9px;font-weight:100;border:1px solid #888;border-radius:100%;padding:1px 5px 0 5px;">ℹ</span>이용방법</a>
+                    	<a href="javascript:fn_callList();" title="새창열림"><span style="margin-right:5px;font-size:16px;color: #888;">☏</span>1522-3658 (유료)</a>
+                    	<a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#link" class="btn1365bot" title="새창열림"><span style="font-weight:900;font-size:16px;color:	#888;">💬</span>1365 봉사봇</a>
+                   	</div>
+                </div>
+                <p class="address"><span>(30112) 세종특별자치시 도움6로 42(어진동)</span></p>
+                <p class="copy">ⓒ Ministry of the Interior and Safety.All Rights reserved.</p>
+                <span class="footer_right"><a href="http://www.wa.or.kr/board/list.asp?BoardID=0006" target="_blank">
+                	<img alt="(사)한국장애인단체총연합회 한국웹접근성인증평가원 웹 접근성 우수사이트 인증마크(WA인증마크)" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/WA_mark_2024.png" width="50" height="34">
+               	</a></span>
+            </div>
+        </div>
+	</div>
+</div>
+<!--// footer -->
+</div>
+</div>
+<!-- 전체 메뉴 -->
+<div id="sitemap" style="display:none; ">
+	<div class="sitemap">
+		<h1 class="haze">MENU<span class="haze">1365자원봉사포털 전체 메뉴</span></h1>
+		<div class="menu_group" data-module="sitemap" style="height:450px;"><!-- 메뉴의 높이에 따라 height값이 자동으로 바뀌도록 해주세요(웹만 적용). -->
+			<div class="m_login_g mobile_only tablet_on"> <!-- 모바일에서만 보이도록 처리함 -->
+                <div>
+					
+						
+							<div class="btn_g"> 
+								<div class="onepass"><div id="onepassLogin1"></div></div>
+								<a href="https://www.1365.go.kr/vols/P9910/mber/volsLogin.do">로그인</a> 
+								<a href="https://www.1365.go.kr/vols/P9940/mber/volsMber.do">회원가입</a> 
+							</div>
+		                    <div class="txt_g">
+		                    	<img src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/img_m_login.png" alt="모바일 로그인">
+		                        <p><strong>로그인</strong> 해주세요.</p>
+		                    </div>
+						
+						
+					
+                </div>
+            </div>
+			
+			
+			
+			
+			
+			
+			
+				
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">봉사안내</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9112">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">자원봉사 안내</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9112">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176598342/wpge/volsinfo1365.do">1365 자원봉사포털 소개</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176623798/wpge/volsguide1365.do">이용방법</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1491209590756/wpge/volsincruitinfo.do">자원봉사자 모집안내</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176655606/wpge/volsinforesultcntc.do">자원봉사 실적 연계 소개</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176691282/wpge/volseducontents.do">자원봉사 교육자료</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1664267317090/wpge/volsInsrnc.do">자원봉사 종합보험</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9120">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">한국중앙자원봉사센터</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9120">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176759851/wpge/volscntrvsn.do">센터소개</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1477903529804/wpge/volscntrhist.do">기관 연혁</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176793607/wpge/volsbrand.do">자원봉사 대표 브랜드/CI</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472176817128/wpge/volsmap.do">찾아오시는 길</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9130/srvcinfo/volsCnterInfo.do">지역자원봉사센터</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9140/srvcinfo/volsDnttInfo.do">자원봉사 수요기관정보</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1732753201936/wpge/volscmpgninfo.do">온기나눔</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+					
+							</ul></div></div>
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">봉사참여</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9210">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">개인봉사</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9210">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do">시간인증봉사</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1572247923954/partcptn/onlinePartCptn.do">활동인증봉사</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9230/partcptn/grpCptn.do?flag=B01">기업·단체봉사</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1572312122596/partcptn/otherInsttCptn.do">타기관 봉사정보</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9310/srvcgud/eduSearch.do">자원봉사교육</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1482213363360/bbs/bbs.do?bbsNo=990000&amp;titleNm=%EB%AA%A9%EB%A1%9D">희망 봉사활동 제안</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+			
+			
+			
+				
+					
+							</ul></div></div>
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">봉사정보</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9320">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">자원봉사 통계</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9320">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472177522467/srvcgud/volsStats.do?titleNm=(%EC%97%B0%EB%A0%B9%EB%B3%84)">인구대비 현황</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472177552845/srvcgud/volsStats.do?type=showYear">연인원 현황</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472177576155/srvcgud/volsStats.do?type=showReal">실인원 현황</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472177597631/srvcgud/volsStats.do?type=showPart">분야별 현황</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472177620085/srvcgud/volsStats.do?type=showAge">연령별 현황</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1569998626335/srvcgud/volsIssueKeyword.do">이슈 키워드</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9330/srvcgud/cnfrmnIssu.do">확인서 발급 조회</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1487669642666/bbs/bbs.do?bbsNo=934000">자원봉사 이야기</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1574397036771/srvcinfo/resn.do">자원봉사후기</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1500267294263/reward/volsRewardList.do">자원봉사 대상</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+					
+							</ul></div></div>
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">고객센터</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9410/bbs/bbs.do?bbsNo=991000&amp;titleNm=%EB%AA%A9%EB%A1%9D">알림판</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9420/bbs/bbs.do?bbsNo=994100&amp;titleNm=%EB%AA%A9%EB%A1%9D">지역센터 공지</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9440/bbs/bbs.do?bbsNo=992000&amp;titleNm=%EB%AA%A9%EB%A1%9D">질문과 답변</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9450/bbs/bbs.do?bbsNo=993000">자주하는 질문</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+					
+							</ul></div></div>
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">나의 자원봉사</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1569310787340/mypage/svcrltSttus.do">봉사현황</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9720">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">봉사정보</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9720">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472178091420/mypage/partcptnAcmslt.do">봉사참여 실적</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472178117200/mypage/selectMyCertifyList.do">실적확인서 발행 내역</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472178171182/mypage/reqstDtls.do">봉사 신청 내역</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class="pc_only"><a href="https://www.1365.go.kr/vols/1569312167718/mypage/volsMyActStats.do">봉사활동통계</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_1569311714006">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">추천/관심봉사</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_1569311714006">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1569313748072/mypage/volsMyRecmdList.do">추천봉사</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1569313763518/mypage/volsMyRecentList.do">최근본 봉사</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1478765167344/mypage/volsMyAttenList.do">관심 자원봉사</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1569313798569/mypage/volsMyDnttList.do">관심수요기관</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1472178365742/myPage/selectEduRsltList.do">교육신청내용</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1479288377451/myPage/setMonthCalrndar.do?titleNm=(%EC%9B%94%EA%B0%84)">캘린더</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9730">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">나의 작성글</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9730">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1574647024735/myPage/bbs.do?menuNo=P9730">나의 작성글</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1574647074573/mypage/rankresn.do">자원봉사 후기</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1569311624172/myPage/selectMssageList.do">알림톡</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_P9740">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">회원정보</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_P9740">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1478149574230/myPage/volsMber.do?type=save">기본정보</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472178300474/myPage/volsMber.do?type=save&amp;step=02">부가정보</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1624433796646/myPage/loginManageView.do">로그인관리</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1472178414431/myPage/myMberOut.do">회원탈퇴</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1479976181104/mypage/selectSvcrltLinkedList.do">NEIS 연계 서비스</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+								
+								<li data-module="acc_elem_sub" class="sub_deps sub_deps_on" data-id="sub_1569311518667">
+									<div class="tit" data-module="acc_cont">
+										<em tabindex="0">관리자인증</em>
+										<button type="button" class="btn_menu sub_btn" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+										<div class="sub_cont" id="subCont_1569311518667">
+											<ul>
+							
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1479976083043/mypage/cntrAdmComfirm.do">관리자 인증하기</a></li>
+												
+												
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+							
+												
+													<li class=""><a href="https://www.1365.go.kr/vols/1479976206891/mypage/updateCertificateForm.do">공인 인증서 갱신하기</a></li>
+												
+												
+								
+											</ul></div></div></li>
+								
+						
+						
+					
+				
+			
+			
+			
+				
+				
+			
+			
+			
+				
+				
+					
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+					
+				
+			
+			
+			
+				
+				
+			
+			
+			
+				
+				
+			
+			
+			
+				
+				
+					
+						
+						
+					
+				
+			
+			
+			
+				
+					
+							</ul></div></div>
+					
+					
+					<div class="groups btm" data-module="acc_elem">
+						<div class="tit">
+							<h2 class="mobile_only tablet_on">사이트 안내</h2>
+							<button type="button" class="btn_menu" data-module="btn" data-module-open="열기" data-module-close="닫기">하위메뉴 <span class="hazeTxt">열기</span></button>
+						</div>
+						<div class="cont only_1deps" data-module="acc_cont">
+							<ul>
+				
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9810/sitegud/volsSitemap.do">사이트맵</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/1569998748117/wpge/volsmobileapp.do">모바일앱 안내</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9820/wpge/volsstplat.do">이용약관</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9830/wpge/volsindvdlpolcy.do">개인정보처리방침</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9840/wpge/volscpyrhtpcy.do">저작권정책</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+			
+				
+				
+					
+						
+						
+							<li data-module="acc_elem_sub" class="sub_deps">
+								<div class="tit" data-module="acc_cont">
+									<a href="https://www.1365.go.kr/vols/P9850/wpge/volscolctreject.do">이메일 무단 수집거부</a>
+								</div>
+							</li>
+						
+					
+				
+			
+			
+					</ul>
+				</div>
+			</div>
+			<div class="groups etc">
+				<h2 class="haze">약관</h2>
+				<div class="cont">
+					<ul>
+						<li><a href="https://www.1365.go.kr/vols/P9820/wpge/volsstplat.do">이용약관</a></li>
+						<li><a style="font-weight:bold;" href="https://www.1365.go.kr/vols/P9830/wpge/volsindvdlpolcy.do">개인정보처리방침</a></li>
+						<li><a href="https://www.1365.go.kr/vols/P9840/wpge/volscpyrhtpcy.do">저작권정책</a></li>
+						<li><a href="https://www.1365.go.kr/vols/P9850/wpge/volscolctreject.do">이메일주소수집거부</a></li>
+						<li><a href="javascript:fn_callList();" title="새창열림">문의전화안내</a></li>
+					</ul>
+				</div>
+				<p class="logo_sitemap"><span class="haze">행정안전부</span></p>
+				<p class="copyright">
+					<span>ⓒ Ministry of the Interior and Safety.</span>
+					<span>All Rights reserved.</span>
+				</p>
+			</div>
+			<button type="button" class="closeSitemap"><span class="haze">전체메뉴 <i class="hazeTxt">닫기</i></span></button>
+		</div>
+	</div>
+</div>
+<!--// 전체 메뉴 -->
+
+<!-- 상단검색영역 -->
+<div id="top_search" style="display: none;">
+	<div class="top_search">
+    	<div class="search-group">
+        	<div>
+            	<div class="inputbox"><input type="text" id="totSearchKeyword" placeholder="검색어를 입력하세요." title="검색어를 입력하세요"></div>
+                <dl>
+                	<!-- 검색엔진 관리자의 인기검색어 설정을 가지고 올지, DB기준의 인기검색어를 가지고 올지 결정 후 수정하는것으로. -->
+                	<dt>인기검색어</dt>
+                    <dd><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#" onclick="fn_total_search_button(&#39;지역센터 행사정보&#39;); return false;">#지역센터 행사정보</a></dd>
+                    <dd><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#" onclick="fn_total_search_button(&#39;청소년 자원봉사&#39;); return false;">#청소년 자원봉사</a></dd>
+                    <dd><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#" onclick="fn_total_search_button(&#39;실적확인서 발급&#39;); return false;">#실적확인서 발급</a></dd>
+                    <dd><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#" onclick="fn_total_search_button(&#39;개인봉사참여&#39;); return false;">#개인봉사참여</a></dd>
+                    <dd><a href="https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do#" onclick="fn_total_search_button(&#39;자원봉사 실적 나이스연계&#39;); return false;">#자원봉사 실적 나이스연계</a></dd>
+                </dl>
+            </div>
+            <button type="button" onclick="fn_total_search()"><span class="haze">검색</span></button>
+        	<button type="button" id="closeSearch"><span class="haze">검색 <i class="hazeTxt">닫기</i></span></button>
+        </div>
+    </div>
+</div>
+<!-- 20191206 하상록 - 통합검색 관련 스크립트 추가 -->
+<script>
+
+$(document).ready(function() {
+	$(window).globalActions();
+
+	if(navigator.userAgent.indexOf('APPLICATION_ANDROID')>-1 || navigator.userAgent.indexOf('APPLICATION_IOS')>-1){ 
+		$('#aLogoutApp').show();
+		$('#aSetBtn').show();
+		$('#aLogoutWeb').remove();
+		$('#aMyLocation').show();
+	}
+	else{
+		$('#aLogoutWeb').show();
+		$('#aSetBtn').remove();
+		$('#aLogoutApp').remove();
+		$('#aMyLocation').remove();
+	}
+	
+	var swiper4 = new Swiper('.swiper4', {
+		slidesPerView: 5,
+		slidesPerGroup : 1,
+		loop: false,
+		breakpointsInverse: true,
+		breakpoints: {
+			0: { slidesPerView: 1},	//브라우저가 768보다 클 때
+			768: { slidesPerView: 3},
+			1024: { slidesPerView: 5}
+		},
+		navigation: {
+			nextEl: '.sbn4',
+			prevEl: '.sbp4'
+		}
+	});
+});
+
+var onepass;
+function onepassClientLoad1() {
+	$('.onepass').css("display","block");
+	onepass = new OnepassClientUtil();
+	onepass.idpUrl = 'https://saml.onepass.go.kr';
+	onepass.loadLoginbtn('onepassLogin1');
+
+	$("#onepassLogin1 a").eq(1).css("display","none");
+	$("#onepassLogin1 a").eq(0).empty();
+	$("#onepassLogin1 a").eq(0).attr("class","btn data_modify");
+	$("#onepassLogin1 a").eq(0).append("<span>디지털원패스</span>");
+}
+
+$("#totSearchKeyword").keydown(function(event) {
+	if(event.keyCode==13){
+		fn_total_search()
+	}
+});
+
+	function fn_total_search(){
+		if($.trim($("#totSearchKeyword").val()) == ''){
+			alert("검색어를 입력하세요.");
+			$("#totSearchKeyword").focus();
+			return false;
+		}
+		$("form[name=totSearch] > input[name=query]").val($("#totSearchKeyword").val());
+		$("#totSearch").submit();
+	}
+	
+	function fn_total_search_button(query){
+		$("form[name=totSearch] > input[name=query]").val(query);
+		$("#totSearch").submit();
+	}
+	
+	$("#totSearchKeyword").on(function(e){
+		if(e.keyCode == "13") {
+			$("#totSearch").submit();
+		}
+	});
+</script>
+<form id="totSearch" name="totSearch" method="get" action="https://www.1365.go.kr/vols/search.do">
+	<input type="hidden" name="query" id="query">
+</form>
+<!--//상단검색영역 -->
+<div id="ajax_loading_bg" class="ajax_hide">
+	<div id="ajax_loading_center">
+	    <img id="ajax_loading_img" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/ajax-loader.gif" alt="LOADING">
+	</div>
+</div>
+
+<!--script 영역-->
+	<script type="text/javascript">
+
+		$('[data-module="faq_accordion"]').accordion({
+			// 메뉴 클릭 시 콜백
+	    onItemClick : function(e, target, index){
+
+	    },
+	    // 메뉴 닫힐때 콜백
+	    onItemClose : function(index, target){
+
+	    },
+	    // 활성화 뎁스
+	    initialOpenIndex : -1,
+	    singleItemOpen :false
+	  });
+
+		function mblLogout() {
+			$.ajax({
+					url : "/mbl/mber/mblLogout.do",
+					type : "POST",
+					dataType: "json",
+				success : function(data) {
+				},
+				error : function(data) {
+				},
+				complete : function() {
+					window.location.href = "/volsLogout.do?appYN=Y";
+				}
+			});
+		}
+	</script>
+<!--//script 영역-->
+
+<div id="dim"></div>
+
+	<script type="text/javascript" src="./시간인증봉사(목록보기) _ 1365 자원봉사포털_files/wcslog.js.다운로드"></script>
+	<script type="text/javascript">
+		if(navigator.userAgent.indexOf('APPLICATION_ANDROID')<0 && navigator.userAgent.indexOf('APPLICATION_IOS')<0){ 
+			//네이버 애널리틱스
+			if(!wcs_add) var wcs_add = {};
+			wcs_add["wa"] = "15c14193157a9d0";
+			if(window.wcs) {
+				 wcs_do();
+			}
+		}
+	</script>
+
+
+
+
+ </body></html>
