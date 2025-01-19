@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.ssafit.mapper.VideoMapper">
+
+	<select id="getAllVideo" resultType="com.example.ssafit.model.Video">
+        SELECT * FROM videos
+    </select>
+    
+	<select id="getSearchVideo" parameterType="String" resultType="com.example.ssafit.model.Video">
+	    SELECT * FROM videos WHERE videoId LIKE '%${videoId}%'
+	</select>
+    
+    <select id="getCategoryVideo" parameterType="com.example.ssafit.model.Video" resultType="com.example.ssafit.model.Video">
+        SELECT * FROM videos WHERE category = #{category}
+    </select>
+
+	<select id="getVideo" parameterType="com.example.ssafit.model.Video" resultType="com.example.ssafit.model.Video">
+		SELECT * FROM videos WHERE videoId = #{videoId}
+	</select>
+	
+	<update id="addViews" parameterType="com.example.ssafit.model.Video">
+		UPDATE videos SET views = views + #{views} WHERE videoId = #{videoId}
+	</update>
+	
+</mapper>

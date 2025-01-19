@@ -1,0 +1,832 @@
+var mapapi_kakao_url = '//dapi.kakao.com/v2/maps/sdk.js?appkey=8d66e864b87e987208f8177b0a743d9e&autoload=false&libraries=services,clusterer,drawing';
+var mapapi_naver = {
+	'host': 'https://oapi.map.naver.com',
+	'maps': '/openapi/v3/maps.js?ncpClientId=awln93z8fd&submodules=geocoder' 
+};
+var smsInfo = new Object();
+
+/** 도로명주소 검색 api 팝업 호출 **/
+function fnJusoPopup(zipNm, postAdresNm, detailAdresNm){
+	var addrSearchFrm = document.addrSearchFrm;
+	addrSearchFrm.zipNm.value = zipNm;
+	addrSearchFrm.postAdresNm.value = postAdresNm;
+	addrSearchFrm.detailAdresNm.value = detailAdresNm;
+	
+	window.name = "jusoPopup1";
+	var url = '/vols/cmmn/jusoPopup.do';
+	window.open(url,'addrSearch','resizable=no width=570 height=420 resizable=no');
+}
+
+//우편번호 팝업호출
+function fnAddrSearch(zipNm, postAdresNm, detailAdresNm){
+	var addrSearchFrm = document.addrSearchFrm;
+    var url = '/vols/cmmn/addrSearchPopup.do';
+    window.open('','addrSearch','resizable=no width=570 height=420 resizable=no');
+    addrSearchFrm.zipNm.value = zipNm;
+    addrSearchFrm.postAdresNm.value = postAdresNm;
+    addrSearchFrm.detailAdresNm.value = detailAdresNm;
+    addrSearchFrm.action = url; 
+    addrSearchFrm.target = 'addrSearch'; 
+    addrSearchFrm.submit();	
+}
+
+//우편번호 검색값 세팅
+function jusoCallBack(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr,jibunAddr,zipNo,admCd,rnMgtSn,bdMgtSn){
+	var addrSearchFrm = document.addrSearchFrm;
+	
+	var zipNm = addrSearchFrm.zipNm.value;
+	var postAdresNm = addrSearchFrm.postAdresNm.value;
+	var detailAdresNm = addrSearchFrm.detailAdresNm.value;
+	
+	$("#"+zipNm).val(zipNo);
+	roadAddrPart1 = $.trim(roadAddrPart1);
+	$("#"+postAdresNm).val(roadAddrPart1);
+	$("#"+detailAdresNm).val(addrDetail);
+	if($('#la').length > 0 && $('#lo').length > 0){
+		//카카도api이용후 위도 경도 가지고옴
+		$.ajax({
+			url:'https://dapi.kakao.com/v2/local/search/address.json?query='+encodeURIComponent(roadAddrPart1),
+			headers: { 'Authorization': 'KakaoAK 4d9440476f751d9d84b90f4587360227'},
+			type: 'GET',
+			success : function(data){
+			//var pointx = data.documents[0].x;
+			//var pointy = data.documents[0].y;
+				$('#la').val(data.documents[0].y);
+				$('#lo').val(data.documents[0].x);
+			}
+		});
+	}
+}
+
+
+//이메일 도메인선택 시 자동입력
+function setMailDomain(fCombo){
+	var n = document.frm;
+	if (fCombo.selectedIndex == 0){
+		n.elements['email2'].value = "";
+		n.elements['email2'].focus();
+	} else {
+		n.elements['email2'].value = fCombo.options[fCombo.selectedIndex].text;
+	}
+}
+
+//html 태그 제거
+function removeTag( html ) {
+	 return html.replace(/(<([^>]+)>)/gi, "");
+}
+
+
+
+
+/*//-------------------------------------------------------------------
+
+//주민번호 형식 체크   
+
+//-------------------------------------------------------------------*/
+
+function jumin_check(juminno) {
+
+	if (juminno == "" || juminno == null || juminno.length != 13) {
+		alert("주민등록번호를 적어주세요.");
+		return false;
+	}
+
+	var jumin1 = juminno.substr(0, 6);
+	var jumin2 = juminno.substr(6, 7);
+	var yy = jumin1.substr(0, 2); // 년도
+	var mm = jumin1.substr(2, 2); // 월
+	var dd = jumin1.substr(4, 2); // 일
+	var genda = jumin2.substr(0, 1); // 성별
+	var cc;
+
+	// 숫자가 아닌 것을 입력한 경우
+	if (!isNumeric(jumin1)) {
+		alert("주민등록번호 앞자리를 숫자로 입력하세요.");
+		return false;
+	}
+
+	// 길이가 6이 아닌 경우
+	if (jumin1.length != 6) {
+		alert("주민등록번호 앞자리를 다시 입력하세요.");
+		return false;
+	}
+
+	// 첫번째 자료에서 연월일(YYMMDD) 형식 중 기본 구성 검사
+	if (yy < "00" || yy > "99" || mm < "01" || mm > "12" || dd < "01"
+			|| dd > "31") {
+		alert("주민등록번호 앞자리를 다시 입력하세요.");
+		return false;
+	}
+
+	// 숫자가 아닌 것을 입력한 경우
+	if (!isNumeric(jumin2)) {
+		alert("주민등록번호 뒷자리를 숫자로 입력하세요.");
+		return false;
+	}
+
+	// 길이가 7이 아닌 경우
+	if (jumin2.length != 7) {
+		alert("주민등록번호 뒷자리를 다시 입력하세요.");
+		return false;
+	}
+
+	// 성별부분이 1 ~ 4 가 아닌 경우
+	if (genda < "1" || genda > "4") {
+		alert("주민등록번호 뒷자리를 다시 입력하세요.");
+		return false;
+	}
+
+	// 연도 계산 - 1 또는 2: 1900년대, 3 또는 4: 2000년대
+//	cc = (genda == "1" || genda == "2") ? "19" : "20";
+	// 첫번째 자료에서 연월일(YYMMDD) 형식 중 날짜 형식 검사
+//	if (isValidDate(cc + yy + mm + dd) == false) {
+//		alert("주민등록번호 앞자리를 다시 입력하세요.");
+//		return false; 
+//	}
+
+	// Check Digit 검사
+	//if (!isSSN(jumin1, jumin2)) {
+	//	alert("입력한 주민등록번호를 검토한 후, 다시 입력하세요.");
+	//	return false;
+	//}
+
+	return true;
+}
+
+function isValidDate(iDate) {
+	if (iDate.length != 8) {
+		return false;
+	}
+
+	return true;
+}
+
+function isNumeric(s) {
+	for (var i = 0; i < s.length; i++) {
+		c = s.substr(i, 1);
+		if (c < "0" || c > "9")
+			return false;
+	}
+	return true;
+}
+
+function isSSN(s1, s2) {
+	var i;
+	n = 2;
+	sum = 0;
+	for (i = 0; i < s1.length; i++)
+		sum += parseInt(s1.substr(i, 1)) * n++;
+	for (i = 0; i < s2.length - 1; i++) {
+		sum += parseInt(s2.substr(i, 1)) * n++;
+		if (n == 10)
+			n = 2;
+	}
+
+	c = 11 - sum % 11;
+	if (c == 11)
+		c = 1;
+	if (c == 10)
+		c = 0;
+	if (c != parseInt(s2.substr(6, 1)))
+		return false;
+	else
+		return true;
+	  
+	return true;
+}
+
+/*
+ * //-------------------------------------------------------------------
+ * //외국인등록번호 형식 체크
+ * //-------------------------------------------------------------------
+ */
+
+//function fnfgnCheck(rrn){ /* 외국인등록번호유효성검사. */
+//	
+//	var sum = 0;
+//
+//	if (rrn.length != 13) {
+//		alert("잘못된 외국인등록번호입니다.\r\n다시 확인하고 입력해 주세요."); 
+//		return false;
+//	}else if (rrn.substr(6, 1) != 5 && rrn.substr(6, 1) != 6 && rrn.substr(6, 1) != 7 && rrn.substr(6, 1) != 8) {
+//	 	alert("잘못된 외국인등록번호입니다.\r\n다시 확인하고 입력해 주세요.");
+//	    return false;
+//	}
+//
+//	if (Number(rrn.substr(7, 2)) % 2 != 0) {
+//		alert("잘못된 외국인등록번호입니다.\r\n다시 확인하고 입력해 주세요.");
+//	    return false;
+//	}
+//	
+//	for(var i=0; i < 12; i++){
+//		sum += Number(rrn.substr(i, 1)) * ((i % 8) + 2);
+//	}
+//
+//	if((((11 - (sum % 11)) % 10 + 2) % 10) == Number(rrn.substr(12, 1))){
+//		return true;
+//	}
+//
+//	alert("잘못된 외국인등록번호입니다.\r\n다시 확인하고 입력해 주세요.");
+//
+//	return false;
+//}
+
+function fnfgnCheck(fgn_reg_no){ /* 외국인등록번호유효성검사. */
+	
+	if (fgn_reg_no == ''){ 
+        alert('외국인등록번호를 입력하십시오.'); 
+        return false; 
+	} 
+	
+	if (fgn_reg_no.length != 13) { 
+	        alert('외국인등록번호 자리수가 맞지 않습니다.'); 
+	        return false; 
+	} 
+	if ((fgn_reg_no.charAt(6) == "5") || (fgn_reg_no.charAt(6) == "6")) 
+	{ 
+	   birthYear = "19"; 
+	} 
+	else if ((fgn_reg_no.charAt(6) == "7") || (fgn_reg_no.charAt(6) == "8")) 
+	{ 
+	   birthYear = "20"; 
+	} 
+	else if ((fgn_reg_no.charAt(6) == "9") || (fgn_reg_no.charAt(6) == "0")) 
+	{ 
+	   birthYear = "18"; 
+	} 
+	else 
+	{ 
+	  alert("등록번호에 오류가 있습니다. 다시 확인하십시오."); 
+	  return false; 
+	}         
+	
+	birthYear += fgn_reg_no.substr(0, 2); 
+	birthMonth = fgn_reg_no.substr(2, 2) - 1; 
+	birthDate = fgn_reg_no.substr(4, 2); 
+	birth = new Date(birthYear, birthMonth, birthDate); 
+	 
+	if ( birth.getYear() % 100 != fgn_reg_no.substr(0, 2) || 
+	     birth.getMonth() != birthMonth || 
+	     birth.getDate() != birthDate) { 
+	  alert('생년월일에 오류가 있습니다. 다시 확인하십시오.'); 
+	  return false; 
+	} 
+	
+	return true;
+}
+
+function fgn_check(fgn_reg_no){
+	
+	if (fgn_reg_no == ''){ 
+        alert('외국인등록번호를 입력하십시오.'); 
+        return false; 
+	} 
+	
+	if (fgn_reg_no.length != 13) { 
+	        alert('외국인등록번호 자리수가 맞지 않습니다.'); 
+	        return false; 
+	} 
+	if ((fgn_reg_no.charAt(6) == "5") || (fgn_reg_no.charAt(6) == "6")) 
+	{ 
+	   birthYear = "19"; 
+	} 
+	else if ((fgn_reg_no.charAt(6) == "7") || (fgn_reg_no.charAt(6) == "8")) 
+	{ 
+	   birthYear = "20"; 
+	} 
+	else if ((fgn_reg_no.charAt(6) == "9") || (fgn_reg_no.charAt(6) == "0")) 
+	{ 
+	   birthYear = "18"; 
+	} 
+	else 
+	{ 
+	  alert("등록번호에 오류가 있습니다. 다시 확인하십시오."); 
+	  return false; 
+	}         
+	
+	birthYear += fgn_reg_no.substr(0, 2); 
+	birthMonth = fgn_reg_no.substr(2, 2) - 1; 
+	birthDate = fgn_reg_no.substr(4, 2); 
+	birth = new Date(birthYear, birthMonth, birthDate); 
+	 
+	if ( birth.getYear() % 100 != fgn_reg_no.substr(0, 2) || 
+	     birth.getMonth() != birthMonth || 
+	     birth.getDate() != birthDate) { 
+	  alert('생년월일에 오류가 있습니다. 다시 확인하십시오.'); 
+	  return false; 
+	} 
+	
+	return true;
+}
+
+
+
+/*//-------------------------------------------------------------------
+//아이디 형식체크  
+//-------------------------------------------------------------------*/
+
+function checkIdString(uid){
+
+	if(!/^[a-zA-Z0-9]{6,20}$/.test(uid)){ 
+	    alert('아이디를 영문과 숫자를 반드시 포함하여 6자리~20자리 미만으로 입력해주세요.'); 
+	    return false;
+	}
+
+	var chk_num = uid.search(/[0-9]/g); 
+	var chk_eng = uid.search(/[a-z]/ig);
+	
+	if(chk_num < 0 || chk_eng < 0){ 
+		alert('아이디를 영문과 숫자를 반드시 포함하여 6자리~20자리 미만으로 입력해주세요.'); 
+		return false;
+	}
+	
+	return true;
+}
+
+/*//-------------------------------------------------------------------
+//휴대폰번호 입력시 올바른 휴대폰 번호인지 체크     
+//-------------------------------------------------------------------*/
+function checkMbtlnum(mbtlnum){
+	if(mbtlnum) { 
+		var rgEx = /[01](0|1|6|7|8|9)[-](\d{4}|\d{3})[-]\d{4}$/g;  
+		var strValue = mbtlnum;
+		var chkFlg = rgEx.test(strValue);    
+		if(!chkFlg){ 
+			return false; 
+		}else{
+			return true;
+		}
+	}
+}
+
+/*//-------------------------------------------------------------------
+//이메일 입력시 올바른 이메일인지 체크     
+//-------------------------------------------------------------------*/
+function checkEmail(email){
+	if(email) { 
+		var rgEx=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;  
+		var strValue = email;
+		var chkFlg = rgEx.test(strValue);    
+		if(!chkFlg){ 
+			return false; 
+		}else{
+			return true;
+		}
+	}
+}
+
+function mblnumCheck(){
+
+	var msg = "휴대폰번호를 올바르게 입력하십시오.";
+	$("#mbtlnum").val("");
+	if($("#mbtlnum1").val() != ""){
+		if($("#mbtlnum2").val() !="" && ($("#mbtlnum2").val()).length >= 3){
+			if($("#mbtlnum3").val() !="" && ($("#mbtlnum3").val()).length >= 3){
+				$("#mbtlnum").val($("#mbtlnum1").val()+"-"+$("#mbtlnum2").val()+"-"+$("#mbtlnum3").val());
+				return true;
+			}else{
+				alert(msg);
+				$("#mbtlnum3").focus();
+				return false;
+			}
+		}else{
+			alert(msg);
+			$("#mbtlnum2").focus();
+			return false;
+		} 
+	}else{
+		alert(msg);
+		$("#mbtlnum1").focus();
+		return false;
+	}
+}
+
+function telnoCheck(){
+	var msg = "집전화번호를 올바르게 입력하십시오.";
+	$("#telno").val("");
+
+	if(!($("#telno1").val() == "" && $("#telno2").val() == "" && $("#telno3").val() == "")){
+		if($("#telno1").val() != ""){
+			if($("#telno2").val() !="" && ($("#telno2").val()).length >= 3){
+				if($("#telno3").val() !="" && ($("#telno3").val()).length >= 3){
+					$("#telno").val($("#telno1").val()+"-"+$("#telno2").val()+"-"+$("#telno3").val());
+					return true;
+				}else{
+					alert(msg);
+					$("#telno3").focus();
+					return false;
+				}
+			}else{
+				alert(msg);
+				$("#telno2").focus();
+				return false;
+			} 
+		}else{
+			alert(msg);
+			$("#telno1").focus();
+			return false;
+		}
+	}else{
+		return true;
+	}
+}
+
+function fxnumCheck(){
+
+	var msg = "팩스번호를 올바르게 입력하십시오.";
+	$("#fxnum").val("");
+
+	if($("#fxnum1").val() != ""){
+		if($("#fxnum2").val() !="" && ($("#fxnum2").val()).length >= 3){
+			if($("#fxnum3").val() !="" && ($("#fxnum3").val()).length >= 3){
+				$("#fxnum").val($("#fxnum1").val()+"-"+$("#fxnum2").val()+"-"+$("#fxnum3").val());
+				return true;
+			}else{
+				alert(msg);
+				$("#fxnum3").focus();
+				return false;
+			}
+		}else{
+			alert(msg);
+			$("#fxnum2").focus();
+			return false;
+		} 
+	}else{
+		alert(msg);
+		$("#fxnum1").focus();
+		return false;
+	}
+}
+
+function setEmailDiv(val){
+
+	if(val == "0"){
+		$(".emailDiv1").hide();
+		$(".emailDiv2").show();
+		$("#email").val("");
+		$("#emailId").val("");
+		$("#emailDomain").val("");
+	}else{
+		$(".emailDiv1").show();
+		$(".emailDiv2").hide();
+		
+		var text = $("#domainList option:selected").text();
+		
+		if(val != ""){
+			$("#emailDomain").val(text);	
+		}else{
+			$("#emailDomain").val("");
+		}
+	}
+}
+
+//function checkEmail(){
+//
+//	var emailString = "";
+//
+//	if($("#emailDomain").val() == "" || $("#emailDomain").val() == "0"){
+//		emailString = $("#email").val();
+//	}else{
+//		emailString = $("#emailId").val()+"@"+$("#emailDomain").val();
+//	}
+//
+//	var regMail =/^[._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+\.[a-zA-Z]+$/;
+//
+//	if (!regMail.test(emailString)){
+//		alert("올바른 이메일 주소를 입력해주세요.");
+//		$("#email").val("");
+//		return false;
+//	}else{
+//		$("#email").val(emailString);
+//		return true;
+//	}
+//}
+
+function checkJoinFm(){
+
+	if($("#idDupPassYn").val() != "Y"){
+		alert("아이디 중복확인 하세요.");
+		$("#btn_idDup").focus();
+		return;
+	}
+
+	if($("#password").val() == $("#password2").val()){
+		if(!checkPassword($("#mberId").val(),$("#password").val())){
+			return;
+		}
+	}else{
+		alert("비밀번호가 일치하지 않습니다.\r\n다시 입력해주세요.");
+		$("#password").focus();
+		return;
+	} 
+
+	if($("#passwordQestn").val() == ""){
+		alert("비밀번호 질문을 선택하세요.");
+		$("#passwordQestn").focus();
+		return;
+	}
+
+	if($("#passwordAnswer").val() == ""){
+		alert("비밀번호 답변을 입력하세요.");
+		$("#passwordAnswer").focus();
+		return;
+	}
+
+	if($("#zip1").val() == "" || $("#zip2").val() == "" || $("#postAdres").val() == ""){
+		alert("우편번호 및 주소를 입력하세요.");
+		$("#btn_zip").focus();
+		return;
+	}
+
+	if($("#detailAdres").val() == ""){
+		alert("상세주소를 입력하세요.");
+		$("#detailAdres").focus();
+		return;
+	}
+
+	if($("#phoneAgreeYn").attr("checked") == "checked"){
+		if(!mblnumCheck()){
+			return;
+		}
+	}
+
+	if(!telnoCheck()){
+		return;
+	}
+
+	if($("#emailAgreeYn").attr("checked") == "checked"){
+		if(!checkEmail()){
+			return;
+		}
+	}
+
+	if($("#agreeVolsYn").val() == "Y"){
+		if(!volsInfoCheck()){
+			return;
+		}
+	}
+
+	var fm = document.joinMberForm;
+
+	fm.target = "_self";
+	fm.action ="/nanum/prtl/web/vols/join/checkVolsConAgree.do";
+	fm.submit();
+}
+
+function volsInfoCheck(){
+
+	if($("#schSido").val() == "" || $("#psitnLocgovId").val() == ""){
+		alert("희망봉사지역(소속센터)을 선택하세요.");
+		$("#schSido").focus();
+		return false;
+	}
+	if($("#intrstRealmSe").val() == ""){
+		alert("희망분야(대분류)를 선택하세요.");
+		$("#intrstRealmSe").focus();
+		return false;
+	}
+
+	if($("#intrstRealmIdntfr").val() == ""){
+		alert("희망분야(소분류)를 선택하세요.");
+		$("#intrstRealmIdntfr").focus();
+		return false;
+	}
+
+	if($("#occpCode").val() == ""){
+		alert("직업을 선택하세요.");
+		$("#occpCode").focus();
+		return false;
+	}
+
+	$("#hopeSrvcWkdy").val("");
+	$("#hopeSrvcWkdy").val(hopeSrvcWkdy);
+
+	if($("#grpJoinY").attr("checked") == "checked"){
+		if($("#psitnCnterId").val() == ""){
+			alert("단체를 선택하세요.");
+			$("#btn_cnter").focus();
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/*
+ * 해당필드에 숫자만 입력
+ * 사용예: onkeydown="return onlyNumber(event);" 
+ */
+function onlyNumber(event) {
+	event = event || window.event;
+	var keyID = (event.which) ? event.which : event.keyCode;
+	if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) ){
+		return;
+	}else{
+		return false;
+	}
+}
+
+/* sms popup인증 호출*/
+function fnSmsCertiPopup(){
+	window.open('', 'popupChk', 'width=500, height=550, top=100, left=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
+	document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
+	document.form_chk.target = "popupChk";
+	document.form_chk.submit();
+}
+
+
+
+/* sms popup인증 콜백,  param = 0 인경우, 실명인증처리됨, 그외 인증실패*/
+function fnSmsCertiCallBack(paramObj){
+	smsInfo.sName = paramObj.sName;
+	smsInfo.sBirthDate = paramObj.sBirthDate;
+	smsInfo.iReturn = paramObj.iReturn;
+	smsInfo.sGender = paramObj.sGender;
+	
+	alert(smsInfo.sName);
+}
+
+/*만나이계산*/
+function computeAge(birthday){ 
+	var bday=parseInt(birthday.substring(6,8)); 
+	var bmo=(parseInt(birthday.substring(4,6))-1); 
+	var byr=parseInt(birthday.substring(0,4)); 
+	var byr; 
+	var age; 
+	var now = new Date(); 
+	tday=now.getDate(); 
+	tmo=(now.getMonth()); 
+	tyr=(now.getFullYear()); 
+
+	if((tmo > bmo)||(tmo==bmo & tday>=bday)) { 
+		age=byr; 
+	} else{ 
+		age=byr+1; 
+	}
+	return tyr-age;
+}
+
+/*주민번호로 만나이계산*/
+function computeAgeJumin(jumin1,jumin2){ 
+	
+	var chkVal = jumin2.charAt(0);
+	
+	var byr = "";
+	var age = 0;
+	var now = new Date();
+	
+	if(chkVal == '1' || chkVal == '2'){
+		byr = parseInt("19"+jumin1.substring(0,2));
+	}else if(chkVal == '3' || chkVal == '4'){
+		byr = parseInt("20"+jumin1.substring(0,2));
+	}
+	
+	var bmo=(parseInt(jumin1.substring(2,4))-1);
+	var bday=parseInt(jumin1.substring(4,6));
+	
+	tyr=(now.getFullYear());
+	tmo=(now.getMonth());
+	tday=now.getDate();
+
+	if((tmo > bmo)||(tmo==bmo & tday>=bday)) {
+		age=byr;
+	} else{
+		age=byr+1;
+	}
+
+	return tyr-age;
+}
+
+function isNumber(e){
+
+	var myevent = e || window.event;
+	var keyCode = myevent.keyCode;
+
+	if (keyCode < 48 || keyCode > 57){
+
+		//alert("문자는 사용할 수 없습니다."+"["+keyCode+"]");
+
+		myevent.returnValue=false;
+
+	}	
+}
+
+/* 관심목록 추가, 삭제 */
+function interest(classChk, progrmRegistNo) {
+		if(classChk == false) {
+			 $.ajax({
+					url : "/vols/partcptn/insertInterestJson.do?titleNm=상세보기",
+					type: "post",
+					dataType:"json",
+					data: {"progrmRegistNo" : progrmRegistNo},
+					success : function(json) {
+						if(json.result == 'SUCCESS'){
+							$('#interestChk').addClass("on");
+							$("#interestChk").attr("title", "관심목록에 추가됨");
+							return false;
+						} else if (json.result == 'TIME') {
+							 alert("관심봉사는 5초 간격으로 추가할 수 있습니다.");
+							 return false;
+						} else if (json.result == 'DUPLICATE') {
+							 alert("이미 관심봉사로 등록되어있습니다.");
+							 return false;
+						}
+					}, 
+				 	error: function(json)  {
+						alert('요청처리를 실패하였습니다.');
+					}
+				});
+	} else  {
+			$.ajax({
+				url : "/vols/partcptn/deleteInterestJson.do?titleNm=상세보기",
+				type: "post",
+				dataType:"json",
+				data:  {"progrmRegistNo" : progrmRegistNo},
+				success : function(json) {
+					if(json.result == 'SUCCESS'){
+						$('#interestChk').removeClass("on");
+				 		 $("#interestChk").attr("title", "관심목록에 담기");
+						return false;
+					} else if (json.result == 'DUPLICATE') {
+						 alert("이미 삭제된 관심봉사입니다.");
+						 return false;
+					}
+				}, 
+			 	error: function(json)  {
+					alert('요청처리를 실패하였습니다.');
+				}
+			});  
+	}  
+}
+
+//네이버 주소(포털에서 수요처 등록)
+var naverJusoCallBack = function(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr,jibunAddr,zipNo,admCd,rnMgtSn,bdMgtSn) {
+	   (function () {
+		 //비동기로 네이버API 호출
+	      $.getScript( mapapi_naver.host + mapapi_naver.maps )
+	         //API 호출 성공하면 실행
+	         .done(function( script, textStatus ) {
+	        	//이후 onJSContentLoaded 이벤트로 한번만 호출
+	            naver.maps.onJSContentLoaded = function() {
+	               var naverJuso = function(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+	            	   //검색한 주소, 상세주소, 우편번호 
+	            		var addrSearchFrm = document.addrSearchFrm;
+	            		var zipNm = addrSearchFrm.zipNm.value;
+	            		var postAdresNm = addrSearchFrm.postAdresNm.value;
+	            		var detailAdresNm = addrSearchFrm.detailAdresNm.value;
+	            		$("#"+zipNm).val(zipNo);
+	            		roadAddrPart1 = $.trim(roadAddrPart1);
+	            		$("#"+postAdresNm).val(roadAddrPart1);
+	            		$("#"+detailAdresNm).val(addrDetail);
+	                  naver.maps.Service.geocode(
+	                        { address: roadAddrPart1 },
+	                        function(status, response) {
+	                        	//geocoder 호출 실패
+	                           if (status === naver.maps.Service.Status.ERROR) {
+	                              alert('네이버 지도 API 호출 실패');
+	                           } else {
+	                        	 //변환 후 응답결과
+	                        	var item = response.v2.addresses[0];
+	                        	//좌표를 못받아올 경우 빈값으로 반환(도로명+건물명 아닐 경우 좌표를 못받아옴)
+	                              if(typeof(item) == "undefined") {
+	                            	  $('#la').val("");
+	  	               				  $('#lo').val("");
+	                              } else {
+	                            	  $('#la').val(item.y);
+	  	               				  $('#lo').val(item.x);
+	                              }
+	                          }
+	                  });
+	               };
+	               naverJuso(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn);
+	               naverJusoCallBack = naverJuso;
+	            };
+	         })
+	          //요청 실패
+	         .fail(function( jqxhr, settings, exception ) {
+	            alert('네이버 지도 API 로드 실패');
+	      });
+	   }());
+	};
+	
+/**
+ * 검색조건 중 시작일자와 종료일자를 크체한다.
+ * @param bgn 시작일자(yyyy-mm-dd)
+ * @param end 종료일자(yyyy-mm-dd)
+ */
+function searchDateCheck(_bgn, _end) {
+	var bgn =  parseInt(_bgn.replace(/-/gi,''));
+	var end =  parseInt(_end.replace(/-/gi,''));
+	
+	if(bgn > end){
+		alert("시작일자가 종료일자보다 큽니다.\n날짜를 확인해 주세요.");
+		return false;
+	}
+	
+	if(bgn.toString().length != 8 || end.toString().length != 8){
+		alert("검색기간은 날짜 형식으로 입력해주세요 (ex. 20230101 or 2023-01-01)");
+ 		return false;
+	}
+	
+	return true;
+}

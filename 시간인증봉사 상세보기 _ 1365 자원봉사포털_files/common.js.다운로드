@@ -1,0 +1,884 @@
+var context = window,
+    $root = $(document.documentElement).addClass('js'),
+    tmpInput = document.createElement('input'),
+    isTouch = ('ontouchstart' in context),
+    isMobile = ('orientation' in context) || isTouch,
+    supportPlaceholder = ('placeholder' in tmpInput);
+
+isTouch && $root.addClass('touch');
+isMobile && $root.addClass('mobile');
+var globalCore = {
+    //  딤 컨트롤
+    windowDim : {
+        dimOpen : function(){
+            var dim = $('#dim');
+            dim.show();
+        },
+        dimclose : function(){
+            var dim = $('#dim');
+            dim.hide();
+        }
+    },
+    // 브라우저 체크
+    browser: (function() {
+        var detect = {},
+            win = context,
+            na = win.navigator,
+            ua = na.userAgent,
+            lua = ua.toLowerCase(),
+            match;
+
+        detect.placeholder = supportPlaceholder;
+        detect.isStrict = (typeof context == 'undefined');
+
+        detect.isMobile = isMobile;
+        detect.isRetina = 'devicePixelRatio' in window && window.devicePixelRatio > 1;
+        detect.isAndroid = lua.indexOf('android') !== -1;
+        detect.isOpera = !!(win.opera && win.opera.buildNumber);
+        detect.isWebKit = /WebKit/.test(ua);
+        detect.isTouch = !!('ontouchstart' in window);
+        detect.isDevice = function () {
+            var mobileInfo = new Array('Android', 'iPhone', 'iPod', 'iPad', 'BlackBerry', 'Windows CE', 'SAMSUNG', 'LG', 'MOT', 'SonyEricsson');
+            var ua = navigator.userAgent;
+            for (var key in mobileInfo){
+                if(ua.match(mobileInfo[key]) != null){
+                    return true;
+                }
+            }
+            return false;
+        }();
+
+        match = /(msie) ([\w.]+)/.exec(lua) || /(trident)(?:.*rv.?([\w.]+))?/.exec(lua) || ['', null, -1];
+        detect.isIE = !detect.isWebKit && !detect.isOpera && match[1] !== null;
+        detect.version = detect.ieVersion = parseInt(match[2], 10);
+        detect.isOldIE = detect.isIE && detect.version < 9;
+
+        detect.isWin = (na.appVersion.indexOf("Win") != -1);
+        detect.isMac = (ua.indexOf('Mac') !== -1);
+        detect.isLinux = (na.appVersion.indexOf("Linux") != -1);
+        detect.is64Bit = (lua.indexOf('wow64') > -1 || (na.platform === 'Win64' && lua.indexOf('x64') > -1));
+
+        detect.isChrome = (ua.indexOf('Chrome') !== -1);
+        detect.isGecko = (ua.indexOf('Firefox') !== -1);
+        detect.isAir = ((/adobeair/i).test(ua));
+        detect.isIOS = /(iPad|iPhone)/.test(ua);
+        detect.isSafari = !detect.isChrome && (/Safari/).test(ua);
+        detect.isIETri4 = (detect.isIE && ua.indexOf('Trident/4.0') !== -1);
+
+        detect.msPointer = !!(na.msPointerEnabled && na.msMaxTouchPoints && !win.PointerEvent);
+        detect.pointer = !!((win.PointerEvent && na.pointerEnabled && na.maxTouchPoints) || detect.msPointer);
+        detect.isApplication = /(APPLICATION_)/.test(ua); 
+        
+        if (detect.isAndroid) {
+            detect.androidVersion = function() {
+                var v = ua.match(/[a|A]ndroid[^\d]*(\d+).?(\d+)?.?(\d+)?/);
+                if (!v) {
+                    return -1;
+                }
+                return [parseInt(v[1] | 0, 10), parseInt(v[2] | 0, 10), parseInt(v[3] | 0, 10)];
+            }();
+        } else if (detect.isIOS) {
+            detect.iosVersion = function() {
+                var v = ua.match(/OS (\d+)_?(\d+)?_?(\d+)?/);
+                return [parseInt(v[1] | 0, 10), parseInt(v[2] | 0, 10), parseInt(v[3] | 0, 10)];
+            }();
+        }
+
+        return detect;
+    }())
+};
+
+;(function($, window, document, globalCore, undefined){
+    "use stritc"
+    var $doc = $(document),
+        $win = $(window);
+    //  아코디언
+    $.fn.accordion = function(opt){
+
+        this.each(function(index, element){
+            var me = $(this),
+                option = $.extend({
+                animate: false,
+                openSpeed: 400,
+                closeSpeed: 600,
+                easing: 'linear',
+                singleItemOpen: false,
+                onActiveItemIndex: null,
+                onActiveItemIndexSub: null,
+                onItemOpen: $.noop,
+                onItemClose: $.noop,
+                onItemClick: $.noop,
+                initialOpenIndex : 1,
+                subDeps : false
+            }, opt);
+            // 170202_수정 Start
+            var init = {
+                set : function(){
+                    var el = me;
+                    el.find("[data-module='acc_elem']").each(function(n, e){
+                        var $this = $(this);
+                        $this.data('index', n)
+                        $this.find("> div:last-child").attr('data-module', 'acc_cont');
+                        if (n === option.initialOpenIndex) {
+                            $this.find('.cont').show();
+                            $this.addClass('on');
+                            $this.find('[data-module="btn"]').text($this.find('[data-module="btn"]').attr('[data-module-close]'));
+                            option.onActiveItemIndex = n;
+                        };
+                    });
+                    if (option.subDeps) {
+                        el.find("[data-module='acc_elem_sub']").each(function(n, e){
+                            var $this = $(this);
+                            $this.data('index', n)
+                            $this.find('button').addClass('sub_btn');
+                            $this.find("> div:last-child").attr('data-module', 'acc_cont');
+                        });
+                    };
+                    var cont = el.find("[data-module='acc_cont']");
+                    if (option.animate) {
+                        cont.css({"display":"block", "height":"0", "overflow":"hidden"})
+                    };
+
+                    el.find('[data-module="btn"]').on('click', this.actions);
+                },
+                actions : function(e){
+                    if (!!$(e.target).hasClass('sub_btn')) {
+                        init.subDepsControll(e);
+                        return false;
+                    }
+                    var target = $(e.target).parents('[data-module="acc_elem"]'),
+                        index = target.data('index');
+                        option.onItemClick(e, target, index);
+
+                    if (!option.singleItemOpen) {
+                        if (target.hasClass('on')) {
+                            init.action_close(e, index);
+                        }else{
+                            init.action_open(e, target, index);
+                        }
+                    }else{
+                        if (index === option.onActiveItemIndex) {
+                            init.action_close();
+                        }else if(option.onActiveItemIndex === null){
+                            init.action_open(e, target, index);
+                        }else{
+                            init.action_close();
+                            init.action_open(e, target, index);
+                        }
+                    }
+                },
+                action_open : function(e, target, index){
+                    option.onItemOpen(e, target, index);
+                    init.text_toggle(e);
+                    target.addClass('on');
+                    target.find('.cont').show();
+                    option.onActiveItemIndex = target.data('index');
+                },
+                action_close : function(e, n){
+                    var index = n || option.onActiveItemIndex;
+                    var target = me.find("[data-module='acc_elem']").eq(index)
+                    option.onItemClose(index, target);
+                    target.removeClass('on');
+                    target.find('.cont').hide();
+                    init.text_toggle(e)
+                    option.onActiveItemIndex = null;
+                },
+                animate_open : function(e){
+
+                },
+                animate_close : function(e){
+
+                },
+                text_toggle : function(e){
+                    var btn = (!!e) ? $(e.target) : me.find("[data-module='acc_elem']").eq(option.onActiveItemIndex).find('[data-module="btn"]');
+                    var openTxt = btn.attr('[data-module-open]');
+                    var closeTxt = btn.attr('[data-module-close]');
+                    if (btn[0].innerText == openTxt) {
+                        btn.text(closeTxt)
+                    }else{
+                        btn.text(openTxt)
+                    }
+                },
+                subDepsControll : function(e){
+
+                    var target = $(e.target).parents('[data-module="acc_elem_sub"]'),
+                        index = target.data('index');
+                    if (!target.hasClass('on')) {
+                        target.addClass('on');
+                        target.siblings().removeClass('on');
+                    }else{
+                        target.removeClass('on');
+                    }
+                }
+            };
+            // 170202_수정 End
+            init.set();
+
+        });
+
+        return this;
+    };
+
+    // 텝
+
+    $.fn.tab = function(opt){
+        this.each(function(index, element){
+            var me = $(this),
+                option = $.extend({
+                    onTabOpen: $.noop,
+                    onTabClose: $.noop,
+                    onTabClick: $.noop,
+                    initialOpenIndex : 0,
+                    autoFocus : false,
+                    activeTab : null,
+                    hazeElem : me.find('[data-content="tab-nav"] [data-text="haze"]').clone()
+                }, opt);
+            var init = {
+                set : function(){
+                    var el = me,
+                        tabNav = me.find('[data-content="tab-nav"]');
+                        option.activeTab = tabNav.find('li.on');
+                    tabNav.find('li a').on('click dbclick', this.actions);
+                },
+                actions : function(e){
+                    var $this = $(this),
+                        tabCont = me.find('[data-content="tab-content"]'),
+                        tabList = $(e.target).parents('.tab_list'),
+                        tabIndex = tabList.index(),
+                        target = $(this.hash);
+                    option.onTabOpen(e, target, option.activeTab,  tabIndex )
+                    // var check_result = function(){
+                    //     return
+                    // }
+                    // if (check_result) {
+                    //     alert(check_result)
+                    // };
+                    option.activeTab = tabList;
+                    tabList.siblings().each(function(n, e){
+                        $(this).find('[data-text="haze"]').remove();
+                        $(this).removeClass('on');
+                        tabCont.find('> div').removeClass('on');
+                        tabCont.find('> div').removeAttr('tabIndex')
+                    })
+
+                    $(this).append(option.hazeElem)
+                    tabList.addClass('on')
+                    tabCont.find('> div').eq(tabIndex).addClass('on');
+                    tabCont.find('> div').eq(tabIndex).attr('tabindex', -1);
+                    tabCont.find('> div').eq(tabIndex).focus();
+                    return false;
+                }
+            };
+            init.set();
+
+        });
+
+        return this;
+    }
+
+    $.fn.globalActions = function(){
+        var me = $('#headerWrap'),
+            content = $('#contentsWrap'),
+            sitemap = $('#sitemap'),
+            sitemapViewBtn = me.find('.all_menu_open'),
+            utilMenuOpen = me.find('#utilMenuOpen'),
+            contentTopCtrl = $('#screenControll'),
+            dim = $('#dim'),
+            openTxt = '열기',
+            closeTxt = '닫기',
+            sizeGuide = {   //사이즈 가이드
+                mobile : {
+                    min : 320,
+                    max : 767
+                },
+                tablet : {
+                    min : 768,
+                    max : 1024
+                },
+                pc : {
+                    min : 1025,
+                    max : 1920
+                }
+            }
+        // 사이트맵 오픈
+        sitemapViewBtn.on('click', function(){
+            var winSize = $(window).width();
+            if ($(this).hasClass('on')) {
+                sitemap.hide();
+                sitemapViewBtn
+                .attr({'tabindex': '0'})
+                .removeClass('on')
+                .focus()
+                .find('.hazeTxt').text(openTxt);
+                globalCore.windowDim.dimclose();
+                $(window).off('resize');
+                return false;
+            };
+            $(this).addClass('on');
+            $(this).find('.hazeTxt').text(closeTxt);
+            sitemap.show();
+            sitemap.find('.tit em').eq(0).focus();
+            if ( sizeGuide.tablet.max >= winSize ) {
+                globalCore.windowDim.dimOpen();
+            } else {
+            	$("div[class=sub_cont]").show();
+            }
+            $(window).on('resize', function(e){
+                var size = $(window).width();
+                if ( sizeGuide.tablet.max >= size ) {
+                    globalCore.windowDim.dimOpen();
+                }else{
+                    globalCore.windowDim.dimclose();
+                }
+
+            });
+            return false;
+        });
+
+        sitemap.find('.closeSitemap')
+        .on('click', function(){
+            sitemap.hide();
+            sitemapViewBtn
+            .attr({'tabindex': '0'})
+            .removeClass('on')
+            .focus()
+            .find('.hazeTxt').text(openTxt);
+            globalCore.windowDim.dimclose();
+            $(window).off('resize');
+        })
+        .on('keydown', function(e){
+            if (e.keyCode == 9 && !e.shiftKey) {
+                return false;
+            }
+        });
+        // 사이트맵 닫기
+/*        sitemap.find('a:first-child').on('focusin', function(){
+            $(this).on('keyup', function(e){
+                console.log()
+            })
+        })
+        sitemap.find('#closeSitemap')
+        .on('click', function(){
+
+            sitemap.hide();
+            sitemapViewBtn
+            .removeClass('on')
+            .focus()
+            .find('.hazeTxt').text(openTxt);
+            globalCore.windowDim.dimclose();
+            $(window).off('resize');
+
+        })
+        .on('keydown', function(e){
+            if (e.keyCode == 9 && !e.shiftKey) {
+                return false;
+            }
+        });*/
+        dim.on('click', function(){
+        	sitemap.hide();
+            sitemapViewBtn
+            .removeClass('on')
+            .focus()
+            .find('.hazeTxt').text(openTxt);
+            globalCore.windowDim.dimclose();
+            $(window).off('resize');
+        });
+        sitemap.find('#sitemapSkip')
+        .on('keydown', function(e){
+            if (e.keyCode == 9 && e.shiftKey) {
+                return false;
+            }
+        })
+        .on('click', function(){
+            sitemap.hide();
+            sitemapViewBtn
+            .removeClass('on')
+            .focus()
+            .find('.hazeTxt').text(openTxt);
+            globalCore.windowDim.dimclose();
+            $(window).off('resize');
+            return false;
+        })
+
+        // 유틸메뉴 컨트롤
+        utilMenuOpen.on('click', function(){
+
+            var winSize = $(window).width();
+            var closeBtn = me.find('.menu_close');
+            var utilMenu = me.find('.util_menu_wrap');
+            utilMenu.addClass('on');
+            if ( sizeGuide.tablet.max >= winSize ) {
+                globalCore.windowDim.dimOpen();
+            };
+            $(window).on('resize', function(e){
+                var size = $(window).width();
+                if ( sizeGuide.tablet.max >= size ) {
+                    globalCore.windowDim.dimOpen();
+                }else{
+                    globalCore.windowDim.dimclose();
+                }
+
+            });
+            closeBtn.on('click', function(){
+                utilMenu.removeClass('on');
+                globalCore.windowDim.dimclose();
+                $(this).off('click');
+                $(window).off('resize');
+            });
+            // 	빈화면 컨트롤
+            dim.on('click', function(){
+        		utilMenu.removeClass('on');
+        		globalCore.windowDim.dimclose();
+        		$(this).off('click');
+        		$(window).off('resize');
+            });
+        });
+
+        // 사이트맵 모바일 버전 컨트롤
+        $('[data-module="sitemap"]').accordion({
+            onItemClick : function(e, target, index){
+
+            },
+            onItemClose : function(index, target){
+
+            },
+            // 활성화 뎁스
+            initialOpenIndex : null,
+            singleItemOpen :true,
+            subDeps : true
+        });
+
+        content.find('.dropdown')
+        .on('mouseenter', function(e){
+            $(this).addClass('on');
+            $(this).addClass('hover');
+        })
+        .on('mouseleave', function(e){
+            $(this).removeClass('on');
+            $(this).removeClass('hover');
+        })
+        .on('focusin', function(e){
+            $(this).addClass('on');
+            $(this).addClass('hover');
+        })
+        .on('click', function(e){
+        	if($(this).attr("class").indexOf('fa') > -1){
+        		$(this).addClass('on');
+        		$(this).addClass('hover');
+        		$(this).removeClass('fa');
+        	}else{
+	        	if($(this).attr("class").indexOf('on') > -1){
+	        			$(this).removeClass('on');
+	        			$(this).removeClass('hover');
+	        	}else{
+	        		$(this).addClass('on');
+	        		$(this).addClass('hover');
+	        	}
+        	}
+        })
+        .find('.dropdown_menu li:last-child a').on('focusout', function(){
+          $(".dropdown").removeClass('on');
+          $(".dropdown").removeClass('hover');
+        });
+    };
+
+    $.fn.layerPopup = function(opt){
+        this.each(function(index, element){
+            var me = $(this),
+                option = $.extend({
+                inline: true,
+                focusing : false,
+                href: this.hash
+            }, opt);
+            globalCore.windowDim.dimOpen();
+            me.show();
+            me.focus();
+            $('#dim').on('click', function(){
+                me.hide()
+                globalCore.windowDim.dimclose();
+            });
+            me.on('click', 'button.layer_close', function(){
+                me.hide()
+                globalCore.windowDim.dimclose();
+            });
+        });
+
+        return this;
+    }
+    $doc.on({
+        'click': function (e) {
+            if(globalCore.browser.isDevice == false) return;
+            var $this = $(this).toggleClass('hover');
+            //       href = globalCore.getHref($this.context.hash);
+
+            // if(globalCore.browser.isDevice == true && (!href) && $this.hasClass('hover') == true){
+            //     //e.preventDefault();
+            // }
+
+            $this.triggerHandler('hover:on');
+        },
+        'focus': function (e) {
+            var $this = $(this);
+            if(globalCore.browser.isDevice == true){
+                $this.removeClass('hover');
+                return;
+            };
+            $(this).addClass('focus').triggerHandler('focus:on');
+        },
+        'hover mouseenter': function (e) {
+            var $this = $(this);
+            if(globalCore.browser.isDevice == true) {
+                $this.addClass('hover');
+                return;
+            }
+            $(this).addClass('hover').triggerHandler('hover:on');
+        },
+        'mouseleave': function (e) {
+            var $this = $(this);
+            if(globalCore.browser.isDevice == true) {
+                $this.removeClass('hover');
+                return;
+            }
+            $(this).removeClass('hover').triggerHandler('hover:off');
+        },
+        'blur': function (e) {
+            var $this = $(this);
+            if(globalCore.browser.isDevice == true) {
+                $this.removeClass('hover');
+                return;
+            }
+
+            $(this).removeClass('focus').triggerHandler('focus:off');
+        }
+    }, 'a:not("[disabled]"), button:not("[disabled]"), input, select, radio, checkbox, textarea, [data-handler="motion"]');
+})(jQuery, window, document, globalCore);
+
+
+//파일컨트롤 공통
+//20191014 하상록 - 퍼블리싱 변경으로 인한 첨부파일 추가 태그 수정
+var fileList = []; // 파일 경로가 담길 배열
+$('#egovComFileUploader').on({
+	change: function(e){
+		if (e.target.value === '') return false;
+		var list = $('#uploadFileList');
+
+
+		var val = e.target.value.split('\\'),
+				str = val[val.length-1],
+				sbType = 'HWP, TXT, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, JPEG, GIF, PNG, BMP, PDF'.toLowerCase().split(', '),
+				scType = ';, \, jsp, php, asp, cer, cdx, asa, htm, css, war'.toLowerCase().split(', '),
+				type = e.target.value.match(/\.([^\.]+)$/)[1],
+				list = $('#uploadFileList'),
+//				elem = '<li class="hypen" data-localurl="' + e.target.value + '" ><span class="file">- 첨부파일 : ' + str + ' <button type="button"><span>파일 삭제</span></button></span></li>';
+				elem = '<li data-localurl="' + e.target.value + '" ><dl class="file"><dt>첨부파일</dt><dd><span class="file"><img src="/web/vols/images/ico/ico_board_view_file.png" alt="' + str + '">' + str + ' </a><a href="#link" class="delete"><span class="haze">삭제</span></a></span></dd></dl></li>';
+		// 이미 첨부된 파일 일 경우
+		if (fileList.indexOf(e.target.value) != -1) {
+			alert('이미 첨부된 파일 입니다.');
+			return false;
+		};
+
+		// 파일 확장자 벨리데이션
+		if (sbType.indexOf(type) == -1) {
+			alert('첨부할수 없는 파일 확장자 입니다.');
+			$(this).val('');
+			return false;
+		};
+		fileList.push(e.target.value);
+		list.append(elem);
+
+	},
+	// 파일 갯수 체크
+	click : function(){
+		var list = $('#uploadFileList');
+		if (list.find('> li').length >= 5) {
+			alert('파일첨부는 5개까지만 가능합니다.');
+			return false;
+		};
+	}
+});
+
+// 파일 삭제
+$('#uploadFileList').on('click', 'li a', function(){
+	var val = $(this).parents('li').attr('data-localurl');
+	var index = fileList.indexOf(val);
+	fileList.splice(index, 1);
+	$('#egovComFileUploader').val('');
+	$(this).parents('li').remove();
+	$("#egovComFileUploader").focus();
+	return false;
+});
+
+/* 웹접근성 주석처리
+$(function(){
+
+	//휴대폰번호 input박스 maxlength입력 시 자동 포커스이동
+	$("input[id^='hp']").keyup (function () {
+        var charLimit = $(this).attr("maxlength");
+        if (this.value.length >= charLimit) {
+            $(this).parent().next().next().find("input[id^='hp']").focus();
+            return false;
+        }
+    });
+
+	//유선전화번호 input박스 maxlength입력 시 자동 포커스이동
+	$("input[id^='tel']").keyup (function () {
+		var charLimit = $(this).attr("maxlength");
+		if (this.value.length >= charLimit) {
+			$(this).parent().next().next().find("input[id^='tel']").focus();
+			return false;
+		}
+	});
+
+}); */
+
+//이메일 도메인선택 시 자동입력
+function setMailDomain(fCombo){
+	var n = document.frm;
+	if (fCombo.selectedIndex == 0){
+		n.elements['email2'].value = "";
+		n.elements['email2'].focus();
+	} else {
+		n.elements['email2'].value = fCombo.options[fCombo.selectedIndex].text;
+	}
+}
+
+//html 태그 제거
+function removeTag( html ) {
+	 return html.replace(/(<([^>]+)>)/gi, "");
+}
+
+/*//-------------------------------------------------------------------
+
+//비밀번호 형식 체크
+
+//-------------------------------------------------------------------*/
+
+function checkPassword(uid,upw)
+{
+
+//	var allowCharNUM = '1234567890';
+//	var allowCharL = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//	var allowCharRegx = '/[~!@\#$%<>^&*\()\-=+_\’]/gi';
+
+	//비밀번호 정책 변경 - 최소8자리에 숫자, 영문자 혼용
+	//비밀번호 정책 변경 - 최소10자리에 숫자, 영문자 혼용 - 2015.09.03
+
+	var allowCharNUM = /[0-9]/;
+	var allowCharL = /[A-Za-z]/;
+	var allowCharRegx = /[~!@\#$%<>^&*\()\-=+_\’]/;
+//	~!@#$%^&*()_+><=-
+	var allUse = new Array(3);
+	allUse[0] = 0;
+	allUse[1] = 0;
+	allUse[2] = 0;
+
+	for(var i=0;i<upw.length;i++){
+
+		if (allowCharNUM.test(upw.charAt(i)) == false && allowCharL.test(upw.charAt(i)) == false && allowCharRegx.test(upw.charAt(i)) == false){
+			alert("비밀번호에 허용되지 않는 문자를 입력 하셨습니다.");
+			return false;
+		}else{
+
+			if(allowCharNUM.test(upw.charAt(i))){
+				allUse[0] = 1;
+			}
+			if(allowCharL.test(upw.charAt(i))){
+				allUse[1] = 1;
+			}
+			if(allowCharRegx.test(upw.charAt(i))){
+				allUse[2] = 1;
+			}
+		}
+	}
+
+	//비밀번호 정책 변경 - 최소8자리에 숫자, 영문자, 특수문자 혼용
+	if(!(upw.length>=8 && upw.length<=20)){
+		alert('비밀번호는 8자리 이상 20자리 이하로 영문,숫자,특수문자 1자 이상 필수입력해야 합니다. (예:aabb1234#)');
+		$("#password").focus();
+		return false;
+	}
+
+	if(allUse[0]+allUse[1]+allUse[2] != 3){
+		alert('비밀번호는 8자리 이상 20자리 이하로 영문,숫자,특수문자 1자 이상 필수입력해야 합니다. (예:aabb1234#)');
+		return false;
+	}
+
+  if(upw.search(uid)>-1){
+      alert('아이디가 포함된 비밀번호는 사용하실 수 없습니다.');
+      return false;
+  }
+
+  return true;
+}
+
+function goPrint(){
+     var sw=screen.width;
+     var sh=screen.height;
+     var w=800;//팝업창 가로길이
+     var h=600;//세로길이
+     var xpos=(sw-w)/2; //화면에 띄울 위치
+     var ypos=(sh-h)/2; //중앙에 띄웁니다.
+
+     var pHeader="<html>" + $('head').html() + "<body>";
+     var pgetContent=$('.content_view').html() + "<br>";
+     var pFooter="</body></html>";
+     pContent=pHeader + pgetContent + pFooter;
+
+     pWin=window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes"); //동적인 새창을 띄웁니다.
+     
+     //pWin.document.close(); //클로즈
+     if(globalCore.browser.isIE) {
+		$(pWin.document.body).html($('.content_view').html());
+		pWin.print();
+		pWin.close();
+	 } else {
+		pWin.document.open(); //팝업창 오픈
+		pWin.document.write(pContent); //새롭게 만든 html소스를 씁니다.
+		setTimeout(function(){
+			 pWin.print(); //인쇄가 되던가 취소가 되면 팝업창을 닫습니다.//윈도우 인쇄 창 띄우고
+			 pWin.close(); //인쇄가 되던가 취소가 되면 팝업창을 닫습니다.
+		 }, 500);
+	 } // print() 호출 1호 delay
+}
+
+/**
+ * get Cookie
+ *
+ * @param cookieName
+ * @returns
+ */
+function fn_getCookie(cookieName) {
+	cookieName = cookieName + '=';
+	var cookieData = document.cookie;
+	var start = cookieData.indexOf(cookieName);
+	var cookieValue = '';
+	if (start != -1) {
+		start += cookieName.length;
+		var end = cookieData.indexOf(';', start);
+		if (end == -1)
+			end = cookieData.length;
+		cookieValue = cookieData.substring(start, end);
+	}
+	return unescape(cookieValue);
+}
+
+/**
+ * set Cookie
+ *
+ * @param cookieName
+ * @param value
+ * @param exdays
+ * @returns
+ */
+function fn_setCookie(cookieName, value, exdays) {
+	var exdate = new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var cookieValue = escape(value)
+			+ ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
+	document.cookie = cookieName + "=" + cookieValue;
+}
+
+/**
+ * deleteCookie
+ *
+ * @param cookieName
+ * @returns
+ */
+function fn_deleteCookie(cookieName) {
+	var expireDate = new Date();
+	expireDate.setDate(expireDate.getDate() - 1);
+	document.cookie = cookieName + "= " + "; expires="
+			+ expireDate.toGMTString();
+}
+
+function cutStr(str,limit){
+
+	var tmpStr = str;
+	var byte_count = 0;
+	var len = str.length;
+	var dot = "";
+
+	for(i=0; i<len; i++){
+		byte_count += chr_byte(str.charAt(i)); 
+
+		if(byte_count == limit-1){
+			if(chr_byte(str.charAt(i+1)) == 2){
+				tmpStr = str.substring(0,i+1);
+				dot = "...";
+			}else {
+				if(i+2 != len) dot = "...";
+				tmpStr = str.substring(0,i+2);
+				}
+			break;
+			}else if(byte_count == limit){
+					if(i+1 != len) dot = "...";
+					tmpStr = str.substring(0,i+1);
+					break;
+			}
+		}
+	return tmpStr;
+}
+
+function chr_byte(chr){
+
+	if(escape(chr).length > 4)
+		return 2;
+	else
+		return 1;
+}
+//-------------------------------------------------------------------
+//브라우저의 버전을 체크하는 부분
+//-------------------------------------------------------------------
+
+ var IEYES = 0;
+
+ var menufacture = navigator.appName;
+
+ var version = navigator.appVersion;
+
+ if((menufacture.indexOf('마이크로소프트') >= 0
+     || menufacture.indexOf('Microsoft') >= 0)
+     && version.indexOf('4.0') >= 0 ){
+     IEYES = 1;                                                   
+ }
+ 
+//-------------------------------------------------------------------
+//지정된 객체의 문자열의 길이를 계산하는 부분
+//-------------------------------------------------------------------
+
+function CheckByte(str){
+
+    var i;
+    var strLen;
+    var strByte;
+
+    strLen = str.length;
+
+    // IE4.0 이상
+
+    if(IEYES == 1){
+        for(i=0, strByte=0;i<strLen;i++){
+            if(str.charAt(i) >= ' ' && str.charAt(i) <= '~' ) strByte++;
+            else strByte += 2;
+        }
+        return strByte;
+    // Netscape일 경우
+    }else{
+        return strLen;
+    }
+}
+
+//-------------------------------------------------------------------
+// 문자길이 체크   
+//-------------------------------------------------------------------	
+
+function checkLength(obj,title,limit){
+    
+	var content = document.getElementById(obj).value;
+
+    if(CheckByte(content) > limit){
+      alert(title+"은 "+limit+"자까지만 입력이 가능합니다.");
+      document.getElementById(obj).value = cutStr(content,limit);
+    }
+  }
+
