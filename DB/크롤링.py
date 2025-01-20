@@ -40,7 +40,7 @@ async def scrape_volunteer_fields():
         await page.wait_for_selector("li")  # 목록 항목 로드 대기
 
         all_data = []
-        max_pages = 3  # 최대 3페이지 순회
+        max_pages = 500  # 최대 3페이지 순회
 
         for page_num in range(1, max_pages + 1):
             print(f"Processing page {page_num}...")
@@ -79,7 +79,6 @@ async def scrape_volunteer_fields():
 
                     # 데이터 추가
                     all_data.append((user_id, context, end_date, create_time, link))
-                    print(f"Context: {context}, End Date: {end_date}")
 
                     # 상세 페이지에서 목록 페이지로 복귀
                     await page.go_back()
