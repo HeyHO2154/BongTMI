@@ -1,0 +1,37 @@
+DROP DATABASE hsj;
+
+CREATE DATABASE hsj;
+
+USE hsj;
+
+-- 유저 테이블
+CREATE TABLE User (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255) NOT NULL,
+    userPw VARCHAR(255) NOT NULL,
+    nickname VARCHAR(255),
+    createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 봉사 공고 테이블
+CREATE TABLE Bong (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT COMMENT '유저 외 <크롤링 기관명>',
+    context VARCHAR(255),
+    EndDate TIMESTAMP COMMENT '모집 마감일',
+    createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    link VARCHAR(255)
+);
+
+-- 봉사 후기 테이블
+CREATE TABLE Review (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    BongID INT NOT NULL,
+    title VARCHAR(255),
+    image LONGBLOB COMMENT '이미지 저장 BLOB',
+    context VARCHAR(255),
+    createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (BongID) REFERENCES Bong(id) ON DELETE CASCADE
+);
