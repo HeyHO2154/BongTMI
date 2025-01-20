@@ -1,23 +1,14 @@
-import jakarta.persistence.*;
+package Main.DTO.User;
+
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
-@Entity
 @Data
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(nullable = false, unique = true)
     private String userId;
-
-    @Column(nullable = false)
     private String userPw;
-
     private String nickname;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createTime = LocalDateTime.now();
+    private Timestamp createTime;
 }
