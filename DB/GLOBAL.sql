@@ -17,7 +17,7 @@ CREATE TABLE User (
 CREATE TABLE Bong (
     id INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT COMMENT '유저 외 <크롤링 기관명>',
-    context VARCHAR(255),
+    context TEXT,
     EndDate TIMESTAMP COMMENT '모집 마감일',
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     link VARCHAR(255)

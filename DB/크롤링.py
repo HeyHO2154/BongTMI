@@ -1,106 +1,113 @@
 import asyncio
 from playwright.async_api import async_playwright
-import pandas as pd
-import os
+import pymysql
 from datetime import datetime
 
-def calculate_duration(start_date, end_date):
-    start = datetime.strptime(start_date.strip(), "%Y-%m-%d")
-    end = datetime.strptime(end_date.strip(), "%Y-%m-%d")
-    return (end - start).days + 1
+# MySQL 데이터베이스 연결 설정
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '1013',
+    'database': 'hsj',
+    'charset': 'utf8mb4',
+    'autocommit': True
+}
 
-async def scrape_volunteer_info():
+# MySQL에 데이터 저장 함수
+def save_to_mysql(data):
+    try:
+        connection = pymysql.connect(**db_config)
+        with connection.cursor() as cursor:
+            sql = """
+            INSERT INTO Bong (UserID, context, EndDate, createTime, link)
+            VALUES (%s, %s, %s, %s, %s)
+            """
+            cursor.executemany(sql, data)
+        print(f"Saved {len(data)} rows to MySQL.")
+    except Exception as e:
+        print(f"Error saving to MySQL: {e}")
+    finally:
+        connection.close()
+
+# 크롤링 및 데이터 저장
+async def scrape_volunteer_fields():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
 
         # 사이트 열기
         await page.goto("https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do")
-        await page.wait_for_selector("li")  # 리스트 항목 로드 대기
+        await page.wait_for_selector("li")  # 목록 항목 로드 대기
 
-        data = []
-        page_num = 1  # 페이지 번호 추적
-        max_pages = 500  # 테스트를 위해 최대 페이지만 크롤링
+        all_data = []
+        max_pages = 3  # 최대 3페이지 순회
 
-        # 페이지 순회
-        while page_num <= max_pages:
-            print(f"Processing page {page_num}...")  # 현재 페이지 출력
+        for page_num in range(1, max_pages + 1):
+            print(f"Processing page {page_num}...")
 
-            # 공고 정보 크롤링
-            announcements = await page.query_selector_all("li")
-            for announcement in announcements:
+            # 목록 페이지에서 상세 페이지 링크 수집
+            announcements = await page.query_selector_all("li a.list")
+            links = []
+            for link_element in announcements:
+                javascript_call = await link_element.get_attribute("href")
+                if javascript_call:
+                    progrm_regist_no = javascript_call.split("(")[-1].split(")")[0]
+                    link = f"https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?type=show&progrmRegistNo={progrm_regist_no}"
+                    links.append(link)
+
+            # 상세 페이지로 이동 후 데이터 추출
+            for link in links:
                 try:
-                    # 봉사기간 추출
-                    service_period = await announcement.query_selector("dt:has-text('[봉사기간]') + dd")
-                    if service_period:
-                        service_dates = await service_period.inner_text()
-                        start_date, end_date = service_dates.split("~")
-                        duration = calculate_duration(start_date, end_date)
-                    else:
-                        duration = None
+                    await page.goto(link)
+                    print(f"Navigated to detail page: {link}")
+                    await page.wait_for_selector("body")
 
-                    # 등록기관 추출
-                    registration_org = await announcement.query_selector("dt:has-text('[등록기관]') + dd")
-                    registration_org = await registration_org.inner_text() if registration_org else None
+                    # UserID
+                    user_id = -1  # 기관 ID를 -1로 설정
 
-                    # 봉사시간 추출
-                    service_time = await announcement.query_selector("dt:has-text('[봉사시간]') + dd")
-                    service_time = await service_time.inner_text() if service_time else None
+                    # Context
+                    context_element = await page.query_selector("div.board_body > div.bb_txt > pre")
+                    context = await context_element.inner_text() if context_element else "N/A"
 
-                    # 인정시간 추출
-                    recognition_time = await announcement.query_selector("dt:has-text('[인정시간]') + dd")
-                    if recognition_time:
-                        recognition_time = await recognition_time.inner_text()
-                        recognition_hours = recognition_time.split("최대 ")[1].split("시간")[0].strip()
-                    else:
-                        recognition_hours = None
+                    # EndDate
+                    end_date_element = await page.query_selector("dt:has-text('모집기간') + dd")
+                    end_date_text = await end_date_element.inner_text() if end_date_element else "N/A"
+                    end_date = end_date_text.split("~")[-1].strip() if "~" in end_date_text else "N/A"
 
-                    # 봉사내용 추출
-                    content_title = await announcement.query_selector(".tit_board_list")
-                    content_title = await content_title.inner_text() if content_title else None
+                    # createTime
+                    create_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-                    # 링크 추출
-                    link_element = await announcement.query_selector("a.list")
-                    if link_element:
-                        javascript_call = await link_element.get_attribute("href")
-                        progrm_regist_no = javascript_call.split("(")[-1].split(")")[0]
-                        link = f"https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?type=show&progrmRegistNo={progrm_regist_no}"
-                    else:
-                        link = None
+                    # 데이터 추가
+                    all_data.append((user_id, context, end_date, create_time, link))
+                    print(f"Context: {context}, End Date: {end_date}")
 
-                    # 데이터 저장 (빈 값이 아닌 경우만 추가)
-                    if duration and registration_org and service_time and recognition_hours and content_title and link:
-                        data.append({
-                            "봉사기간": duration,
-                            "등록기관": registration_org,
-                            "봉사시간": service_time,
-                            "인정시간": recognition_hours,
-                            "봉사내용": content_title,
-                            "링크": link,
-                        })
+                    # 상세 페이지에서 목록 페이지로 복귀
+                    await page.go_back()
+
                 except Exception as e:
-                    print(f"Error processing an announcement: {e}")
+                    print(f"Error processing detail page: {e}")
 
             # 다음 페이지로 이동
-            next_button = await page.query_selector("a.btn_next")
-            if next_button and await next_button.is_enabled():
-                await next_button.click()
-                print(f"Moving to page {page_num + 1}...")  # 다음 페이지 이동 출력
-                await page.wait_for_selector("li")  # 데이터가 새로 로드될 때까지 대기
-                page_num += 1
-            else:
-                print("No more pages to process. Exiting...")
+            try:
+                next_button = await page.query_selector("a.btn_next")
+                if next_button and await next_button.is_enabled():
+                    await next_button.click()
+                    print(f"Moving to page {page_num + 1}...")
+                    await page.wait_for_timeout(3000)
+                    await page.wait_for_selector("li")
+                else:
+                    print(f"No more pages or 'Next' button not found on page {page_num}. Exiting...")
+                    break
+            except Exception as e:
+                print(f"Error moving to the next page: {e}")
                 break
+
+        # MySQL에 데이터 저장
+        if all_data:
+            save_to_mysql(all_data)
 
         # 브라우저 닫기
         await browser.close()
 
-        # 데이터프레임 생성 및 공백 제거
-        df = pd.DataFrame(data)
-        df = df.dropna(how="any")  # 빈 값이 있는 행 제거
-        output_path = os.path.join("C:\\Users\\PRO\\Desktop", "volunteer_announcements.xlsx")
-        df.to_excel(output_path, index=False)
-        print(f"Data saved to {output_path}")
-
 # 실행
-asyncio.run(scrape_volunteer_info())
+asyncio.run(scrape_volunteer_fields())
