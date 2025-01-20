@@ -35,3 +35,5 @@ CREATE TABLE Review (
     FOREIGN KEY (UserID) REFERENCES User(id) ON DELETE CASCADE,
     FOREIGN KEY (BongID) REFERENCES Bong(id) ON DELETE CASCADE
 );
+
+select * from Bong;

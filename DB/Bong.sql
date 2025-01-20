@@ -4,7 +4,7 @@ CREATE TABLE BongData (
     title VARCHAR(255),
     StartHour INT,
     EndHour INT,
-    BongPlaceID VARCHAR(255),
+    region VARCHAR(255),
     verified BOOLEAN,
     FOREIGN KEY (id) REFERENCES Bong(id) ON DELETE CASCADE
 );
@@ -13,7 +13,7 @@ CREATE TABLE BongData (
 CREATE TABLE BongPlace (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    latitude DECIMAL(9, 6) COMMENT '위도',
-    longitude DECIMAL(9, 6) COMMENT '경도',
+    latitude DOUBLE COMMENT '위도',
+    longitude DOUBLE COMMENT '경도',
     FOREIGN KEY (id) REFERENCES Bong(id) ON DELETE CASCADE
 );
