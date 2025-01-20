@@ -1,4 +1,3 @@
-CREATE DATABASE hsj;
 
 USE hsj;
 

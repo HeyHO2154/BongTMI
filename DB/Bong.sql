@@ -1,5 +1,3 @@
-CREATE DATABASE hsj;
-
 USE hsj;
 
 -- 봉사 공고 테이블
