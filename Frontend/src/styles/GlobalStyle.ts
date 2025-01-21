@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .app-container {
+    overflow: hidden; /* 전체 페이지에서 스크롤 숨김 */
     width: 600px; /* 가로 길이를 500px로 고정 */
     min-height: 100vh;
     display: flex;

@@ -154,7 +154,6 @@ const Card = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   /* 텍스트 중앙 배치 */
   display: flex;
