@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const NavBarContainer = styled.nav`
+  position: fixed;
+  z-index: 999; /* NavBar를 모든 콘텐츠 위로 가져오기 */
   width: 100%; /* 부모 컨테이너의 100% 폭 */
   background-color: #fff;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
