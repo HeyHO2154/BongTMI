@@ -2,20 +2,21 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+  /* *부분은 인터넷 창 기본 여백 지우기 용으로 보통 사용 */
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+  //일단 임시 주석(하위 컴포넌트에 영향 줄까봐)
+  // body {
+  //   font-family: 'Arial', sans-serif;
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   height: 100vh;
+  // }
 
   #root {
     display: flex;
@@ -27,7 +28,6 @@ const GlobalStyle = createGlobalStyle`
 
   .app-container {
     width: 600px; /* 가로 길이를 500px로 고정 */
-    background-color: white;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
