@@ -5,14 +5,16 @@ import styled from "styled-components";
 interface CardData {
   id: number;
   label: string;
+  date: string;
+  context: string;
 }
 
 const initialCards: CardData[] = [
-  { id: 1, label: "배추" },
-  { id: 2, label: "감자" },
-  { id: 3, label: "오이" },
-  { id: 4, label: "토마토" },
-  { id: 5, label: "당근" },
+  { id: 1, label: "봄볕주야간보호센터", date: "모집마감일: 2025-01-21", context: "주야간보호센터 어르신 활동 보조 및 프로그램 준비 도움(오후)" },
+  { id: 2, label: "삼송기쁨데이케어센터", date: "모집마감일: 2025-01-21", context: "(삼송역부근)악기,춤,노래,국악 등 자원봉사 모집합니다. 월-토 16-17시" },
+  { id: 3, label: "아가페요양원", date: "모집마감일: 2025-01-21", context: "아가페요양원에서 어르신들을 위한 자원봉사자님을 모집합니다.(동인천아가페요양원)" },
+  { id: 4, label: "산성종합사회복지관", date: "모집마감일: 2025-01-21", context: "산성종합사회복지관 경로식당 정기 봉사자를 모집합니다." },
+  { id: 5, label: "삼송기쁨데이케어센터", date: "모집마감일: 2025-01-21", context: "(삼송역 부근)악기,춤,노래,국악 등 자원봉사 모집합니다.월-토 11-12시" },
 ];
 
 const SWIPE_THRESHOLD = 100; // 스와이프 판정 기준 (px)
@@ -125,7 +127,11 @@ const Slider: React.FC = () => {
             onMouseUp={isTop ? handleMouseUp : undefined}
             onMouseLeave={isTop ? handleMouseLeave : undefined}
           >
-            {card.label}
+            <TextContainer>
+              <LabelText>{card.label}</LabelText>
+              <ContextText>{card.date}</ContextText>
+              <ContextText>{card.context}</ContextText>
+            </TextContainer>
           </Card>
         );
       })}
@@ -140,9 +146,10 @@ export default Slider;
 // --------------------
 // 스타일 정의
 // --------------------
+
 const Wrapper = styled.div`
-  flex: 1;           /* flex 아이템이 남은 공간을 차지 */
-  display: flex;     /* 혹은 내부 레이아웃도 flex로 쓸 수 있음 */
+  flex: 1;
+  display: flex;
   flex-direction: column;
   position: relative;
 `;
@@ -155,18 +162,45 @@ const Card = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
 
-  /* 텍스트 중앙 배치 */
+  /* 원래 중앙 정렬을 위해 설정돼 있던 부분 삭제/수정:
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
+  justify-content: center; 
+  */
 
   user-select: none; /* 드래그 중 텍스트가 선택되지 않도록 */
   cursor: grab;
 `;
 
+/** 카드 하단 왼쪽에 텍스트를 배치할 컨테이너 */
+const TextContainer = styled.div`
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  right: 15%;
+
+  /* 원하는 스타일 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+/** 라벨(큰 글씨) */
+const LabelText = styled.div`
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+`;
+
+/** 컨텍스트(작은 글씨) */
+const ContextText = styled.div`
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 2%;
+`;
+
 const NoMoreCards = styled.div`
-  margin-top: 20px;
+  margin-top: 50%;
   text-align: center;
   color: #888;
 `;
