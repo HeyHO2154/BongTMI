@@ -18,6 +18,8 @@ CREATE TABLE Bong (
     id INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT COMMENT '유저 외 <크롤링 기관명>',
     context TEXT,
+    BongStart TIMESTAMP COMMENT '봉사 시작일',
+    BongEnd TIMESTAMP COMMENT '봉사 종료일',
     EndDate TIMESTAMP COMMENT '모집 마감일',
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     link VARCHAR(255)
@@ -36,4 +38,9 @@ CREATE TABLE Review (
     FOREIGN KEY (BongID) REFERENCES Bong(id) ON DELETE CASCADE
 );
 
-select * from Bong;
+SELECT b.*,
+       d.*,
+       p.*
+FROM Bong b
+LEFT JOIN BongData d    ON b.id = d.id
+LEFT JOIN BongPlace p   ON b.id = p.id;
