@@ -1,4 +1,4 @@
-package Main.DTO.Bong;
+package Main.Bong.DTO;
 
 import jakarta.persistence.*;
 import lombok.Data;

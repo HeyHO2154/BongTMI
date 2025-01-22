@@ -1,9 +1,9 @@
-package Main.Repository.Bong;
+package Main.Bong.Repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import Main.DTO.Bong.Bong;
+import Main.Bong.DTO.Bong;
 
 @Repository
 public interface BongRepository extends JpaRepository<Bong, Integer> {

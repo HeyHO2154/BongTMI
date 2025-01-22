@@ -1,4 +1,4 @@
-package Main.DTO.Bong;
+package Main.Bong.DTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
