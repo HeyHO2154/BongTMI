@@ -1,80 +1,105 @@
 package Main.Bong.DTO;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.util.Date;
 
-import java.sql.Timestamp;
-
-@Data
 @Entity
 @Table(name = "Bong")
 public class Bong {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String progrmRegistNo;
 
-    @Column(name = "UserID", nullable = false)
-    private int userID; // User 테이블의 ID 또는 외부 기관명
+    private String progrmSj;
+    private String nanmmbyNm;
+    private Date progrmBgnde;
+    private Date progrmEndde;
+    private int progrmSttusSe;
+    private String actPlace;
+    private String telno;
+    private String email;
+    private String progrmCn;
 
-    @Column(name = "context", nullable = false)
-    private String context;
+    // Getters and Setters
+    public String getProgrmRegistNo() {
+        return progrmRegistNo;
+    }
 
-    @Column(name = "EndDate", nullable = false)
-    private Timestamp endDate;
+    public void setProgrmRegistNo(String progrmRegistNo) {
+        this.progrmRegistNo = progrmRegistNo;
+    }
 
-    @Column(name = "createTime", nullable = false)
-    private Timestamp createTime;
+    public String getProgrmSj() {
+        return progrmSj;
+    }
 
-    @Column(name = "link", nullable = false)
-    private String link;
+    public void setProgrmSj(String progrmSj) {
+        this.progrmSj = progrmSj;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public String getNanmmbyNm() {
+        return nanmmbyNm;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setNanmmbyNm(String nanmmbyNm) {
+        this.nanmmbyNm = nanmmbyNm;
+    }
 
-	public int getUserID() {
-		return userID;
-	}
+    public Date getProgrmBgnde() {
+        return progrmBgnde;
+    }
 
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
+    public void setProgrmBgnde(Date progrmBgnde) {
+        this.progrmBgnde = progrmBgnde;
+    }
 
-	public String getContext() {
-		return context;
-	}
+    public Date getProgrmEndde() {
+        return progrmEndde;
+    }
 
-	public void setContext(String context) {
-		this.context = context;
-	}
+    public void setProgrmEndde(Date progrmEndde) {
+        this.progrmEndde = progrmEndde;
+    }
 
-	public Timestamp getEndDate() {
-		return endDate;
-	}
+    public int getProgrmSttusSe() {
+        return progrmSttusSe;
+    }
 
-	public void setEndDate(Timestamp endDate) {
-		this.endDate = endDate;
-	}
+    public void setProgrmSttusSe(int progrmSttusSe) {
+        this.progrmSttusSe = progrmSttusSe;
+    }
 
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
+    public String getActPlace() {
+        return actPlace;
+    }
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
+    public void setActPlace(String actPlace) {
+        this.actPlace = actPlace;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public String getTelno() {
+        return telno;
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
-    
-    
+    public void setTelno(String telno) {
+        this.telno = telno;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProgrmCn() {
+        return progrmCn;
+    }
+
+    public void setProgrmCn(String progrmCn) {
+        this.progrmCn = progrmCn;
+    }
 }

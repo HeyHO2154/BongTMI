@@ -1,9 +1,0 @@
-function fnRsaEnc(value, rsaPublicKeyModulus, rsaPublicKeyExponent) {
-	var rsa = new RSAKey();
-	rsa.setPublic(rsaPublicKeyModulus, rsaPublicKeyExponent);
-	
-	var encValue = rsa.encrypt(value);
-	
-	return encValue;
-}
-

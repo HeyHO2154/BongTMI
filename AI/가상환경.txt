@@ -1,3 +1,0 @@
-cd Desktop
-tensorflow_env\Scripts\activate
-python c:/Users/PRO/Desktop/GitDesktop/BongTMI/AI/AI.py
