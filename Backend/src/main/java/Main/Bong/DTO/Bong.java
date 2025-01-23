@@ -1,12 +1,11 @@
 package Main.Bong.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import java.util.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 @Entity
-@Table(name = "Bong")
 public class Bong {
 
     @Id

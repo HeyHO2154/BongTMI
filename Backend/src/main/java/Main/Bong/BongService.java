@@ -18,9 +18,6 @@ public class BongService {
             throw new RuntimeException("랜덤으로 선택된 공고가 없습니다.");
         }
 
-        // 디버깅: 매핑된 데이터 출력
-        System.out.println("Fetched Bong Data: " + bong.toString());
-
         return bong;
     }
 }
