@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
+import SearchBar from "../components/SearchBar"; // 상단 고정 검색창 컴포넌트
 
 interface CardData {
   id: number;
@@ -76,19 +77,21 @@ const Search: React.FC = () => {
   };
 
   return (
-    <Wrapper onScroll={handleScroll}>
-      <Title>공고 목록</Title>
-      {cards.map((card, index) => (
-        <Card key={card.id}>
-          <Label>{card.label}</Label>
-          <Date>{card.date}</Date>
-          <Context>{card.context}</Context>
-        </Card>
-      ))}
-      {isLoading && <LoadingText>로딩 중...</LoadingText>}
-      {!hasMore && <EndText>더 이상 공고가 없습니다.</EndText>}
-    </Wrapper>
-  );
+    <>
+      <Wrapper onScroll={handleScroll}>
+      <SearchBar /> {/* 상단 고정 검색창 */}
+        {cards.map((card, index) => (
+          <Card key={card.id}>
+            <Label>{card.label}</Label>
+            <Date>{card.date}</Date>
+            <Context>{card.context}</Context>
+          </Card>
+        ))}
+        {isLoading && <LoadingText>로딩 중...</LoadingText>}
+        {!hasMore && <EndText>더 이상 공고가 없습니다.</EndText>}
+      </Wrapper>
+    </>
+  );  
 };
 
 export default Search;
