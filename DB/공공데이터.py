@@ -28,23 +28,44 @@ def insert_volunteer_data(data):
         with connection.cursor() as cursor:
             sql = """
             INSERT INTO Bong (
-                progrmRegistNo, progrmSj, nanmmbyNm, progrmBgnde, progrmEndde, progrmSttusSe,
-                actPlace, telno, progrmCn
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                progrmRegistNo, progrmSj, progrmSttusSe, progrmBgnde, progrmEndde,
+                actBeginTm, actEndTm, noticeBgnde, noticeEndde, rcritNmpr, actWkdy, srvcClCode,
+                adultPosblAt, yngbgsPosblAt, grpPosblAt, mnnstNm, nanmmbyNm, actPlace,
+                nanmmbyNmAdmn, telno, fxnum, postAdres, email, progrmCn, sidoCd, gugunCd
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
                 progrmSj=VALUES(progrmSj),
-                nanmmbyNm=VALUES(nanmmbyNm),
+                progrmSttusSe=VALUES(progrmSttusSe),
                 progrmBgnde=VALUES(progrmBgnde),
                 progrmEndde=VALUES(progrmEndde),
-                progrmSttusSe=VALUES(progrmSttusSe),
+                actBeginTm=VALUES(actBeginTm),
+                actEndTm=VALUES(actEndTm),
+                noticeBgnde=VALUES(noticeBgnde),
+                noticeEndde=VALUES(noticeEndde),
+                rcritNmpr=VALUES(rcritNmpr),
+                actWkdy=VALUES(actWkdy),
+                srvcClCode=VALUES(srvcClCode),
+                adultPosblAt=VALUES(adultPosblAt),
+                yngbgsPosblAt=VALUES(yngbgsPosblAt),
+                grpPosblAt=VALUES(grpPosblAt),
+                mnnstNm=VALUES(mnnstNm),
+                nanmmbyNm=VALUES(nanmmbyNm),
                 actPlace=VALUES(actPlace),
+                nanmmbyNmAdmn=VALUES(nanmmbyNmAdmn),
                 telno=VALUES(telno),
-                progrmCn=VALUES(progrmCn)
+                fxnum=VALUES(fxnum),
+                postAdres=VALUES(postAdres),
+                email=VALUES(email),
+                progrmCn=VALUES(progrmCn),
+                sidoCd=VALUES(sidoCd),
+                gugunCd=VALUES(gugunCd)
             """
             cursor.execute(sql, (
-                data['progrmRegistNo'], data['progrmSj'], data['nanmmbyNm'],
-                data['progrmBgnde'], data['progrmEndde'], data['progrmSttusSe'],
-                data['actPlace'], data['telno'], data['progrmCn']
+                data['progrmRegistNo'], data['progrmSj'], data['progrmSttusSe'], data['progrmBgnde'], data['progrmEndde'],
+                data['actBeginTm'], data['actEndTm'], data['noticeBgnde'], data['noticeEndde'], data['rcritNmpr'], data['actWkdy'], 
+                data['srvcClCode'], data['adultPosblAt'], data['yngbgsPosblAt'], data['grpPosblAt'], data['mnnstNm'], 
+                data['nanmmbyNm'], data['actPlace'], data['nanmmbyNmAdmn'], data['telno'], data.get('fxnum', None), 
+                data['postAdres'], data['email'], data['progrmCn'], data['sidoCd'], data['gugunCd']
             ))
         connection.commit()
     finally:
@@ -85,13 +106,30 @@ def parse_xml_to_dict(xml_data):
         parsed_data.append({
             'progrmRegistNo': item.findtext('progrmRegistNo', ''),
             'progrmSj': item.findtext('progrmSj', ''),
-            'nanmmbyNm': item.findtext('nanmmbyNm', ''),
+            'progrmSttusSe': item.findtext('progrmSttusSe', ''),
             'progrmBgnde': item.findtext('progrmBgnde', ''),
             'progrmEndde': item.findtext('progrmEndde', ''),
-            'progrmSttusSe': item.findtext('progrmSttusSe', ''),
+            'actBeginTm': item.findtext('actBeginTm', ''),
+            'actEndTm': item.findtext('actEndTm', ''),
+            'noticeBgnde': item.findtext('noticeBgnde', ''),
+            'noticeEndde': item.findtext('noticeEndde', ''),
+            'rcritNmpr': item.findtext('rcritNmpr', ''),
+            'actWkdy': item.findtext('actWkdy', ''),
+            'srvcClCode': item.findtext('srvcClCode', ''),
+            'adultPosblAt': item.findtext('adultPosblAt', ''),
+            'yngbgsPosblAt': item.findtext('yngbgsPosblAt', ''),
+            'grpPosblAt': item.findtext('grpPosblAt', ''),
+            'mnnstNm': item.findtext('mnnstNm', ''),
+            'nanmmbyNm': item.findtext('nanmmbyNm', ''),
             'actPlace': item.findtext('actPlace', ''),
+            'nanmmbyNmAdmn': item.findtext('nanmmbyNmAdmn', ''),
             'telno': item.findtext('telno', ''),
-            'progrmCn': item.findtext('progrmCn', '')
+            'fxnum': item.findtext('fxnum', ''),
+            'postAdres': item.findtext('postAdres', ''),
+            'email': item.findtext('email', ''),
+            'progrmCn': item.findtext('progrmCn', ''),
+            'sidoCd': item.findtext('sidoCd', ''),
+            'gugunCd': item.findtext('gugunCd', '')
         })
     return parsed_data
 

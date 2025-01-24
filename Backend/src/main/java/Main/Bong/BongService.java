@@ -3,9 +3,6 @@ package Main.Bong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import Main.Bong.DTO.Bong;
-import Main.Bong.Repo.BongRepository;
-
 @Service
 public class BongService {
 

@@ -26,7 +26,7 @@ const Slider: React.FC = () => {
       const response = await axios.get("http://localhost:8080/api/bong/random");
       const newCard = {
         id: Math.random(), // 고유 ID 생성
-        label: response.data.progrmSj,
+        label: response.data.srvcClCode,
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
         context: response.data.progrmCn || "상세 설명 없음",
       };

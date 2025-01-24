@@ -1,10 +1,8 @@
-package Main.Bong.Repo;
+package Main.Bong;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import Main.Bong.DTO.Bong;
 
 @Repository
 public interface BongRepository extends CrudRepository<Bong, String> {
