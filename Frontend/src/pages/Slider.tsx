@@ -26,9 +26,9 @@ const Slider: React.FC = () => {
       const response = await axios.get("http://localhost:8080/api/bong/random");
       const newCard = {
         id: Math.random(), // 고유 ID 생성
-        label: response.data.srvcClCode,
-        date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
-        context: response.data.progrmCn || "상세 설명 없음",
+        label: response.data.progrmSj,
+        context: response.data.srvcClCode || "상세 설명 없음",
+        date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,    
       };
       return newCard;
     } catch (error) {
@@ -163,8 +163,8 @@ const Slider: React.FC = () => {
           >
             <TextContainer>
               <LabelText>{card.label}</LabelText>
-              <ContextText>{card.date}</ContextText>
               <ContextText>{card.context}</ContextText>
+              <ContextText>{card.date}</ContextText>        
             </TextContainer>
           </Card>
         );
@@ -210,13 +210,13 @@ const TextContainer = styled.div`
 `;
 
 const LabelText = styled.div`
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #333;
 `;
 
 const ContextText = styled.div`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #666;
   margin-top: 2%;
 `;
