@@ -210,7 +210,7 @@ const TextContainer = styled.div`
 `;
 
 const LabelText = styled.div`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: #333;
 `;
