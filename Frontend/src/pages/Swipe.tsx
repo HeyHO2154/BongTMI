@@ -201,7 +201,7 @@ const Card = styled.div`
   height: 100%;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 0px; /* 카드 모서리를 둥글게 */
   user-select: none;
   cursor: grab;
 `;
@@ -215,7 +215,7 @@ const TextContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 추가 */
-  padding: 30px 30px 200px 30px; /* 상, 우, 하, 좌 순서로 설정 */
+  padding: 30px 30px 160px 30px; /* 상, 우, 하, 좌 순서로 설정 */
   border-radius: 8px; /* 박스 모서리를 둥글게 */
 `;
 

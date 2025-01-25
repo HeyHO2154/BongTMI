@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
+import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로
 import NavBar from "./components/NavBar";
 import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
@@ -15,8 +16,9 @@ const App: React.FC = () => {
       <GlobalStyle />
       <Router>
         <div className="app-container">
+          <TopBar />
           <Routes>
-            <Route path="/swipe" element={<Swipe />} />
+            <Route path="/" element={<Swipe />} />
             <Route path="/search" element={<Search />} />
             <Route path="/add-card" element={<AddCard />} />
             <Route path="/feed" element={<Feed />} />
