@@ -47,6 +47,8 @@ public class BongController {
                 if (resource.exists() && resource.isReadable()) {
                     imagePath = tempPath;
                     break;
+                }else {
+                	imagePath = Paths.get(basePath, "0", "봉틈이2.png");
                 }
             }
 

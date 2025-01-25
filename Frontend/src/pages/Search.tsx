@@ -98,8 +98,13 @@ const Search: React.FC = () => {
       {/* 상단 검색창 */}
       <StickyBox>
         <SearchBarWrapper>
-          <FontAwesomeIcon icon={faSearch} size="lg" />
           <SearchBar placeholder="검색어를 입력하세요..." />
+          <FontAwesomeIcon
+            icon={faSearch}
+            size="lg"
+            style={{ cursor: "pointer" }} // 클릭 가능하도록 설정
+            onClick={() => console.log("Search icon clicked!")} // 클릭 이벤트 추가
+          />
         </SearchBarWrapper>
         <FilterToggle onClick={() => setIsFilterVisible(!isFilterVisible)}>
           <FontAwesomeIcon icon={isFilterVisible ? faChevronUp : faChevronDown} size="sm" />
@@ -235,12 +240,14 @@ const SearchBar = styled.input`
 const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 양 끝으로 정렬 */
   gap: 8px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 8px;
   background-color: #fff;
 `;
+
 
 const FilterToggle = styled.div`
   display: flex;
