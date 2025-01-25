@@ -29,24 +29,36 @@ public class BongController {
         return bongService.getRandomBong();
     }
     
-    @GetMapping("/image/{bongName}/{imageIndex}")
+    @GetMapping("/image/{progrmRegistNo}/{imageIndex}")
     public ResponseEntity<Resource> getImage(
-            @PathVariable String bongName,
+            @PathVariable String progrmRegistNo,
             @PathVariable int imageIndex
     ) {
         try {
             // 이미지 경로 설정
             String basePath = "C:\\Users\\PRO\\Desktop\\GitDesktop\\BongTMI\\DB\\Image";
-            String fileName = "Image_" + imageIndex + ".jpg"; // 또는 .png
-            Path imagePath = Paths.get(basePath, bongName, fileName);
+            String[] extensions = {".jpg", ".jpeg", ".png", ".PNG"};
+            Path imagePath = null;
 
-            // 이미지 리소스를 로드
-            Resource resource = new UrlResource(imagePath.toUri());
-            if (resource.exists() && resource.isReadable()) {
+            // 지원하는 확장자를 순차적으로 확인
+            for (String ext : extensions) {
+                Path tempPath = Paths.get(basePath, progrmRegistNo, "Image_" + imageIndex + ext);
+                Resource resource = new UrlResource(tempPath.toUri());
+                if (resource.exists() && resource.isReadable()) {
+                    imagePath = tempPath;
+                    break;
+                }
+            }
+
+            if (imagePath != null) {
+                // 이미지 리소스를 로드
+                Resource resource = new UrlResource(imagePath.toUri());
+                String contentType = imagePath.toString().toLowerCase().endsWith(".png") ? MediaType.IMAGE_PNG_VALUE : MediaType.IMAGE_JPEG_VALUE;
+
                 // 이미지 파일을 ResponseEntity로 반환
                 return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG) // PNG라면 MediaType.IMAGE_PNG
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + imagePath.getFileName().toString() + "\"")
                         .body(resource);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -55,4 +67,5 @@ public class BongController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 }

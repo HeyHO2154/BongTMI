@@ -3,16 +3,16 @@ import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
 
 interface CardData {
-  id: number;
   label: string;
+  region: string;
+  type: string;
   date: string;
-  context: string;
   imageUrl: string; // 이미지 URL 추가
 }
 
 const SWIPE_THRESHOLD = 200; // 스와이프 판정 기준 (px)
 
-const Slider: React.FC = () => {
+const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(-1); // 현재 최상단 카드 인덱스
   const [dragX, setDragX] = useState(0);
@@ -27,11 +27,11 @@ const Slider: React.FC = () => {
       const response = await axios.get("http://localhost:8080/api/bong/random");
   
       const newCard: CardData = {
-        id: Math.random(), // 고유 ID 생성
         label: response.data.progrmSj || "제목 없음",
-        context: response.data.srvcClCode || "상세 설명 없음",
+        region: response.data.nanmmbyNm || "지역 없음",
+        type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
-        imageUrl: `http://localhost:8080/api/bong/image/${response.data.mnnstNm}/1`, // 이미지 URL 추가
+        imageUrl: `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
       };
   
       return newCard;
@@ -150,7 +150,6 @@ const Slider: React.FC = () => {
   
         return (
           <Card
-            key={card.id}
             style={{
               zIndex: index,
               backgroundImage: `url(${card.imageUrl})`, // 템플릿 리터럴로 URL 생성
@@ -170,7 +169,8 @@ const Slider: React.FC = () => {
           >
             <TextContainer>
               <LabelText>{card.label}</LabelText>
-              <ContextText>{card.context}</ContextText>
+              <ContextText>{card.region}</ContextText>
+              <ContextText>{card.type}</ContextText>
               <ContextText>{card.date}</ContextText>
             </TextContainer>
           </Card>
@@ -182,7 +182,7 @@ const Slider: React.FC = () => {
   );
 };
 
-export default Slider;
+export default Swipe;
 
 // --------------------
 // 스타일 정의

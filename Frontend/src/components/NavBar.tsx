@@ -37,7 +37,7 @@ const NavButton = styled(NavLink)`
 const NavBar: React.FC = () => {
   return (
     <NavBarContainer>
-      <NavButton to="/slider">
+      <NavButton to="/swipe">
         <FontAwesomeIcon icon={faHeart} size="2x" />
         공고 추천
       </NavButton>

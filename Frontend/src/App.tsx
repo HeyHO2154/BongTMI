@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
 import NavBar from "./components/NavBar";
-import Slider from "./pages/Slider";
+import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
 import AddCard from "./pages/AddCard";
 import Feed from "./pages/Feed";
@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <Router>
         <div className="app-container">
           <Routes>
-            <Route path="/slider" element={<Slider />} />
+            <Route path="/swipe" element={<Swipe />} />
             <Route path="/search" element={<Search />} />
             <Route path="/add-card" element={<AddCard />} />
             <Route path="/feed" element={<Feed />} />
