@@ -7,9 +7,10 @@ interface CardData {
   label: string;
   date: string;
   context: string;
+  imageUrl: string; // 이미지 URL 추가
 }
 
-const SWIPE_THRESHOLD = 100; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD = 300; // 스와이프 판정 기준 (px)
 
 const Slider: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -24,19 +25,22 @@ const Slider: React.FC = () => {
   const fetchCardData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/bong/random");
-      const newCard = {
+  
+      const newCard: CardData = {
         id: Math.random(), // 고유 ID 생성
-        label: response.data.progrmSj,
+        label: response.data.progrmSj || "제목 없음",
         context: response.data.srvcClCode || "상세 설명 없음",
-        date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,    
+        date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
+        imageUrl: `http://localhost:8080/api/bong/image/${response.data.mnnstNm}/1`, // 이미지 URL 추가
       };
+  
       return newCard;
     } catch (error) {
       console.error("Failed to fetch card data:", error);
       return null;
     }
   };
-
+  
   const initializeCards = async () => {
     const newCards: CardData[] = [];
     for (let i = 0; i < 5; i++) {
@@ -143,12 +147,15 @@ const Slider: React.FC = () => {
     <Wrapper>
       {cards.map((card, index) => {
         const isTop = index === currentIndex;
-
+  
         return (
           <Card
             key={card.id}
             style={{
               zIndex: index,
+              backgroundImage: `url(${card.imageUrl})`, // 템플릿 리터럴로 URL 생성
+              backgroundSize: "cover",
+              backgroundPosition: "center",
               transform: isTop
                 ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)`
                 : "translateX(0) rotate(0)",
@@ -164,12 +171,12 @@ const Slider: React.FC = () => {
             <TextContainer>
               <LabelText>{card.label}</LabelText>
               <ContextText>{card.context}</ContextText>
-              <ContextText>{card.date}</ContextText>        
+              <ContextText>{card.date}</ContextText>
             </TextContainer>
           </Card>
         );
       })}
-
+  
       {currentIndex < 0 && <NoMoreCards>더 이상 카드가 없습니다!</NoMoreCards>}
     </Wrapper>
   );
@@ -201,23 +208,26 @@ const Card = styled.div`
 
 const TextContainer = styled.div`
   position: absolute;
-  bottom: 20%;
-  left: 10%;
-  right: 15%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 추가 */
+  padding: 30px 30px 200px 30px; /* 상, 우, 하, 좌 순서로 설정 */
+  border-radius: 8px; /* 박스 모서리를 둥글게 */
 `;
 
 const LabelText = styled.div`
   font-size: 1.6rem;
   font-weight: bold;
-  color: #333;
+  color: #fff; /* 흰색 텍스트 */
 `;
 
 const ContextText = styled.div`
   font-size: 1.2rem;
-  color: #666;
+  color: #ddd; /* 흰색과 대비되는 밝은 회색 */
   margin-top: 2%;
 `;
 
