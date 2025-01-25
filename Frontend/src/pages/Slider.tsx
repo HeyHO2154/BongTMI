@@ -10,7 +10,7 @@ interface CardData {
   imageUrl: string; // 이미지 URL 추가
 }
 
-const SWIPE_THRESHOLD = 300; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD = 200; // 스와이프 판정 기준 (px)
 
 const Slider: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);

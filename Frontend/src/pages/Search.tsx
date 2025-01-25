@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
-import SearchBar from "../components/SearchBar"; // 상단 고정 검색창 컴포넌트
 
 interface CardData {
   id: number;
@@ -77,9 +76,7 @@ const Search: React.FC = () => {
   };
 
   return (
-    <>
-      <Wrapper onScroll={handleScroll}>
-      <SearchBar /> {/* 상단 고정 검색창 */}
+    <Wrapper onScroll={handleScroll}>
         {cards.map((card, index) => (
           <Card key={card.id}>
             <Label>{card.label}</Label>
@@ -89,8 +86,7 @@ const Search: React.FC = () => {
         ))}
         {isLoading && <LoadingText>로딩 중...</LoadingText>}
         {!hasMore && <EndText>더 이상 공고가 없습니다.</EndText>}
-      </Wrapper>
-    </>
+    </Wrapper>
   );  
 };
 
@@ -106,12 +102,6 @@ const Wrapper = styled.div`
   overflow-y: scroll; /* 스크롤 활성화 */
   padding: 16px;
   background-color: #f9f9f9;
-`;
-
-const Title = styled.h1`
-  font-size: 1.5rem;
-  margin-bottom: 16px;
-  color: #333;
 `;
 
 const Card = styled.div`

@@ -34,3 +34,4 @@ CREATE TABLE Bong (
 );
 
 select * from Bong;
+SELECT COUNT(*) AS total_rows FROM Bong;
