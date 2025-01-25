@@ -1,4 +1,3 @@
-
 // src/pages/MyPage.tsx
 import React from "react";
 
