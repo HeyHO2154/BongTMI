@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-const AddCard: React.FC = () => {
+const AddBong: React.FC = () => {
   const [formData, setFormData] = useState({
     progrmRegistNo: "",
     progrmSj: "",
@@ -322,7 +322,7 @@ const AddCard: React.FC = () => {
   );
 };
 
-export default AddCard;
+export default AddBong;
 
 // --------------------
 // 스타일 정의

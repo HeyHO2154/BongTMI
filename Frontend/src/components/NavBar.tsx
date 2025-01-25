@@ -45,7 +45,7 @@ const NavBar: React.FC = () => {
         <FontAwesomeIcon icon={faSearch} size="2x" />
         공고 검색
       </NavButton>
-      <NavButton to="/add-card">
+      <NavButton to="/add-bong">
         <FontAwesomeIcon icon={faPlus} size="2x" />
         공고 등록
       </NavButton>

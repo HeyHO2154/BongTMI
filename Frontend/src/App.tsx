@@ -6,7 +6,7 @@ import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로
 import NavBar from "./components/NavBar";
 import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
-import AddCard from "./pages/AddCard";
+import AddBong from "./pages/AddBong";
 import Feed from "./pages/Feed";
 import MyPage from "./pages/MyPage";
 
@@ -20,7 +20,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Swipe />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/add-card" element={<AddCard />} />
+            <Route path="/add-bong" element={<AddBong />} />
             <Route path="/feed" element={<Feed />} />
             <Route path="/my-page" element={<MyPage />} />
           </Routes>

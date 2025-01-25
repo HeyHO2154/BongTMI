@@ -2,7 +2,7 @@
 import React from "react";
 
 const Feed: React.FC = () => {
-  return <div>Feed Page</div>;
+  return <div>후기 페이지</div>;
 };
 
 export default Feed;
