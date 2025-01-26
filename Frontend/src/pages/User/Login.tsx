@@ -15,13 +15,21 @@ const handleKakaoLogin = () => {
 
 const Login: React.FC = () => {
   return (
-    <div>
-      <h1>Login</h1>
-      {/* 버튼 대신 이미지 */}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '80vh',
+        textAlign: 'center',
+      }}
+    >
+      <h1 style={{ marginBottom: '20px' }}>Login</h1>
       <img
         src="/src/assets/kakao_login_medium.png"
         alt="Login with Kakao"
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', maxWidth: '200px' }}
         onClick={handleKakaoLogin}
       />
     </div>
