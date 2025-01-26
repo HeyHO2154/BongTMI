@@ -400,7 +400,7 @@ const Textarea = styled.textarea`
   width: 100%; /* 가로를 전체 채움 */
 `;
 
-const Button = styled.form`
+const Button = styled.div` /* <form>에서 <div>로 변경 */
   display: flex;
   flex-direction: column;
   align-items: center; /* 버튼과 폼 요소를 가로 중앙 정렬 */

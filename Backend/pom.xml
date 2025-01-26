@@ -90,6 +90,12 @@
         <artifactId>playwright</artifactId>
         <version>1.37.0</version> <!-- 최신 버전 확인 후 변경 -->
     </dependency>
+    <dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-web</artifactId>
+	</dependency>
+
+    
 
     </dependencies>
 

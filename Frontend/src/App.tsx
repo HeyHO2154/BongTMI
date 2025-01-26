@@ -10,6 +10,9 @@ import AddBong from "./pages/AddBong";
 import Feed from "./pages/Feed";
 import MyPage from "./pages/MyPage";
 
+import Login from "./pages/User/Login";
+import Callback from './pages/User/Callback';
+
 const App: React.FC = () => {
   return (
     <>
@@ -23,6 +26,10 @@ const App: React.FC = () => {
             <Route path="/add-bong" element={<AddBong />} />
             <Route path="/feed" element={<Feed />} />
             <Route path="/my-page" element={<MyPage />} />
+
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/auth/callback/kakao" element={<Callback />} />
+
           </Routes>
           <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}
         </div>

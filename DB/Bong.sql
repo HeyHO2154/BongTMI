@@ -1,7 +1,6 @@
-DROP DATABASE hsj;
-CREATE DATABASE hsj;
-
 USE hsj;
+
+DROP TABLE IF EXISTS Bong;
 
 -- 봉사 공고 테이블
 CREATE TABLE Bong (
@@ -34,4 +33,3 @@ CREATE TABLE Bong (
 );
 
 select * from Bong;
-SELECT COUNT(*) AS total_rows FROM Bong;

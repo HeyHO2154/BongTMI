@@ -6,6 +6,7 @@ import axios from "axios";
 
 
 interface CardData {
+  id: string; // 고유 식별자 추가
   label: string;
   region: string;
   type: string;
@@ -43,6 +44,7 @@ const Search: React.FC = () => {
     try {
       const response = await axios.get("http://localhost:8080/api/bong/random");
       return {
+        id: response.data.progrmRegistNo, // 고유 id 추가
         label: response.data.progrmSj || "제목 없음",
         region: response.data.nanmmbyNm || "지역 없음",
         type: response.data.srvcClCode || "상세 설명 없음",
@@ -61,7 +63,7 @@ const Search: React.FC = () => {
     if (isLoading) return;
     setIsLoading(true);
     const newCards: CardData[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       const card = await fetchCardData();
       if (card) newCards.push(card);
     }
@@ -187,7 +189,7 @@ const Search: React.FC = () => {
       {/* 카드 리스트 */}
       <CardList>
         {cards.map((card) => (
-          <Card>
+          <Card key={card.id}> {/* 고유 key 설정 */}
             <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
             <CardText>
               <Label>{card.label}</Label>

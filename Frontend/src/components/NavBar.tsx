@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const NavBarContainer = styled.nav`
   position: fixed;
@@ -39,15 +39,15 @@ const NavBar: React.FC = () => {
     <NavBarContainer>
       <NavButton to="/">
         <FontAwesomeIcon icon={faHeart} size="2x" />
-        공고 추천
+        봉사 추천
       </NavButton>
       <NavButton to="/search">
         <FontAwesomeIcon icon={faSearch} size="2x" />
-        공고 검색
+        봉사 검색
       </NavButton>
       <NavButton to="/add-bong">
         <FontAwesomeIcon icon={faPlus} size="2x" />
-        공고 등록
+        봉사 등록
       </NavButton>
       <NavButton to="/feed">
         <FontAwesomeIcon icon={faEye} size="2x" />

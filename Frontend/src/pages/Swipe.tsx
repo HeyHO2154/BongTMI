@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
 
 interface CardData {
+  id: string; // 고유 식별자 추가
   label: string;
   region: string;
   type: string;
@@ -27,6 +28,7 @@ const Swipe: React.FC = () => {
       const response = await axios.get("http://localhost:8080/api/bong/random");
   
       const newCard: CardData = {
+        id: response.data.progrmRegistNo, // 고유 id 추가
         label: response.data.progrmSj || "제목 없음",
         region: response.data.nanmmbyNm || "지역 없음",
         type: response.data.srvcClCode || "상세 설명 없음",
@@ -118,6 +120,7 @@ const Swipe: React.FC = () => {
 
 
   const swipe = async (direction: "left" | "right") => {
+    console.log(direction);
     // 새 카드 데이터를 가져옴
     const newCard = await fetchCardData();
     if (!newCard) return; // API 호출 실패 시 중단
@@ -150,6 +153,7 @@ const Swipe: React.FC = () => {
   
         return (
           <Card
+            key={card.id} // 고유 key 설정
             style={{
               zIndex: index,
               backgroundImage: `url(${card.imageUrl})`, // 템플릿 리터럴로 URL 생성
