@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
-import { UserOutlined, HeartOutlined } from "@ant-design/icons";
+import { UserOutlined, HeartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -24,6 +25,28 @@ const dummyData = [
 ];
 
 const MyPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+
+  useEffect(() => {
+    // 로컬 스토리지에서 사용자 정보 가져오기
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // 사용자 정보 저장
+    } else {
+      navigate("/user/login"); // 로그인 페이지로 이동
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // 사용자 정보 제거
+    navigate("/user/login"); // 로그인 페이지로 리다이렉트
+  };
+
+  if (!user) {
+    return null; // 로딩 중에는 아무것도 렌더링하지 않음
+  }
+
   return (
     <Container>
       <Header>
@@ -33,8 +56,8 @@ const MyPage: React.FC = () => {
               <ProfileInfo>
                 <Avatar size={64} icon={<UserOutlined />} className="user-avatar" />
                 <UserDetails>
-                  <Title level={4} className="user-name">김도희</Title>
-                  <Text className="user-email" type="secondary">dorosy@naver.com</Text>
+                  <Title level={4} className="user-name">{user.nickname}</Title>
+                  <Text className="user-email" type="secondary">{user.email}</Text>
                 </UserDetails>
               </ProfileInfo>
             </Col>
@@ -48,6 +71,14 @@ const MyPage: React.FC = () => {
           <Button type="primary" size="middle">봉사 내역 관리</Button>
           <Button type="default" size="middle" icon={<HeartOutlined />}>
             좋아요 한 공고
+          </Button>
+          <Button
+            type="default"
+            size="middle"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            로그아웃
           </Button>
         </ButtonGroup>
       </Header>
@@ -126,16 +157,14 @@ const UserDetails = styled.div`
 `;
 
 const ButtonGroup = styled.div`
-  text-align: center;
+  display: flex; /* 버튼을 Flexbox로 배치 */
+  justify-content: center; /* 버튼을 가로 중앙에 정렬 */
+  gap: 10px; /* 버튼 간 간격 설정 */
   margin-top: 10px;
-
-  button:first-child {
-    margin-right: 10px;
-  }
 
   button {
     font-size: 14px;
-    padding: 5px 15px;
+    padding: 10px 15px;
   }
 `;
 
