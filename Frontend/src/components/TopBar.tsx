@@ -1,11 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import logoImage from "../assets/봉틈이2.png"; // 이미지 import
+import { useNavigate } from "react-router-dom"; // useNavigate import
 
 const TopBar: React.FC = () => {
+
+  const navigate = useNavigate(); // useNavigate 훅 호출
+
+  const toHome = () => {
+    navigate('/'); // 홈으로 이동
+  };
+
   return (
     <BarWrapper>
-      <Logo src={logoImage} alt="Logo" />
+      <Logo
+        src="/src/assets/봉틈이2.png"
+        alt="봉틈이"
+        style={{ cursor: 'pointer' }}
+        onClick={toHome}
+      />
     </BarWrapper>
   );
 };
