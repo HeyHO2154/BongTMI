@@ -19,7 +19,7 @@ const Callback: React.FC = () => {
         .then((response) => {
           console.log('Login successful:', response.data);
           localStorage.setItem('user', JSON.stringify(response.data));
-          navigate('/');
+          navigate('/my-page');
         })
         .catch((error) => {
           console.error('Login failed:', error);
