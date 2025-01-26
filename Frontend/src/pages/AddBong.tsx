@@ -330,7 +330,7 @@ export default AddBong;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 154px); /* TopBar(60px) + NavBar(90px) 제외 */
+  height: calc(100vh - 157px); /* TopBar(60px) + NavBar(90px) 제외 */
   box-sizing: border-box;
   overflow-y: auto;
   background-color: #f9f9f9;

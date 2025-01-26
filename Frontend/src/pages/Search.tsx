@@ -214,7 +214,7 @@ export default Search;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 120px); /* TopBar(60px) + Navbar(60px) */
+  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
   box-sizing: border-box;
   overflow-y: auto;
 `;

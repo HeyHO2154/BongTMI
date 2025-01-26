@@ -32,7 +32,7 @@ const BarWrapper = styled.div`
   top: 0;
   z-index: 100;
   background-color: #fff; /* 상단 바 배경색 */
-  height: 60px; /* 상단 바 높이 */
+  height: 65px; /* 상단 바 높이 */
   display: flex;
   align-items: center;
   justify-content: center; /* 로고를 중앙 배치 */

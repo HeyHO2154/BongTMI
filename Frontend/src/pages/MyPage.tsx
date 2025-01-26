@@ -20,7 +20,7 @@ const dummyData = [
   {
     title: "2024-01-10 지역사회 환경정화 활동",
     description: "쓰레기를 줍고 깨끗한 환경을 만드는 데 동참했습니다.",
-    image: "https://picsum.photos/300?random=2",
+    image: "https://picsum.photos/300?random=3",
   },
 ];
 
@@ -112,7 +112,7 @@ export default MyPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 83.5vh;
+  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
 `;
 
 const Header = styled.div`
