@@ -151,8 +151,6 @@ const Swipe: React.FC = () => {
     }
   };
   
-
-
   const swipe = async (direction: "left" | "right") => {
     console.log(direction);
     // 새 카드 데이터를 가져옴
@@ -196,7 +194,7 @@ const Swipe: React.FC = () => {
                 ? Math.abs(dragX) > Math.abs(dragY)
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
                   : `translateY(${dragY}px)` // 상하 스와이프
-                : `translateY(${dragY}px)`, // 상하 스와이프 - 모든 카드가 같이 이동
+                : `translateY(0px)`, // 상하 스와이프 - 모든 카드가 같이 이동X
               transition: isDragging ? "none" : "transform 0.3s ease",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
@@ -217,11 +215,6 @@ const Swipe: React.FC = () => {
         );
       })}
 
-      {/* DetailPageWrapper */}
-      <DetailPageWrapper dragY={dragY}>
-        <DetailBong />
-      </DetailPageWrapper>
-
       {currentIndex < 0 && <NoMoreCards>더 이상 카드가 없습니다!</NoMoreCards>}
     </Wrapper>
   );
@@ -229,20 +222,6 @@ const Swipe: React.FC = () => {
 };
 
 export default Swipe;
-
-const DetailPageWrapper = styled.div.attrs<{ dragY: number }>((props) => ({
-  style: {
-    transform: `translateY(${Math.min(props.dragY, 0)}px)`,
-  },
-}))<{ dragY: number }>`
-  position: absolute;
-  bottom: -100%; /* 초기 위치는 화면 아래 */
-  left: 0;
-  right: 0;
-  height: 100%;
-  background-color: white;
-  z-index: 0; /* 카드 아래로 배치 */
-`;
 
 
 // --------------------
