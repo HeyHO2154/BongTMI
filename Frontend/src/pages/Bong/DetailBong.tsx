@@ -72,12 +72,12 @@ const DetailBong: React.FC = () => {
 
   return (
     <Container>
-      <Header>
-        <ViewMoreButton onClick={handleViewMore}>
-          <FontAwesomeIcon icon={faArrowLeft} />
-          봉사 더 보기
-        </ViewMoreButton>
-      </Header>
+        <Header>
+          <ViewMoreButton onClick={handleViewMore}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+            봉사 더 보기
+          </ViewMoreButton>
+        </Header>
       <Content>
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
@@ -105,7 +105,19 @@ const DetailBong: React.FC = () => {
         <p><strong>내용:</strong> {bongData.progrmCn}</p>
         <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
         <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>
+        
       </Content>
+
+      <Footer>
+          <ApplyButton
+            onClick={() =>
+              window.location.href = `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=${progrmRegistNo}`
+            }
+          >
+            신청하기
+          </ApplyButton>
+        </Footer>
+
     </Container>
   );
 };
@@ -113,13 +125,6 @@ const DetailBong: React.FC = () => {
 export default DetailBong;
 
 // 스타일 정의
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  padding: 10px 20px;
-`;
-
 const ViewMoreButton = styled.button`
   display: flex;
   align-items: center;
@@ -142,7 +147,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100vh - 70px); /* TopBar(60px) + Navbar(60px) */
+  height: calc(100vh - 140px); /* TopBar(60px) + Navbar(60px) */
   overflow: hidden; /* 전체 화면 스크롤 방지 */
   padding: 0;
 
@@ -159,6 +164,16 @@ const Container = styled.div`
   }
 `;
 
+const Header = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  background-color: #fff;
+  z-index: 10; /* Content 위로 배치 */
+  position: relative; /* z-index 적용을 위해 position 추가 */
+`;
+
 const Content = styled.div`
   width: 100%;
   max-width: 800px; /* 내용의 최대 너비 설정 */
@@ -168,5 +183,33 @@ const Content = styled.div`
   box-sizing: border-box;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Header와 Footer 아래로 배치 */
+  position: relative; /* z-index 적용을 위해 position 추가 */
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  background-color: #fff;
+  z-index: 10; /* Content 위로 배치 */
+  position: relative; /* z-index 적용을 위해 position 추가 */
+`;
+
+
+const ApplyButton = styled.button`
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
