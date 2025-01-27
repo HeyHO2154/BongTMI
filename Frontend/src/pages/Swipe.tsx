@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
+import { useNavigate } from "react-router-dom"; // React Router 사용
+import DetailBong from "./Bong/DetailBong"; // DetailBong 컴포넌트 임포트
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -11,14 +13,19 @@ interface CardData {
   imageUrl: string; // 이미지 URL 추가
 }
 
-const SWIPE_THRESHOLD = 200; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_X = 200; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 200; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(-1); // 현재 최상단 카드 인덱스
-  const [dragX, setDragX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const startX = useRef(0); // 드래그 시작점
+  const [dragX, setDragX] = useState(0); // X축 드래그 상태
+  const [dragY, setDragY] = useState(0); // Y축 드래그 상태
+  const [isDragging, setIsDragging] = useState(false); // 드래그 상태 여부
+  const startX = useRef(0); // 드래그 시작점 X
+  const startY = useRef(0); // 드래그 시작점 Y
+
+  const navigate = useNavigate(); // navigate 함수 생성
 
   // --------------------
   // API 호출 로직
@@ -85,12 +92,33 @@ const Swipe: React.FC = () => {
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
     startX.current = e.clientX;
+    startY.current = e.clientY;
+    setDragX(0);
+    setDragY(0);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging) return;
+
     const currentX = e.clientX;
-    setDragX(currentX - startX.current);
+    const currentY = e.clientY;
+
+    const deltaX = currentX - startX.current;
+    const deltaY = currentY - startY.current;
+
+    // 좌우 또는 상하 스와이프 처리
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // 좌우 스와이프
+      setDragX(deltaX);
+      setDragY(0); // 상하 초기화
+    } else {
+      // 상하 스와이프
+      if (deltaY < 0) {
+        // 위로 스와이프만 허용
+        setDragY(deltaY);
+        setDragX(0); // 좌우 초기화
+      }
+    }
   };
 
   const handleMouseUp = () => {
@@ -109,12 +137,17 @@ const Swipe: React.FC = () => {
   // 스와이프 판정 & 처리
   // --------------------
   const checkSwipe = () => {
-    if (dragX > SWIPE_THRESHOLD) {
+    if (dragY < -SWIPE_THRESHOLD_Y) {
+      // 스와이프 임계값 초과 시 페이지를 완전히 위로 이동
+      setDragY(-window.innerHeight); // 화면 높이만큼 위로 이동
+      setTimeout(() => navigate("/detail-bong"), 300); // 페이지 전환 (애니메이션 완료 후)
+    } else if (dragX > SWIPE_THRESHOLD_X) {
       swipe("right");
-    } else if (dragX < -SWIPE_THRESHOLD) {
+    } else if (dragX < -SWIPE_THRESHOLD_X) {
       swipe("left");
     } else {
       setDragX(0);
+      setDragY(0);
     }
   };
 
@@ -141,34 +174,36 @@ const Swipe: React.FC = () => {
   
     // 인덱스 업데이트
     setDragX(0);
+    setDragY(0);
     setCurrentIndex(cards.length - 1); // 항상 최상단 인덱스를 맨 마지막으로 설정
   };
   
-  
-
   return (
     <Wrapper>
       {cards.map((card, index) => {
         const isTop = index === currentIndex;
-  
+
         return (
           <Card
-            key={card.id} // 고유 key 설정
+            key={card.id}
             style={{
               zIndex: index,
-              backgroundImage: `url(${card.imageUrl})`, // 템플릿 리터럴로 URL 생성
+              backgroundImage: `url(${card.imageUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               transform: isTop
-                ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)`
-                : "translateX(0) rotate(0)",
+                ? Math.abs(dragX) > Math.abs(dragY)
+                  ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
+                  : `translateY(${dragY}px)` // 상하 스와이프
+                : `translateY(${dragY}px)`, // 상하 스와이프 - 모든 카드가 같이 이동
+              transition: isDragging ? "none" : "transform 0.3s ease",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
             onTouchEnd={isTop ? handleTouchEnd : undefined}
             onMouseDown={isTop ? handleMouseDown : undefined}
             onMouseMove={isTop ? handleMouseMove : undefined}
-            onMouseUp={isTop ? handleMouseUp : undefined}
+            onMouseUp={handleMouseUp}
             onMouseLeave={isTop ? handleMouseLeave : undefined}
           >
             <TextContainer>
@@ -180,13 +215,34 @@ const Swipe: React.FC = () => {
           </Card>
         );
       })}
-  
+
+      {/* DetailPageWrapper */}
+      <DetailPageWrapper dragY={dragY}>
+        <DetailBong />
+      </DetailPageWrapper>
+
       {currentIndex < 0 && <NoMoreCards>더 이상 카드가 없습니다!</NoMoreCards>}
     </Wrapper>
   );
+
 };
 
 export default Swipe;
+
+const DetailPageWrapper = styled.div.attrs<{ dragY: number }>((props) => ({
+  style: {
+    transform: `translateY(${Math.min(props.dragY, 0)}px)`,
+  },
+}))<{ dragY: number }>`
+  position: absolute;
+  bottom: -100%; /* 초기 위치는 화면 아래 */
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-color: white;
+  z-index: 0; /* 카드 아래로 배치 */
+`;
+
 
 // --------------------
 // 스타일 정의
