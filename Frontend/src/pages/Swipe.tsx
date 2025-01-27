@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
 import { useNavigate } from "react-router-dom"; // React Router 사용
-import DetailBong from "./Bong/DetailBong"; // DetailBong 컴포넌트 임포트
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -14,7 +13,7 @@ interface CardData {
 }
 
 const SWIPE_THRESHOLD_X = 200; // 스와이프 판정 기준 (px)
-const SWIPE_THRESHOLD_Y = 300; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 220; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -139,8 +138,23 @@ const Swipe: React.FC = () => {
   const checkSwipe = () => {
     if (dragY < -SWIPE_THRESHOLD_Y && currentIndex >= 0) {
       const progrmRegistNo = cards[currentIndex].id;
-      console.log("Navigating to:", `/detail/${progrmRegistNo}`); // 로그 확인
-      navigate(`/detail/${progrmRegistNo}`);
+  
+      // 최상단 카드에 애니메이션 적용
+      const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
+      if (topCard) {
+        (topCard as HTMLElement).style.transition = "transform 0s ease, opacity 0s ease"; // 애니메이션 더 느리게
+        (topCard as HTMLElement).style.transform = "translateY(-100%)"; // 위로 이동
+        (topCard as HTMLElement).style.opacity = "0"; // 점점 사라짐
+  
+        // 애니메이션이 끝나자마자 페이지 전환
+        topCard.addEventListener(
+          "transitionend",
+          () => {
+            navigate(`/detail/${progrmRegistNo}`); // 페이지 전환
+          },
+          { once: true } // 이벤트를 한 번만 실행
+        );
+      }
     } else if (dragX > SWIPE_THRESHOLD_X) {
       swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
@@ -150,6 +164,7 @@ const Swipe: React.FC = () => {
       setDragY(0);
     }
   };
+  
   
   const swipe = async (direction: "left" | "right") => {
     console.log(direction);
@@ -185,6 +200,7 @@ const Swipe: React.FC = () => {
         return (
           <Card
             key={card.id}
+            data-index={index} // data-index 속성 추가
             style={{
               zIndex: index,
               backgroundImage: `url(${card.imageUrl})`,
@@ -194,7 +210,7 @@ const Swipe: React.FC = () => {
                 ? Math.abs(dragX) > Math.abs(dragY)
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
                   : `translateY(${dragY}px)` // 상하 스와이프
-                : `translateY(0px)`, // 상하 스와이프 - 모든 카드가 같이 이동X
+                : `translateY(0px)`,
               transition: isDragging ? "none" : "transform 0.3s ease",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
@@ -241,9 +257,9 @@ const Card = styled.div`
   height: 100%;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 0px; /* 카드 모서리를 둥글게 */
   user-select: none;
   cursor: grab;
+  transition: transform 0.7s ease, opacity 0.7s ease; /* 트랜지션 속도 수정 */
 `;
 
 const TextContainer = styled.div`

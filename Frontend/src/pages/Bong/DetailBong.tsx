@@ -106,6 +106,18 @@ const Container = styled.div`
   height: calc(100vh - 70px); /* TopBar(60px) + Navbar(60px) */
   overflow: hidden; /* 전체 화면 스크롤 방지 */
   padding: 0;
+
+  /* 초기 상태: 약간 아래에서 시작 */
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards; /* 0.5초 동안 페이드인 효과 */
+
+  @keyframes fadeIn {
+    to {
+      transform: translateY(0); /* 제자리로 이동 */
+      opacity: 1; /* 완전히 보이게 */
+    }
+  }
 `;
 
 const Content = styled.div`
