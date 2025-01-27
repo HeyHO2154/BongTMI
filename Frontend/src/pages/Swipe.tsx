@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
 import { useNavigate } from "react-router-dom"; // React Router 사용
+import { useLocation } from "react-router-dom"; // useLocation 추가
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -25,13 +26,17 @@ const Swipe: React.FC = () => {
   const startY = useRef(0); // 드래그 시작점 Y
 
   const navigate = useNavigate(); // navigate 함수 생성
+  const location = useLocation(); // location 객체 가져오기
 
   // --------------------
   // API 호출 로직
   // --------------------
-  const fetchCardData = async () => {
+  const fetchCardData = async (progrmRegistNo?: string) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/bong/random");
+      const url = progrmRegistNo
+        ? `http://localhost:8080/api/bong/info?progrmRegistNo=${progrmRegistNo}` // 특정 카드 요청
+        : `http://localhost:8080/api/bong/random`; // 랜덤 카드 요청
+      const response = await axios.get(url);
   
       const newCard: CardData = {
         id: response.data.progrmRegistNo, // 고유 id 추가
@@ -50,21 +55,35 @@ const Swipe: React.FC = () => {
   };
   
   const initializeCards = async () => {
+    const queryParams = new URLSearchParams(location.search); // 쿼리 파라미터 가져오기
+    const progrmRegistNo = queryParams.get("progrmRegistNo");
+
     const newCards: CardData[] = [];
-    for (let i = 0; i < 5; i++) {
-      const card = await fetchCardData();
-      if (card) newCards.push(card);
+
+    
+    
+
+    // 5장 랜덤 카드 추가
+    while (newCards.length < 5) {
+      // progrmRegistNo가 있을 경우, 해당 카드를 첫 번째에 추가
+      if (newCards.length==4 && progrmRegistNo) {
+        const specificCard = await fetchCardData(progrmRegistNo);
+        if (specificCard) newCards.push(specificCard);
+      }else{
+        const card = await fetchCardData();
+        if (card) newCards.push(card);
+      }
     }
     setCards(newCards);
     setCurrentIndex(newCards.length - 1); // 마지막 카드가 최상단으로 보이게 설정
-  };  
+  };
 
   // --------------------
   // 초기 데이터 로드
   // --------------------
   useEffect(() => {
     initializeCards();
-  }, []);
+  }, [location.search]); // location.search 변경 시 다시 초기화
 
   // --------------------
   // 터치 이벤트 핸들러
@@ -144,7 +163,6 @@ const Swipe: React.FC = () => {
       if (topCard) {
         (topCard as HTMLElement).style.transition = "transform 0s ease, opacity 0s ease"; // 애니메이션 더 느리게
         (topCard as HTMLElement).style.transform = "translateY(-100%)"; // 위로 이동
-        (topCard as HTMLElement).style.opacity = "0"; // 점점 사라짐
   
         // 애니메이션이 끝나자마자 페이지 전환
         topCard.addEventListener(
@@ -159,10 +177,9 @@ const Swipe: React.FC = () => {
       swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
       swipe("left");
-    } else {
-      setDragX(0);
-      setDragY(0);
-    }
+    } 
+    setDragX(0);
+    setDragY(0);
   };
   
   
@@ -210,7 +227,7 @@ const Swipe: React.FC = () => {
                 ? Math.abs(dragX) > Math.abs(dragY)
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
                   : `translateY(${dragY}px)` // 상하 스와이프
-                : `translateY(0px)`,
+                : `translateY(${dragY}px)`,
               transition: isDragging ? "none" : "transform 0.3s ease",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}

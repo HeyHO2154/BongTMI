@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom"; // React Router 사용
 
 interface Bong {
   progrmRegistNo: string;
@@ -34,9 +37,14 @@ interface Bong {
 
 const DetailBong: React.FC = () => {
   const { progrmRegistNo } = useParams<{ progrmRegistNo: string }>();
+  const navigate = useNavigate(); // useNavigate 추가
   const [bongData, setBongData] = useState<Bong | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleViewMore = () => {
+    navigate(`/?progrmRegistNo=${progrmRegistNo}`); // Swipe.tsx로 progrmRegistNo 전달
+  };
 
   useEffect(() => {
     const fetchBongData = async () => {
@@ -64,6 +72,12 @@ const DetailBong: React.FC = () => {
 
   return (
     <Container>
+      <Header>
+        <ViewMoreButton onClick={handleViewMore}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+          봉사 더 보기
+        </ViewMoreButton>
+      </Header>
       <Content>
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
@@ -99,6 +113,31 @@ const DetailBong: React.FC = () => {
 export default DetailBong;
 
 // 스타일 정의
+const Header = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 20px;
+`;
+
+const ViewMoreButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #0056b3;
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
