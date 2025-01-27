@@ -31,7 +31,7 @@ const Callback: React.FC = () => {
     }
   }, [navigate]);
 
-  return <div>Processing login...</div>;
+  return <div>로그인 요청 중..</div>;
 };
 
 export default Callback;
