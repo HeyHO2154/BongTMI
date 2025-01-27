@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom"; // React Router 사용
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -90,6 +90,11 @@ const Search: React.FC = () => {
       [key]: value,
     }));
   };
+
+  const navigate = useNavigate(); // navigate 함수 생성
+  const handleCardClick = (progrmRegistNo: string) => {
+    navigate(`/?progrmRegistNo=${progrmRegistNo}`); // 쿼리 파라미터로 전달
+  };  
 
   useEffect(() => {
     loadMoreCards();
@@ -189,7 +194,7 @@ const Search: React.FC = () => {
       {/* 카드 리스트 */}
       <CardList>
         {cards.map((card) => (
-          <Card key={card.id}> {/* 고유 key 설정 */}
+          <Card key={card.id} onClick={() => handleCardClick(card.id)}> {/* 클릭 핸들러 추가 */}
             <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
             <CardText>
               <Label>{card.label}</Label>
@@ -333,7 +338,14 @@ const Card = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  transition: box-shadow 0.3s ease; /* hover 시 애니메이션 추가 */
+  height: 165px; /* 고정된 높이 설정 */
+  &:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 마우스 올릴 때 약간의 그림자 효과 */
+  }
 `;
+
 
 const CardImage = styled.div`
   flex: 0 0 25%;
