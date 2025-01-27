@@ -19,7 +19,7 @@ const App: React.FC = () => {
   return (
     <>
       <GlobalStyle />
-      <Router>
+      <Router basename="/">
         <div className="app-container">
           <TopBar />
           <Routes>
@@ -29,7 +29,7 @@ const App: React.FC = () => {
             <Route path="/feed" element={<Feed />} />
             <Route path="/my-page" element={<MyPage />} />
 
-            <Route path="/detail-bong" element={<DetailBong />} />
+            <Route path="/detail/:progrmRegistNo" element={<DetailBong />} />
 
             <Route path="/user/login" element={<Login />} />
             <Route path="/auth/callback/kakao" element={<Callback />} />

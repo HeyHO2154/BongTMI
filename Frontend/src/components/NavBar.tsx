@@ -36,8 +36,11 @@ const NavBar: React.FC = () => {
 
   useEffect(() => {
     // 마이페이지 이동 시 로그인 여부 확인
+    const isDetailPage = /^\/detail\/\d+$/.test(location.pathname); // 정규식으로 숫자 포함 경로 확인
     if (location.pathname === "/my-page" || location.pathname === "/user/login" || location.pathname === "/A" || location.pathname === "/B") {
       setActiveButton("my-page");
+    } else if (isDetailPage) {
+      setActiveButton("/");
     } else {
       setActiveButton(location.pathname); // 다른 버튼들 활성화 상태 업데이트
     }

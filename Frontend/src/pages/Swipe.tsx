@@ -14,7 +14,7 @@ interface CardData {
 }
 
 const SWIPE_THRESHOLD_X = 200; // 스와이프 판정 기준 (px)
-const SWIPE_THRESHOLD_Y = 200; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 300; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -137,10 +137,10 @@ const Swipe: React.FC = () => {
   // 스와이프 판정 & 처리
   // --------------------
   const checkSwipe = () => {
-    if (dragY < -SWIPE_THRESHOLD_Y) {
-      // 스와이프 임계값 초과 시 페이지를 완전히 위로 이동
-      setDragY(-window.innerHeight); // 화면 높이만큼 위로 이동
-      setTimeout(() => navigate("/detail-bong"), 300); // 페이지 전환 (애니메이션 완료 후)
+    if (dragY < -SWIPE_THRESHOLD_Y && currentIndex >= 0) {
+      const progrmRegistNo = cards[currentIndex].id;
+      console.log("Navigating to:", `/detail/${progrmRegistNo}`); // 로그 확인
+      navigate(`/detail/${progrmRegistNo}`);
     } else if (dragX > SWIPE_THRESHOLD_X) {
       swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
@@ -150,6 +150,7 @@ const Swipe: React.FC = () => {
       setDragY(0);
     }
   };
+  
 
 
   const swipe = async (direction: "left" | "right") => {

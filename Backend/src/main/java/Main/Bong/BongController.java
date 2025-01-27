@@ -2,6 +2,7 @@ package Main.Bong;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,6 +29,11 @@ public class BongController {
     @GetMapping("/random")
     public Bong getRandomBong() {
         return bongService.getRandomBong();
+    }
+    
+    @GetMapping("/info")
+    public ResponseEntity<Bong> getBongInfo(@RequestParam String progrmRegistNo) {
+        return bongService.getInfoBong(progrmRegistNo);
     }
     
     @GetMapping("/image/{progrmRegistNo}/{imageIndex}")
