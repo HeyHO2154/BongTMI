@@ -11,6 +11,7 @@ interface CardData {
   type: string;
   date: string;
   imageUrl: string; // 이미지 URL 추가
+  from: String;
 }
 
 const SWIPE_THRESHOLD_X = 200; // 스와이프 판정 기준 (px)
@@ -38,6 +39,13 @@ const Swipe: React.FC = () => {
         : `http://localhost:8080/api/bong/random`; // 랜덤 카드 요청
       const response = await axios.get(url);
   
+      const source = response.data.progrmRegistNo.substring(0, 3); // from 앞글자 3개 추출
+      let fromValue = "사용자 정의"; // 기본값
+      if (source === "SYO") {
+        fromValue = "1365자원봉사";
+      } else if (source === "VMS") {
+        fromValue = "VMS사회복지";
+      }
       const newCard: CardData = {
         id: response.data.progrmRegistNo, // 고유 id 추가
         label: response.data.progrmSj || "제목 없음",
@@ -45,6 +53,7 @@ const Swipe: React.FC = () => {
         type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
         imageUrl: `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
+        from: fromValue
       };
   
       return newCard;
@@ -238,6 +247,37 @@ const Swipe: React.FC = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={isTop ? handleMouseLeave : undefined}
           >
+
+            <div
+              style={{
+                position: "absolute",
+                top: "20px", // 상단 간격
+                left: "20px", // 좌측 간격
+                backgroundColor:
+                  card.from === "1365자원봉사"
+                    ? "rgba(255, 215, 0, 1)" // 노란색 (1365)
+                    : card.from === "VMS사회복지"
+                    ? "rgba(138, 43, 226, 1)" // 보라색 (VMS)
+                    : "rgba(50, 205, 50, 1)", // 녹색 (사용자정의)
+                color:
+                  card.from === "VMS사회복지"
+                    ? "white" // 글자를 흰색으로 설정 (VMS)
+                    : "black", // 기본값은 검정색
+                padding: "12px 24px", // 패딩 키워서 크기 조정
+                borderRadius: "12px", // 둥글기 유지
+                fontSize: "18px", // 폰트 크기 키우기
+                fontWeight: "bold",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // 그림자 효과
+                height: "auto", // 높이를 자동으로 맞춤
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {card.from}
+            </div>
+
+
             <TextContainer>
               <LabelText>{card.label}</LabelText>
               <ContextText>{card.region}</ContextText>

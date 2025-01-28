@@ -93,7 +93,8 @@ const Search: React.FC = () => {
 
   const navigate = useNavigate(); // navigate 함수 생성
   const handleCardClick = (progrmRegistNo: string) => {
-    navigate(`/?progrmRegistNo=${progrmRegistNo}`); // 쿼리 파라미터로 전달
+    //navigate(`/?progrmRegistNo=${progrmRegistNo}`); // 쿼리 파라미터로 전달
+    navigate(`/detail/${progrmRegistNo}`);
   };  
 
   useEffect(() => {
