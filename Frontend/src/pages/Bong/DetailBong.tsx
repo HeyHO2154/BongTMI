@@ -33,6 +33,7 @@ interface Bong {
   progrmCn: string;
   sidoCd: string;
   gugunCd: string;
+  imageUrls: string[]; // 이미지 배열 추가
 }
 
 const DetailBong: React.FC = () => {
@@ -41,9 +42,22 @@ const DetailBong: React.FC = () => {
   const [bongData, setBongData] = useState<Bong | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 보이는 이미지 인덱스
 
   const handleViewMore = () => {
     navigate(`/?progrmRegistNo=${progrmRegistNo}`); // Swipe.tsx로 progrmRegistNo 전달
+  };
+
+  const handleImageSlide = (direction: "left" | "right") => {
+    if (direction === "left") {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? 2 : prevIndex - 1
+      );
+    } else {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 2 ? 0 : prevIndex + 1
+      );
+    }
   };
 
   useEffect(() => {
@@ -55,7 +69,14 @@ const DetailBong: React.FC = () => {
             params: { progrmRegistNo },
           }
         );
-        setBongData(response.data);
+        setBongData({
+          ...response.data,
+          imageUrls: [
+            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`,
+            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/2`,
+            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/3`,
+          ],
+        });
       } catch (err) {
         setError("데이터를 가져오는 데 실패했습니다.");
       } finally {
@@ -72,12 +93,12 @@ const DetailBong: React.FC = () => {
 
   return (
     <Container>
-        <Header>
-          <ViewMoreButton onClick={handleViewMore}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-            봉사 더 보기
-          </ViewMoreButton>
-        </Header>
+      <Header>
+        <ViewMoreButton onClick={handleViewMore}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+          봉사 더 보기
+        </ViewMoreButton>
+      </Header>
       <Content>
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
@@ -106,18 +127,37 @@ const DetailBong: React.FC = () => {
         <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
         <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>
         
+        {/* 이미지 슬라이드 */}
+        <ImageContainer>
+          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
+          <Image
+            src={bongData.imageUrls[currentImageIndex]}
+            alt={`Image ${currentImageIndex + 1}`}
+          />
+          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
+        </ImageContainer>
       </Content>
 
       <Footer>
-          <ApplyButton
-            onClick={() =>
-              window.location.href = `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=${progrmRegistNo}`
-            }
-          >
-            신청하기
-          </ApplyButton>
-        </Footer>
+        <ApplyButton
+          onClick={() => {
+            const baseUrl =
+              bongData.progrmRegistNo.startsWith("SYO")
+                ? `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=`
+                : bongData.progrmRegistNo.startsWith("VMS")
+                ? `https://www.vms.or.kr/partspace/recruitView.do?seq=`
+                : null;
 
+            if (baseUrl) {
+              window.location.href = `${baseUrl}${bongData.progrmRegistNo.slice(3)}`;
+            } else {
+              alert("유효하지 않은 프로그램 등록 번호입니다.");
+            }
+          }}
+        >
+          신청하기
+        </ApplyButton>
+      </Footer>
     </Container>
   );
 };
@@ -151,7 +191,6 @@ const Container = styled.div`
   overflow: hidden; /* 전체 화면 스크롤 방지 */
   padding: 0;
 
-  /* 초기 상태: 약간 아래에서 시작 */
   transform: translateY(20px);
   opacity: 0;
   animation: fadeIn 0.5s ease-out forwards; /* 0.5초 동안 페이드인 효과 */
@@ -170,21 +209,21 @@ const Header = styled.div`
   justify-content: flex-start;
   padding: 10px 20px;
   background-color: #fff;
-  z-index: 10; /* Content 위로 배치 */
-  position: relative; /* z-index 적용을 위해 position 추가 */
+  z-index: 10;
+  position: relative;
 `;
 
 const Content = styled.div`
   width: 100%;
-  max-width: 800px; /* 내용의 최대 너비 설정 */
-  height: 90%; /* 본문 높이를 제한 */
-  overflow-y: auto; /* 내부 스크롤 활성화 */
+  max-width: 800px;
+  height: 90%;
+  overflow-y: auto;
   padding: 20px;
   box-sizing: border-box;
   background-color: #fff;
   border-radius: 8px;
-  z-index: 1; /* Header와 Footer 아래로 배치 */
-  position: relative; /* z-index 적용을 위해 position 추가 */
+  z-index: 1;
+  position: relative;
 `;
 
 const Footer = styled.div`
@@ -193,10 +232,9 @@ const Footer = styled.div`
   margin-top: 20px;
   margin-bottom: 30px;
   background-color: #fff;
-  z-index: 10; /* Content 위로 배치 */
-  position: relative; /* z-index 적용을 위해 position 추가 */
+  z-index: 10;
+  position: relative;
 `;
-
 
 const ApplyButton = styled.button`
   padding: 12px 20px;
@@ -212,4 +250,47 @@ const ApplyButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+`;
+
+// 슬라이드 관련 스타일
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
+`;
+
+const SlideButtonLeft = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+`;
+
+const SlideButtonRight = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
 `;

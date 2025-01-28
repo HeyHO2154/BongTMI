@@ -32,4 +32,5 @@ CREATE TABLE Bong (
     gugunCd VARCHAR(7) NOT NULL -- 시군구코드
 );
 
+SELECT COUNT(*) AS total_count FROM Bong;
 select * from Bong;

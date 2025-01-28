@@ -147,6 +147,9 @@ def process_and_store_volunteer_data():
             detail_xml = fetch_volunteer_detail(item['progrmRegistNo'])
             detail_data = parse_xml_to_dict(detail_xml)
             if detail_data:
+                # detail_data의 progrmRegistNo 앞에 "SYO" 추가
+                detail_data[0]['progrmRegistNo'] = 'SYO' + detail_data[0]['progrmRegistNo']
+                
                 insert_volunteer_data(detail_data[0])  # 상세 데이터 저장
         page_no += 1
 
