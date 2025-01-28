@@ -99,7 +99,18 @@ const DetailBong: React.FC = () => {
           봉사 더 보기
         </ViewMoreButton>
       </Header>
+
       <Content>
+        {/* 이미지 슬라이드 */}
+        <ImageContainer>
+          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
+          <Image
+            src={bongData.imageUrls[currentImageIndex]}
+            alt={`Image ${currentImageIndex + 1}`}
+          />
+          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
+        </ImageContainer>
+
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
         <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
@@ -126,16 +137,7 @@ const DetailBong: React.FC = () => {
         <p><strong>내용:</strong> {bongData.progrmCn}</p>
         <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
         <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>
-        
-        {/* 이미지 슬라이드 */}
-        <ImageContainer>
-          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
-          <Image
-            src={bongData.imageUrls[currentImageIndex]}
-            alt={`Image ${currentImageIndex + 1}`}
-          />
-          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
-        </ImageContainer>
+      
       </Content>
 
       <Footer>
@@ -260,6 +262,7 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 20px; /* 하단 패딩 추가 */
 `;
 
 const Image = styled.img`
