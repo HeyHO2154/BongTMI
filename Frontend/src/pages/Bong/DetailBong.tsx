@@ -209,7 +209,7 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  padding: 10px 20px 10px 20px;
+  padding: 12px 20px 10px 12px;
   background-color: #fff;
   z-index: 10;
   position: relative;
