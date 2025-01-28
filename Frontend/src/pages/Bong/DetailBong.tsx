@@ -209,7 +209,7 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  padding: 10px 20px;
+  padding: 10px 20px 10px 20px;
   background-color: #fff;
   z-index: 10;
   position: relative;
@@ -220,7 +220,7 @@ const Content = styled.div`
   max-width: 800px;
   height: 90%;
   overflow-y: auto;
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
   box-sizing: border-box;
   background-color: #fff;
   border-radius: 8px;
@@ -231,8 +231,8 @@ const Content = styled.div`
 const Footer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin-top: 10px;
+  margin-bottom: 40px;
   background-color: #fff;
   z-index: 10;
   position: relative;
