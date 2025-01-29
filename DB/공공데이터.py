@@ -136,7 +136,9 @@ def parse_xml_to_dict(xml_data):
 # 데이터 저장 프로세스
 def process_and_store_volunteer_data():
     page_no = 1
-    while True:
+    #개발용이라 소량 페이지만 가져옴,
+    #실제로는 while true로 하면됨
+    while page_no <= 1:
         xml_data = fetch_all_volunteer_data(page_no)
         volunteer_list = parse_xml_to_dict(xml_data)
         if not volunteer_list:
