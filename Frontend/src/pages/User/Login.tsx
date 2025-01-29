@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
+import styled from "styled-components";
 
 const handleKakaoLogin = () => {
   const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=aa593063067708935c526eedf855bc6e&redirect_uri=http://localhost:5173/auth/callback/kakao`;
   window.location.href = kakaoAuthUrl;
+};
+const handleNaverLogin = () => {
+  const clientId = "entZ4xGkP03kyHMWooKS"; // 네이버 개발자 센터에서 발급받은 클라이언트 ID
+  const redirectUri = "http://localhost:5173/auth/callback/naver"; // 네이버에 등록한 콜백 URL
+  const state = "random_string"; // CSRF 방지를 위한 랜덤한 상태 값
+
+  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+  window.location.href = naverAuthUrl;
 };
 
 const Login: React.FC = () => {
@@ -16,105 +26,116 @@ const Login: React.FC = () => {
       alert("아이디와 비밀번호를 입력해주세요.");
       return;
     }
-    // 일반 로그인 로직 처리 (추후 구현 필요)
     console.log("로그인 시도:", { userId, password });
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "80vh",
-        textAlign: "center",
-      }}
-    >
-      <h1 style={{ marginBottom: "20px" }}>로그인</h1>
-      {/* 아이디 입력 창 */}
-      <input
+    <Container>
+      <Logo src="/src/assets/봉틈이1.png" alt="봉틈이" />
+
+      <Input
         type="text"
         placeholder="아이디를 입력하세요"
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
-        style={{
-          marginBottom: "10px",
-          padding: "10px",
-          width: "280px",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-        }}
       />
-      {/* 비밀번호 입력 창 */}
-      <input
+
+      <Input
         type="password"
         placeholder="비밀번호를 입력하세요"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        style={{
-          marginBottom: "20px",
-          padding: "10px",
-          width: "280px",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-        }}
       />
-      {/* 로그인 버튼 + 카카오 로그인 버튼 */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <button
-          onClick={handleLogin}
-          style={{
-            padding: "12.5px 21.5px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          로그인
-        </button>
-        <img
-          src="/src/assets/kakao_login_medium.png"
-          alt="Login with Kakao"
-          style={{ cursor: "pointer", maxWidth: "200px" }}
+
+      <LoginButton onClick={handleLogin}>로그인</LoginButton>
+      <LinkContainer>
+        <StyledLink onClick={() => navigate("/A")}>계정찾기</StyledLink>
+        |
+        <StyledLink onClick={() => navigate("/B")}>회원가입</StyledLink>
+      </LinkContainer>
+      <ButtonContainer>
+        <NaverButton
+          src="/src/assets/로그인_네이버.png"
+          onClick={handleNaverLogin}
+        />
+        <KakaoButton
+          src="/src/assets/로그인_카카오.png"
           onClick={handleKakaoLogin}
         />
-      </div>
-      {/* 계정찾기 / 회원가입 */}
-      <div
-        style={{
-          marginTop: "20px",
-          display: "flex",
-          justifyContent: "center",
-          gap: "20px",
-        }}
-      >
-        <span
-          onClick={() => navigate("/A")}
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#007bff",
-          }}
-        >
-          계정찾기
-        </span>
-        /
-        <span
-          onClick={() => navigate("/B")}
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#007bff",
-          }}
-        >
-          회원가입
-        </span>
-      </div>
-    </div>
+      </ButtonContainer>
+
+      
+    </Container>
   );
 };
 
 export default Login;
+
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+`;
+
+const Logo = styled.img`
+  height: 250px; /* 로고 높이 */
+  width: auto; /* 비율 유지 */
+  cursor: pointer;
+  padding-bottom: 15px;
+`;
+
+const Input = styled.input`
+  margin-bottom: 10px;
+  padding: 12px;
+  width: 280px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 30px;
+`;
+
+const LoginButton = styled.button`
+  width: 280px;
+  padding: 12.5px 21.5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const KakaoButton = styled.img`
+  cursor: pointer;
+  max-width: 200px;
+`;
+const NaverButton = styled.img`
+  cursor: pointer;
+  max-width: 91.6px;
+  border-radius: 7px;
+`;
+
+const LinkContainer = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+`;
+
+const StyledLink = styled.span`
+  cursor: pointer;
+  text-decoration: underline;
+  color: #007bff;
+`;

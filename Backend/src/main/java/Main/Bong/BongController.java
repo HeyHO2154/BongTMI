@@ -49,17 +49,15 @@ public class BongController {
         return bongService.saveBong(bongDto);
     }
 
+    
+    
+    
+    
+    
     @PostMapping("/upload/{progrmRegistNo}")
     public String uploadImages(@PathVariable String progrmRegistNo, @RequestParam("images") MultipartFile[] files) {
         return bongService.uploadImages(progrmRegistNo, files);
     }
-    
-    
-    
-    
-    
-    
-    
     
     @GetMapping("/image/{progrmRegistNo}/{imageIndex}")
     public ResponseEntity<Resource> getImage(

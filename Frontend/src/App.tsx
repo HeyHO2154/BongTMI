@@ -13,7 +13,8 @@ import MyPage from "./pages/MyPage";
 import DetailBong from "./pages/Bong/DetailBong";
 
 import Login from "./pages/User/Login";
-import Callback from './pages/User/Callback';
+import KakaoCallback from "./pages/User/KaKaoCallback";
+import NaverCallback from "./pages/User/NaverCallback";
 
 const App: React.FC = () => {
   return (
@@ -32,7 +33,8 @@ const App: React.FC = () => {
             <Route path="/detail/:progrmRegistNo" element={<DetailBong />} />
 
             <Route path="/user/login" element={<Login />} />
-            <Route path="/auth/callback/kakao" element={<Callback />} />
+            <Route path="/auth/callback/kakao" element={<KakaoCallback />} />
+            <Route path="/auth/callback/naver" element={<NaverCallback />} />
 
           </Routes>
           <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Callback: React.FC = () => {
+const KakaoCallback: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,4 +34,4 @@ const Callback: React.FC = () => {
   return <div>로그인 요청 중..</div>;
 };
 
-export default Callback;
+export default KakaoCallback;
