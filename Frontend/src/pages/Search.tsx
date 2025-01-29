@@ -26,7 +26,6 @@ interface FilterState {
 
 const Search: React.FC = () => {
   const [allCards, setAllCards] = useState<CardData[]>([]); // 전체 데이터를 저장
-  const [cards, setCards] = useState<CardData[]>([]);
   const [visibleCards, setVisibleCards] = useState<CardData[]>([]); // 화면에 보여질 카드
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -298,6 +297,7 @@ const FilterWrapper = styled.div`
 const FilterLabel = styled.label`
   font-size: 0.9rem;
   font-weight: bold;
+  padding-top: 7px; /* 위쪽 패딩 추가 */
 `;
 
 const FilterSelect = styled.select`
