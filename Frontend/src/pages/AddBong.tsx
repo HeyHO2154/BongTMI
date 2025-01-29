@@ -114,6 +114,7 @@ const AddBong: React.FC = () => {
 
   //사용자 정보
   const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+  user;  //노란경고 방지
 
   // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,6 +142,7 @@ const AddBong: React.FC = () => {
       if (formData.images && formData.images.length > 0) {
         const imageFormData = new FormData();
         formData.images.forEach((image, index) => {
+          index;  //노란경고 방지
           imageFormData.append("images", image);
         });
   
