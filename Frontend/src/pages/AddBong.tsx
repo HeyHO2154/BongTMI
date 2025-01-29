@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -172,9 +172,39 @@ const AddBong: React.FC = () => {
     setFormData((prev) => ({ ...prev, actWkdy: actWkdyValue }));
   };
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // 사용자 정보 저장
+    }
+  }, []);
+
   return (
     <Wrapper>
       <Title>봉사 공고 등록</Title>
+      <NoticeBox>
+        <NoticeTitle>📢 필독 공지!!</NoticeTitle>
+        <NoticeContent>
+          공고 등록은 봉사와 관련된 공고를 등록하는 곳입니다.<br />
+          악용, 남용 적발 시 계정 정지 조치합니다.
+        </NoticeContent>
+      </NoticeBox>
+      {user === null ? (
+        <WarningBox>
+          <WarningTitle>⚠️ 경고!</WarningTitle>
+          <WarningContent>
+            로그인을 하지 않은 상태로 공고를 올릴 경우, 신뢰도가 낮아집니다.<br />
+            <a href="/my-page">로그인</a>을 통해 공고의 신뢰도를 올려보세요!
+          </WarningContent>
+        </WarningBox>
+      ) : (
+        <InfoBox>
+          <InfoBoxTitle>✅ 계정 확인됨</InfoBoxTitle>
+          <InfoBoxContent>
+            <strong>{user.nickname}</strong>으로 로그인이 되어있습니다. 공고 등록 시 반영됩니다.
+          </InfoBoxContent>
+        </InfoBox>
+      )}
       <Form onSubmit={handleSubmit}>
         <Section>
           <SectionTitle>기본 정보</SectionTitle>
@@ -441,4 +471,73 @@ const WeekdayCheckbox = styled.input`
   width: 16px;
   height: 16px;
   cursor: pointer;
+`;
+
+const NoticeBox = styled.div`
+  background-color: #fff3cd;
+  border-left: 5px solid #ffa502;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+`;
+
+const NoticeTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #d35400;
+  padding-bottom: 12px;
+`;
+
+const NoticeContent = styled.p`
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+`;
+
+const WarningBox = styled.div`
+  background-color: #f8d7da;
+  border-left: 5px solid #dc3545;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+`;
+
+const WarningTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #a71d2a;
+  padding-bottom: 12px;
+`;
+
+const WarningContent = styled.p`
+  font-size: 1rem;
+  color: #721c24;
+  line-height: 1.5;
+  a {
+    color: #c82333;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const InfoBox = styled.div`
+  background-color: #d4edda; /* 연한 초록색 */
+  border-left: 5px solid #28a745; /* 진한 초록색 테두리 */
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+`;
+
+const InfoBoxTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #155724; /* 어두운 초록색 */
+  padding-bottom: 12px;
+`;
+
+const InfoBoxContent = styled.p`
+  font-size: 1rem;
+  color: #155724; /* 어두운 초록색 */
+  line-height: 1.5;
 `;
