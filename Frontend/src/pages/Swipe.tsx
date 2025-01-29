@@ -40,7 +40,7 @@ const Swipe: React.FC = () => {
       const response = await axios.get(url);
   
       const source = response.data.progrmRegistNo.substring(0, 3); // from 앞글자 3개 추출
-      let fromValue = response.data.nanmmbyNm || "미등록 사용자"; // 기본값
+      let fromValue = response.data.nanmmbyNmAdmn || "미등록 사용자"; // 기본값
       if (source === "SYO") {
         fromValue = "1365자원봉사";
       } else if (source === "VMS") {
@@ -205,7 +205,6 @@ const Swipe: React.FC = () => {
   
       // 새 카드를 0번 인덱스에 추가
       updatedCards[0] = newCard;
-
       return updatedCards;
     });
   
@@ -222,7 +221,7 @@ const Swipe: React.FC = () => {
 
         return (
           <Card
-            key={card.id}
+            key={`${card.id}-${index}`}
             data-index={index} // data-index 속성 추가
             style={{
               zIndex: index,
