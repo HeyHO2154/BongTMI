@@ -25,9 +25,14 @@ interface FilterState {
 }
 
 const Search: React.FC = () => {
+  const [allCards, setAllCards] = useState<CardData[]>([]); // 전체 데이터를 저장
   const [cards, setCards] = useState<CardData[]>([]);
+  const [visibleCards, setVisibleCards] = useState<CardData[]>([]); // 화면에 보여질 카드
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFilterVisible, setIsFilterVisible] = useState(false); // 상세검색 토글 상태
+  const [offset, setOffset] = useState(0);
+  const limit = 10; // 한 번에 로드할 개수
+
   const [filters, setFilters] = useState<FilterState>({
     srvcClCode: "",
     progrmSttusSe: "",
@@ -40,37 +45,42 @@ const Search: React.FC = () => {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const fetchCardData = async (): Promise<CardData | null> => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/bong/random");
-      return {
-        id: response.data.progrmRegistNo, // 고유 id 추가
-        label: response.data.progrmSj || "제목 없음",
-        region: response.data.nanmmbyNm || "지역 없음",
-        type: response.data.srvcClCode || "상세 설명 없음",
-        date: `모집마감일: ${new Date(
-          response.data.progrmEndde
-        ).toLocaleDateString()}`,
-        imageUrl: `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`,
-      };
-    } catch (error) {
-      console.error("Failed to fetch card data:", error);
-      return null;
-    }
-  };
-
-  const loadMoreCards = async () => {
-    if (isLoading) return;
+  // 전체 Bong 리스트를 가져오는 함수
+  const fetchAllCards = async () => {
     setIsLoading(true);
-    const newCards: CardData[] = [];
-    for (let i = 0; i < 10; i++) {
-      const card = await fetchCardData();
-      if (card) newCards.push(card);
+    try {
+      const response = await axios.get("http://localhost:8080/api/bong/all");
+      const formattedCards = response.data.map((bong: any) => ({
+        id: bong.progrmRegistNo,
+        label: bong.progrmSj || "제목 없음",
+        region: bong.nanmmbyNm || "지역 없음",
+        type: bong.srvcClCode || "상세 설명 없음",
+        date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
+        imageUrl: `http://localhost:8080/api/bong/image/${bong.progrmRegistNo}/1`,
+      }));
+
+      setAllCards(formattedCards);
+      setVisibleCards(formattedCards.slice(0, limit)); // 첫 페이지 로드
+      setOffset(limit);
+    } catch (error) {
+      console.error("Failed to fetch all Bong data:", error);
     }
-    setCards((prevCards) => [...prevCards, ...newCards]);
     setIsLoading(false);
   };
 
+  // 스크롤 시 추가 로딩 함수
+  const loadMoreCards = () => {
+    if (isLoading || offset >= allCards.length) return; // 더 불러올 데이터 없으면 중단
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setVisibleCards((prevCards) => [...prevCards, ...allCards.slice(offset, offset + limit)]);
+      setOffset((prevOffset) => prevOffset + limit);
+      setIsLoading(false);
+    }, 500);
+  };
+
+  // 스크롤 감지 이벤트
   const handleScroll = () => {
     const wrapper = wrapperRef.current;
     if (wrapper) {
@@ -98,7 +108,7 @@ const Search: React.FC = () => {
   };  
 
   useEffect(() => {
-    loadMoreCards();
+    fetchAllCards();
   }, []);
 
   return (
@@ -194,17 +204,21 @@ const Search: React.FC = () => {
 
       {/* 카드 리스트 */}
       <CardList>
-        {cards.map((card) => (
-          <Card key={card.id} onClick={() => handleCardClick(card.id)}> {/* 클릭 핸들러 추가 */}
-            <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
-            <CardText>
-              <Label>{card.label}</Label>
-              <Context>{card.region}</Context>
-              <Context>{card.type}</Context>
-              <DateCss>{card.date}</DateCss>
-            </CardText>
-          </Card>
-        ))}
+        {visibleCards.length > 0 ? (
+          visibleCards.map((card: CardData) => (
+            <Card key={card.id} onClick={() => handleCardClick(card.id)}>
+              <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
+              <CardText>
+                <Label>{card.label}</Label>
+                <Context>{card.region}</Context>
+                <Context>{card.type}</Context>
+                <DateCss>{card.date}</DateCss>
+              </CardText>
+            </Card>
+          ))
+        ) : (
+          <LoadingText>봉사 데이터를 불러오는 중...</LoadingText>
+        )}
       </CardList>
       {isLoading && <LoadingText>Loading...</LoadingText>}
     </Wrapper>

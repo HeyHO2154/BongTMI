@@ -1,9 +1,8 @@
 package Main.Bong;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -30,6 +29,11 @@ public class BongController {
     @Autowired
     private BongService bongService;
  
+    @GetMapping("/all")
+    public List<Bong> getAllBong() {
+        return bongService.getAllBong();
+    }
+    
     @GetMapping("/random")
     public Bong getRandomBong() {
         return bongService.getRandomBong();

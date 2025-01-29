@@ -2,6 +2,7 @@ package Main.Bong;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ public class BongService {
     @Autowired
     private BongRepository bongRepository;
 
+    public List<Bong> getAllBong() {
+    	List<Bong> bong = bongRepository.findAllBong();
+		return bong;
+	}
+    
     public Bong getRandomBong() {
         Bong bong = bongRepository.findRandomBong();
         if (bong == null) {
