@@ -6,7 +6,35 @@ import { useNavigate } from "react-router-dom";
 const AddBong: React.FC = () => {
   const navigate = useNavigate(); // ✅ 네비게이션 훅 사용
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    progrmRegistNo: string;
+    progrmSj: string;
+    progrmSttusSe: string;
+    progrmBgnde: string;
+    progrmEndde: string;
+    actBeginTm: string;
+    actEndTm: string;
+    noticeBgnde: string;
+    noticeEndde: string;
+    rcritNmpr: string;
+    actWkdy: string;
+    srvcClCode: string;
+    adultPosblAt: string;
+    yngbgsPosblAt: string;
+    grpPosblAt: string;
+    mnnstNm: string;
+    nanmmbyNm: string;
+    actPlace: string;
+    nanmmbyNmAdmn: string;
+    telno: string;
+    fxnum: string;
+    postAdres: string;
+    email: string;
+    progrmCn: string;
+    sidoCd: string;
+    gugunCd: string;
+    images: File[];  // <-- 추가됨
+  }>({
     progrmRegistNo: "",
     progrmSj: "",
     progrmSttusSe: "1",
@@ -33,7 +61,9 @@ const AddBong: React.FC = () => {
     progrmCn: "",
     sidoCd: "00",
     gugunCd: "00",
+    images: [],  // <-- 추가됨
   });
+  
 
   // 입력값 변경 시 처리
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -57,8 +87,18 @@ const AddBong: React.FC = () => {
         : newValue,
     }));
   };
-  
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files).slice(0, 3); // 최대 3개 제한
+      setFormData((prev) => ({
+        ...prev,
+        images: files,
+      }));
+    }
+  };
+  
+  
   //USR 고유번호 생성
   const generateProgrmRegistNo = () => {
     const now = new Date();
@@ -78,37 +118,38 @@ const AddBong: React.FC = () => {
   // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    //고유번호 지정
+    
     formData.progrmRegistNo = generateProgrmRegistNo();
-    //담당자명 지정
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // 사용자 정보 저장
+      setUser(JSON.parse(storedUser));
       formData.nanmmbyNmAdmn = JSON.parse(storedUser).nickname;
     }
-
-    // 필수 값 검증
+  
     if (!formData.progrmRegistNo || !formData.progrmSj) {
       alert("필수 항목을 입력해주세요.");
       return;
     }
-
+  
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/bong/add",
-        JSON.stringify(formData), // JSON 변환
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Submission successful:", response.data);
+      // 1. JSON 데이터 먼저 전송
+      await axios.post("http://localhost:8080/api/bong/add", JSON.stringify(formData), {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      // 2. 이미지 업로드 처리
+      if (formData.images && formData.images.length > 0) {
+        const imageFormData = new FormData();
+        formData.images.forEach((image, index) => {
+          imageFormData.append("images", image);
+        });
+  
+        await axios.post(`http://localhost:8080/api/bong/upload/${formData.progrmRegistNo}`, imageFormData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+  
       alert("봉사 공고 등록이 완료되었습니다!");
-
-      //성공 시 상세 페이지로 이동
       navigate(`/detail/${formData.progrmRegistNo}`);
     } catch (error) {
       alert("등록 중 오류가 발생했습니다.");
@@ -263,6 +304,10 @@ const AddBong: React.FC = () => {
               <Input type="text" name="fxnum" placeholder="예: 모집 사이트 또는 오픈카톡방 등" value={formData.fxnum} onChange={handleChange}/>
             </FormGroup>
           </FormGrid>
+          <FormGroup>
+              <Label>이미지 업로드 (최대 3장)</Label>
+              <Input type="file" multiple accept="image/*" onChange={handleFileChange} />
+            </FormGroup>
         </Section>
 
         <Section>

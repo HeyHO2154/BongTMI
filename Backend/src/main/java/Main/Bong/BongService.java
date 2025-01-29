@@ -1,11 +1,14 @@
 package Main.Bong;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BongService {
@@ -61,5 +64,24 @@ public class BongService {
         bong.setGugunCd(bongDto.getGugunCd());
         return bongRepository.save(bong);
     }
+
+	public String uploadImages(String progrmRegistNo, MultipartFile[] files) {
+		String uploadPath = "C:/Users/PRO/Desktop/GitDesktop/BongTMI/DB/Image/" + progrmRegistNo;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        try {
+            for (int i = 0; i < files.length && i < 3; i++) { // 최대 3개 제한
+                MultipartFile file = files[i];
+                String filePath = uploadPath + "/Image_" + (i+1) + ".jpg";
+                file.transferTo(new File(filePath));
+            }
+            return "이미지 업로드 성공";
+        } catch (IOException e) {
+            return "이미지 업로드 실패: " + e.getMessage();
+        }
+	}
 }
 

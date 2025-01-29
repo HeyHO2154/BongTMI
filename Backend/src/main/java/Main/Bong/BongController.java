@@ -1,5 +1,7 @@
 package Main.Bong;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -39,9 +42,17 @@ public class BongController {
     
     @PostMapping("/add")
     public Bong saveBong(@RequestBody Bong bongDto) {
-    	System.out.println(bongDto);
         return bongService.saveBong(bongDto);
     }
+
+    @PostMapping("/upload/{progrmRegistNo}")
+    public String uploadImages(@PathVariable String progrmRegistNo, @RequestParam("images") MultipartFile[] files) {
+        return bongService.uploadImages(progrmRegistNo, files);
+    }
+    
+    
+    
+    
     
     
     
