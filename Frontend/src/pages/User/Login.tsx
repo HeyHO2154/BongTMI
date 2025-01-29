@@ -49,9 +49,9 @@ const Login: React.FC = () => {
 
       <LoginButton onClick={handleLogin}>로그인</LoginButton>
       <LinkContainer>
-        <StyledLink onClick={() => navigate("/A")}>계정찾기</StyledLink>
+        <StyledLink onClick={() => navigate("/user/find-account")}>계정찾기</StyledLink>
         |
-        <StyledLink onClick={() => navigate("/B")}>회원가입</StyledLink>
+        <StyledLink onClick={() => navigate("/user/register")}>회원가입</StyledLink>
       </LinkContainer>
       <ButtonContainer>
         <NaverButton
@@ -84,7 +84,6 @@ const Container = styled.div`
 const Logo = styled.img`
   height: 250px; /* 로고 높이 */
   width: auto; /* 비율 유지 */
-  cursor: pointer;
   padding-bottom: 15px;
 `;
 
@@ -112,6 +111,7 @@ const LoginButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  font-size: 14px;
   &:hover {
     background-color: #0056b3;
   }

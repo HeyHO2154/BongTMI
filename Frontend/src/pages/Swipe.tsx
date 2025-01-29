@@ -258,9 +258,9 @@ const Swipe: React.FC = () => {
                     ? "rgb(218, 40, 40)" // 적색 (비 로그인)
                     : "rgba(50, 205, 50, 1)", // 녹색 (사용자 정의)
                 color:
-                  card.from === "VMS사회복지"
-                    ? "white" // 글자를 흰색으로 설정 (VMS)
-                    : "black", // 기본값은 검정색
+                  card.from === "1365자원봉사"
+                    ? "black" // 글자를 흰색으로 설정 (VMS)
+                    : "white", // 기본값은 검정색
                 padding: "12px 24px", // 패딩 키워서 크기 조정
                 borderRadius: "12px", // 둥글기 유지
                 fontSize: "18px", // 폰트 크기 키우기

@@ -67,6 +67,10 @@ def fetch_and_download():
                 save_path = os.path.join(base_path, progrmRegisNo)
 
                 # **이미 존재하는 폴더인지 확인**
+                if "USR" in progrmRegisNo:  # USR이 포함된 경우 건너뛰기
+                    print(f"({index}/{total}) '{progrmRegisNo}'는 다운로드 생략")
+                    continue  # 다운로드 건너뛰기
+                # **이미 존재하는 폴더인지 확인**
                 if os.path.exists(save_path) and os.listdir(save_path):
                     print(f"({index}/{total}) '{progrmRegisNo}' 폴더가 이미 존재하여 다운로드 생략")
                     continue  # 다운로드 건너뛰기

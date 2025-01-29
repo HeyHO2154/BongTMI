@@ -15,6 +15,8 @@ import DetailBong from "./pages/Bong/DetailBong";
 import Login from "./pages/User/Login";
 import KakaoCallback from "./pages/User/KaKaoCallback";
 import NaverCallback from "./pages/User/NaverCallback";
+import FindAccount from "./pages/User/FindAccount";
+import Register from "./pages/User/Register";
 
 const App: React.FC = () => {
   return (
@@ -35,6 +37,8 @@ const App: React.FC = () => {
             <Route path="/user/login" element={<Login />} />
             <Route path="/auth/callback/kakao" element={<KakaoCallback />} />
             <Route path="/auth/callback/naver" element={<NaverCallback />} />
+            <Route path="/user/find-account" element={<FindAccount />} />
+            <Route path="/user/register" element={<Register />} />
 
           </Routes>
           <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}

@@ -12,6 +12,7 @@ interface CardData {
   type: string;
   date: string;
   imageUrl: string; // 이미지 URL 추가
+  from: string; // 출처 정보 추가
 }
 
 interface FilterState {
@@ -49,14 +50,26 @@ const Search: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:8080/api/bong/all");
-      const formattedCards = response.data.map((bong: any) => ({
-        id: bong.progrmRegistNo,
-        label: bong.progrmSj || "제목 없음",
-        region: bong.nanmmbyNm || "지역 없음",
-        type: bong.srvcClCode || "상세 설명 없음",
-        date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
-        imageUrl: `http://localhost:8080/api/bong/image/${bong.progrmRegistNo}/1`,
-      }));
+      const formattedCards = response.data.map((bong: any) => {
+        const source = bong.progrmRegistNo.substring(0, 3); // 출처 구분 (앞 3글자)
+        let fromValue = bong.nanmmbyNmAdmn || "미등록 사용자"; // 기본값 설정
+  
+        if (source === "SYO") {
+          fromValue = "1365자원봉사";
+        } else if (source === "VMS") {
+          fromValue = "VMS사회복지";
+        }
+  
+        return {
+          id: bong.progrmRegistNo,
+          label: bong.progrmSj || "제목 없음",
+          region: bong.nanmmbyNm || "지역 없음",
+          type: bong.srvcClCode || "상세 설명 없음",
+          date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
+          imageUrl: `http://localhost:8080/api/bong/image/${bong.progrmRegistNo}/1`,
+          from: fromValue, // 추가된 필드
+        };
+      });
 
       setAllCards(formattedCards);
       setVisibleCards(formattedCards.slice(0, limit)); // 첫 페이지 로드
@@ -207,10 +220,11 @@ const Search: React.FC = () => {
           visibleCards.map((card: CardData) => (
             <Card key={card.id} onClick={() => handleCardClick(card.id)}>
               <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
+              <Badge from={card.from}>{card.from}</Badge>
               <CardText>
                 <Label>{card.label}</Label>
                 <Context>{card.region}</Context>
-                <Context>{card.type}</Context>
+                {/* <Context>{card.type}</Context> */}
                 <DateCss>{card.date}</DateCss>
               </CardText>
             </Card>
@@ -219,6 +233,7 @@ const Search: React.FC = () => {
           <LoadingText>봉사 데이터를 불러오는 중...</LoadingText>
         )}
       </CardList>
+
       {isLoading && <LoadingText>Loading...</LoadingText>}
     </Wrapper>
   );
@@ -347,17 +362,19 @@ const CardList = styled.div`
 `;
 
 const Card = styled.div`
+  position: relative; /* ✅ 추가 */
   display: flex;
   flex-direction: row;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-  transition: box-shadow 0.3s ease; /* hover 시 애니메이션 추가 */
-  height: 165px; /* 고정된 높이 설정 */
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  height: 170px; /* 고정된 높이 설정 */
+
   &:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 마우스 올릴 때 약간의 그림자 효과 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -370,12 +387,16 @@ const CardImage = styled.div`
 `;
 
 const CardText = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 142px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 16px;
 `;
+
 
 const Label = styled.div`
   font-size: 1.2rem;
@@ -398,4 +419,23 @@ const LoadingText = styled.div`
   text-align: center;
   color: #888;
   margin-top: 16px;
+`;
+
+const Badge = styled.div<{ from: string }>`
+  position: absolute;
+  top: 10px;
+  left: 155px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: ${({ from }) => (from === "1365자원봉사" ? "black" : "white")};
+  background-color: ${({ from }) =>
+    from === "1365자원봉사"
+      ? "rgba(255, 215, 0, 1)" // 노란색 (1365)
+      : from === "VMS사회복지"
+      ? "rgba(138, 43, 226, 1)" // 보라색 (VMS)
+      : from === "미등록 사용자"
+      ? "rgb(218, 40, 40)" // 적색 (비 로그인)
+      : "rgba(50, 205, 50, 1)"}; // 녹색 (사용자 정의)
 `;

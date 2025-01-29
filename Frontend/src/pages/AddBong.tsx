@@ -201,7 +201,7 @@ const AddBong: React.FC = () => {
         <InfoBox>
           <InfoBoxTitle>✅ 계정 확인됨</InfoBoxTitle>
           <InfoBoxContent>
-            <strong>{user.nickname}</strong>으로 로그인이 되어있습니다. 공고 등록 시 반영됩니다.
+            <strong>{user.nickname}</strong>님으로 로그인이 되어있습니다. 공고 등록 시 반영됩니다.
           </InfoBoxContent>
         </InfoBox>
       )}
