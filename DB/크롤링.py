@@ -25,6 +25,32 @@ def save_to_mysql(data):
                 noticeBgnde, noticeEndde, rcritNmpr, actWkdy, srvcClCode, adultPosblAt, yngbgsPosblAt, grpPosblAt,
                 mnnstNm, nanmmbyNm, actPlace, nanmmbyNmAdmn, telno, fxnum, postAdres, email, progrmCn, sidoCd, gugunCd
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                progrmSj=VALUES(progrmSj),
+                progrmSttusSe=VALUES(progrmSttusSe),
+                progrmBgnde=VALUES(progrmBgnde),
+                progrmEndde=VALUES(progrmEndde),
+                actBeginTm=VALUES(actBeginTm),
+                actEndTm=VALUES(actEndTm),
+                noticeBgnde=VALUES(noticeBgnde),
+                noticeEndde=VALUES(noticeEndde),
+                rcritNmpr=VALUES(rcritNmpr),
+                actWkdy=VALUES(actWkdy),
+                srvcClCode=VALUES(srvcClCode),
+                adultPosblAt=VALUES(adultPosblAt),
+                yngbgsPosblAt=VALUES(yngbgsPosblAt),
+                grpPosblAt=VALUES(grpPosblAt),
+                mnnstNm=VALUES(mnnstNm),
+                nanmmbyNm=VALUES(nanmmbyNm),
+                actPlace=VALUES(actPlace),
+                nanmmbyNmAdmn=VALUES(nanmmbyNmAdmn),
+                telno=VALUES(telno),
+                fxnum=VALUES(fxnum),
+                postAdres=VALUES(postAdres),
+                email=VALUES(email),
+                progrmCn=VALUES(progrmCn),
+                sidoCd=VALUES(sidoCd),
+                gugunCd=VALUES(gugunCd)
             """
             cursor.executemany(sql, data)
         print(f"Saved {len(data)} records to MySQL.")
@@ -46,15 +72,12 @@ async def scrape_vms():
         #max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
         #개발할떄는 용량 최소화를 위해 1페이지만
         max_pages = 1
-        print(max_pages)
 
         for page_num in range(max_pages):
 
             # 목록 페이지 열기
             await page.goto("https://www.vms.or.kr/partspace/recruit.do?sttdte=2025-01-01&enddte=2025-12-31&page="+str(page_num+1))
             await page.wait_for_selector("ul.list_wrap li a", timeout=60000)
-
-            print(f"Processing page {page_num + 1}...")
 
             # 목록에서 seq 값 추출
             links = await page.locator("ul.list_wrap li a").all()
@@ -68,7 +91,6 @@ async def scrape_vms():
             for seq in seq_values:
                 try:
                     detail_url = f"https://www.vms.or.kr/partspace/recruitView.do?seq={seq}"
-                    print(f"Fetching details from: {detail_url}")
 
                     # 상세 페이지 열기
                     await page.goto(detail_url)
@@ -123,6 +145,7 @@ async def scrape_vms():
                         noticeBgnde, noticeEndde, rcritNmpr, actWkdy, srvcClCode, adultPosblAt, yngbgsPosblAt, grpPosblAt,
                         mnnstNm, nanmmbyNm, actPlace, nanmmbyNmAdmn, telno, fxnum, postAdres, email, progrmCn, sidoCd, gugunCd
                     ))
+                    print("저장됨: "+progrmRegistNo)
                 except Exception as e:
                     print(f"Error processing detail page for seq {seq}: {e}")
 

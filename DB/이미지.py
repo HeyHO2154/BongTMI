@@ -65,10 +65,15 @@ def fetch_and_download():
 
                 # 저장할 폴더 경로
                 save_path = os.path.join(base_path, progrmRegisNo)
+
+                # **이미 존재하는 폴더인지 확인**
+                if os.path.exists(save_path) and os.listdir(save_path):
+                    print(f"({index}/{total}) '{progrmRegisNo}' 폴더가 이미 존재하여 다운로드 생략")
+                    continue  # 다운로드 건너뛰기
+                # 폴더 생성 후 다운로드 실행 
                 os.makedirs(save_path, exist_ok=True)  # 폴더 생성
-                
-                print(f"({index}/{total}) 현재 검색어: {query_word} (폴더: {progrmRegisNo})")
                 download_images(query_word, save_path)  # 이미지 다운로드
+                print(f"({index}/{total}) 현재 검색어: {query_word} (폴더: {progrmRegisNo})")
 
                 # 딜레이 (3초~5초 사이 랜덤 딜레이)
                 #time.sleep(3 + (2 * os.urandom(1)[0] / 255))
