@@ -49,7 +49,7 @@ const Swipe: React.FC = () => {
       const newCard: CardData = {
         id: response.data.progrmRegistNo, // 고유 id 추가
         label: response.data.progrmSj || "제목 없음",
-        region: response.data.nanmmbyNm || "지역 없음",
+        region: response.data.postAdres || "지역 없음",
         type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
         imageUrl: `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
