@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Bong;
 
 -- 봉사 공고 테이블
 CREATE TABLE Bong (
-    progrmRegistNo VARCHAR(10) PRIMARY KEY, -- 프로그램등록번호 (PK)
+    progrmRegistNo VARCHAR(100) PRIMARY KEY, -- 프로그램등록번호 (PK)
     progrmSj VARCHAR(100) NOT NULL, -- 봉사제목
     progrmSttusSe TINYINT NOT NULL, -- 모집상태 (1: 모집대기, 2: 모집중, 3: 모집완료)
     progrmBgnde DATE NOT NULL, -- 봉사시작일자
@@ -24,7 +24,7 @@ CREATE TABLE Bong (
     actPlace VARCHAR(100) NOT NULL, -- 봉사장소
     nanmmbyNmAdmn VARCHAR(50) NOT NULL, -- 담당자명
     telno VARCHAR(20) NOT NULL, -- 전화번호
-    fxnum VARCHAR(14), -- FAX번호 (NULL 허용)
+    fxnum VARCHAR(100), -- FAX번호 (NULL 허용)
     postAdres VARCHAR(100) NOT NULL, -- 담당자 주소
     email VARCHAR(100) NOT NULL, -- 이메일
     progrmCn TEXT NOT NULL, -- 내용

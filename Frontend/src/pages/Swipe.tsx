@@ -40,7 +40,7 @@ const Swipe: React.FC = () => {
       const response = await axios.get(url);
   
       const source = response.data.progrmRegistNo.substring(0, 3); // from 앞글자 3개 추출
-      let fromValue = "사용자 정의"; // 기본값
+      let fromValue = response.data.nanmmbyNm || "미등록 사용자"; // 기본값
       if (source === "SYO") {
         fromValue = "1365자원봉사";
       } else if (source === "VMS") {
@@ -68,9 +68,6 @@ const Swipe: React.FC = () => {
     const progrmRegistNo = queryParams.get("progrmRegistNo");
 
     const newCards: CardData[] = [];
-
-    
-    
 
     // 5장 랜덤 카드 추가
     while (newCards.length < 5) {
@@ -258,7 +255,9 @@ const Swipe: React.FC = () => {
                     ? "rgba(255, 215, 0, 1)" // 노란색 (1365)
                     : card.from === "VMS사회복지"
                     ? "rgba(138, 43, 226, 1)" // 보라색 (VMS)
-                    : "rgba(50, 205, 50, 1)", // 녹색 (사용자정의)
+                    : card.from === "미등록 사용자"
+                    ? "rgb(218, 40, 40)" // 적색 (비 로그인)
+                    : "rgba(50, 205, 50, 1)", // 녹색 (사용자 정의)
                 color:
                   card.from === "VMS사회복지"
                     ? "white" // 글자를 흰색으로 설정 (VMS)

@@ -153,7 +153,7 @@ const DetailBong: React.FC = () => {
             if (baseUrl) {
               window.location.href = `${baseUrl}${bongData.progrmRegistNo.slice(3)}`;
             } else {
-              alert("유효하지 않은 프로그램 등록 번호입니다.");
+              window.location.href = `${bongData.fxnum}`;
             }
           }}
         >

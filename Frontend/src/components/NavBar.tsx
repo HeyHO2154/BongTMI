@@ -18,9 +18,11 @@ const NavBarContainer = styled.nav`
   bottom: 0; /* 하단에 고정 */
 `;
 
-const NavButton = styled(NavLink)<{ isActive?: boolean }>`
+const NavButton = styled(NavLink).attrs<{ $isActive: boolean }>((props) => ({
+  className: props.$isActive ? "active" : ""
+}))`
   text-decoration: none;
-  color: ${(props) => (props.isActive ? "#007bff" : "#555")};
+  color: ${(props) => (props.$isActive ? "#007bff" : "#555")};
   font-size: 14px;
   text-align: center;
   display: flex;
@@ -48,25 +50,25 @@ const NavBar: React.FC = () => {
   
   return (
     <NavBarContainer>
-      <NavButton to="/" isActive={activeButton === "/"}>
+      <NavButton to="/" $isActive={activeButton === "/"}>
         <FontAwesomeIcon icon={faHeart} size="2x" />
         봉사 추천
       </NavButton>
-      <NavButton to="/search" isActive={activeButton === "/search"}>
+      <NavButton to="/search" $isActive={activeButton === "/search"}>
         <FontAwesomeIcon icon={faSearch} size="2x" />
         봉사 검색
       </NavButton>
-      <NavButton to="/add-bong" isActive={activeButton === "/add-bong"}>
+      <NavButton to="/add-bong" $isActive={activeButton === "/add-bong"}>
         <FontAwesomeIcon icon={faPlus} size="2x" />
         봉사 등록
       </NavButton>
-      <NavButton to="/feed" isActive={activeButton === "/feed"}>
+      <NavButton to="/feed" $isActive={activeButton === "/feed"}>
         <FontAwesomeIcon icon={faEye} size="2x" />
         후기 탐색
       </NavButton>
       <NavButton
         to="/my-page"
-        isActive={activeButton === "my-page"}
+        $isActive={activeButton === "my-page"}
       >
         <FontAwesomeIcon icon={faUser} size="2x" />
         마이페이지

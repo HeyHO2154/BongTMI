@@ -30,5 +30,36 @@ public class BongService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 	}
+	
+    public Bong saveBong(Bong bongDto) {
+        Bong bong = new Bong();
+        bong.setProgrmRegistNo(bongDto.getProgrmRegistNo());
+        bong.setProgrmSj(bongDto.getProgrmSj());
+        bong.setProgrmSttusSe(bongDto.getProgrmSttusSe());
+        bong.setProgrmBgnde(bongDto.getProgrmBgnde());
+        bong.setProgrmEndde(bongDto.getProgrmEndde());
+        bong.setActBeginTm(bongDto.getActBeginTm());
+        bong.setActEndTm(bongDto.getActEndTm());
+        bong.setNoticeBgnde(bongDto.getNoticeBgnde());
+        bong.setNoticeEndde(bongDto.getNoticeEndde());
+        bong.setRcritNmpr(bongDto.getRcritNmpr());
+        bong.setActWkdy(bongDto.getActWkdy());
+        bong.setSrvcClCode(bongDto.getSrvcClCode());
+        bong.setAdultPosblAt(bongDto.getAdultPosblAt());
+        bong.setYngbgsPosblAt(bongDto.getYngbgsPosblAt());
+        bong.setGrpPosblAt(bongDto.getGrpPosblAt());
+        bong.setMnnstNm(bongDto.getMnnstNm());
+        bong.setNanmmbyNm(bongDto.getNanmmbyNm());
+        bong.setActPlace(bongDto.getActPlace());
+        bong.setNanmmbyNmAdmn(bongDto.getNanmmbyNmAdmn());
+        bong.setTelno(bongDto.getTelno());
+        bong.setFxnum(bongDto.getFxnum());
+        bong.setPostAdres(bongDto.getPostAdres());
+        bong.setEmail(bongDto.getEmail());
+        bong.setProgrmCn(bongDto.getProgrmCn());
+        bong.setSidoCd(bongDto.getSidoCd());
+        bong.setGugunCd(bongDto.getGugunCd());
+        return bongRepository.save(bong);
+    }
 }
 
