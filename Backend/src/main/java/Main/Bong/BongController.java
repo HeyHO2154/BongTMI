@@ -76,7 +76,7 @@ public class BongController {
                     imagePath = tempPath;
                     break;
                 }else {
-                	imagePath = Paths.get(basePath, "0", "봉틈이2.png");
+                	imagePath = Paths.get(basePath, "0", "Bong.png");
                 }
             }
 
