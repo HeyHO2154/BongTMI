@@ -4,15 +4,12 @@ import styled from "styled-components";
 import config from "../../config";
 
 const handleKakaoLogin = () => {
-  const clientId = "aa593063067708935c526eedf855bc6e";
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${config.API_DEV_CALL}/auth/callback/kakao`;
-  window.location.href = kakaoAuthUrl;
+  window.location.href = `${config.API_DEV}/oauth/kakao`;
 };
 const handleNaverLogin = () => {
-  const clientId = "entZ4xGkP03kyHMWooKS"; // 네이버 개발자 센터에서 발급받은 클라이언트 ID
-  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&state=random_string&redirect_uri=${config.API_DEV_CALL}/auth/callback/naver`;
-  window.location.href = naverAuthUrl;
+  window.location.href = `${config.API_DEV}/oauth/naver`;
 };
+
 
 const Login: React.FC = () => {
   const [userId, setUserId] = useState("");
