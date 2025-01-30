@@ -72,7 +72,7 @@ public class BongService {
     }
 
 	public String uploadImages(String progrmRegistNo, MultipartFile[] files) {
-		String uploadPath = "C:/Users/PRO/Desktop/GitDesktop/BongTMI/DB/Image/" + progrmRegistNo;
+		String uploadPath = "/home/junma97/Desktop/DB/Image/" + progrmRegistNo;
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();

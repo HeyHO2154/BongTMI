@@ -73,9 +73,9 @@ const DetailBong: React.FC = () => {
         setBongData({
           ...response.data,
           imageUrls: [
-            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`,
-            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/2`,
-            `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/3`,
+            `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`,
+            `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/2`,
+            `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/3`,
           ],
         });
       } catch (err) {
@@ -105,10 +105,7 @@ const DetailBong: React.FC = () => {
         {/* 이미지 슬라이드 */}
         <ImageContainer>
           <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
-          <Image
-            src={bongData.imageUrls[currentImageIndex]}
-            alt={`Image ${currentImageIndex + 1}`}
-          />
+          <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
           <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
         </ImageContainer>
 
@@ -266,11 +263,12 @@ const ImageContainer = styled.div`
   padding-bottom: 20px; /* 하단 패딩 추가 */
 `;
 
-const Image = styled.img`
+const Image = styled.div`
   width: 100%;
-  height: auto;
-  max-height: 100%;
-  object-fit: cover;
+  height: 400px; /* 원하는 높이 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const SlideButtonLeft = styled.button`

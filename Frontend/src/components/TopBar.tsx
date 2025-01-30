@@ -18,7 +18,7 @@ const TopBar: React.FC = () => {
       </IconWrapper>
 
       {/* 🏠 중앙 로고 */}
-      <Logo src="/src/assets/봉틈이2.png" alt="봉틈이" onClick={toHome} />
+      <Logo src="/assets/BongTMI2.png" alt="봉틈이" onClick={toHome} />
 
 
       {/* 🔔 왼쪽 알람 아이콘 */}

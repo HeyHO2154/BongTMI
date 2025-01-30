@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${Front_URL}")
 @RequestMapping("/api/bong")
 public class BongController {
 
@@ -66,7 +66,7 @@ public class BongController {
     ) {
         try {
             // 이미지 경로 설정
-            String basePath = "C:\\Users\\PRO\\Desktop\\GitDesktop\\BongTMI\\DB\\Image";
+        	String basePath = "/home/junma97/Desktop/DB/Image";
             String[] extensions = {".jpg", ".jpeg", ".png", ".PNG"};
             Path imagePath = null;
 

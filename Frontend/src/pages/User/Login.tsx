@@ -10,7 +10,6 @@ const handleNaverLogin = () => {
   window.location.href = `${config.API_DEV}/oauth/naver`;
 };
 
-
 const Login: React.FC = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +25,7 @@ const Login: React.FC = () => {
 
   return (
     <Container>
-      <Logo src="/src/assets/봉틈이1.png" alt="봉틈이" />
+      <Logo src="/assets/BongTMI1.png" alt="봉틈이" />
 
       <Input
         type="text"
@@ -50,11 +49,11 @@ const Login: React.FC = () => {
       </LinkContainer>
       <ButtonContainer>
         <NaverButton
-          src="/src/assets/로그인_네이버.png"
+          src="/assets/Login_Naver.png"
           onClick={handleNaverLogin}
         />
         <KakaoButton
-          src="/src/assets/로그인_카카오.png"
+          src="/assets/Login_Kakao.png"
           onClick={handleKakaoLogin}
         />
       </ButtonContainer>

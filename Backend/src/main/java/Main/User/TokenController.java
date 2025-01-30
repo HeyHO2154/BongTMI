@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/oauth")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "${Front_URL}")
 public class TokenController {
 
