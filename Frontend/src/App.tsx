@@ -1,5 +1,5 @@
 // src/App.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
 import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로
@@ -19,6 +19,19 @@ import FindAccount from "./pages/User/FindAccount";
 import Register from "./pages/User/Register";
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const setAppHeight = () => {
+      document.documentElement.style.setProperty("--app-height", `${window.innerHeight}px`);
+    };
+
+    setAppHeight(); // 초기 설정
+    window.addEventListener("resize", setAppHeight); // 창 크기 변경 시 업데이트
+
+    return () => {
+      window.removeEventListener("resize", setAppHeight); // 이벤트 리스너 제거
+    };
+  }, []);
+  
   return (
     <>
       <GlobalStyle />

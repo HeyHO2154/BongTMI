@@ -1,40 +1,52 @@
-// src/styles/GlobalStyle.ts
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  /* *부분은 인터넷 창 기본 여백 지우기 용으로 보통 사용 */
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
-  //일단 임시 주석(하위 컴포넌트에 영향 줄까봐)
-  // body {
-  //   font-family: 'Arial', sans-serif;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   height: 100vh;
-  // }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
 
   #root {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    height: 100%;
   }
 
   .app-container {
-    overflow: hidden; /* 전체 페이지에서 스크롤 숨김 */
-    width: 600px; /* 가로 길이를 500px로 고정 */
-    min-height: 100vh;
+    width: 100%;
+    max-width: 600px;
+    height: var(--app-height, 100vh); /* 동적 높이 적용 */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-    border: 1px solid #ddd; /* 외곽선 추가 */
-    position: relative; /* NavBar가 fixed일 때 상위 구조 내에 위치 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom); /* iOS 하단 영역 확보 */
+  }
+
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom); /* iOS 하단 안전 영역 추가 */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
