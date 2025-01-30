@@ -15,8 +15,8 @@ interface CardData {
   from: String;
 }
 
-const SWIPE_THRESHOLD_X = 200; // 스와이프 판정 기준 (px)
-const SWIPE_THRESHOLD_Y = 220; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_X = 150; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 200; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -98,12 +98,31 @@ const Swipe: React.FC = () => {
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setIsDragging(true);
     startX.current = e.touches[0].clientX;
-  };
+    startY.current = e.touches[0].clientY;
+    setDragX(0);
+    setDragY(0);
+  };  
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging) return;
+  
     const currentX = e.touches[0].clientX;
-    setDragX(currentX - startX.current);
+    const currentY = e.touches[0].clientY;
+  
+    const deltaX = currentX - startX.current;
+    const deltaY = currentY - startY.current;
+  
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // 좌우 스와이프 처리
+      setDragX(deltaX);
+      setDragY(0); // 상하 초기화
+    } else {
+      // 상하 스와이프 처리 (위로만 허용)
+      if (deltaY < 0) {
+        setDragY(deltaY);
+        setDragX(0); // 좌우 초기화
+      }
+    }
   };
 
   const handleTouchEnd = () => {

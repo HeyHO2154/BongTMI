@@ -100,15 +100,13 @@ const DetailBong: React.FC = () => {
           봉사 더 보기
         </ViewMoreButton>
       </Header>
-
-      <Content>
-        {/* 이미지 슬라이드 */}
-        <ImageContainer>
-          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
+      {/* 이미지 슬라이드 */}
+      <ImageContainer>
+        <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
           <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
-          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
-        </ImageContainer>
-
+        <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
+      </ImageContainer>
+      <Content>
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
         <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
@@ -265,7 +263,7 @@ const ImageContainer = styled.div`
 
 const Image = styled.div`
   width: 100%;
-  height: 400px; /* 원하는 높이 */
+  height: 300px; /* 원하는 높이 */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

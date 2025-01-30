@@ -26,14 +26,14 @@ const GlobalStyle = createGlobalStyle`
   .app-container {
     width: 100%;
     max-width: 600px;
-    height: var(--app-height, 100vh); /* 동적 높이 적용 */
+    height: var(--app-height, 100vh); /* 기본적으로 전체 화면 */
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
     position: relative;
-    padding-bottom: env(safe-area-inset-bottom); /* iOS 하단 영역 확보 */
+    transition: height 0.3s ease-in-out;
   }
 
   .navbar {
@@ -45,8 +45,13 @@ const GlobalStyle = createGlobalStyle`
     max-width: 600px;
     background-color: white;
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom); /* iOS 하단 안전 영역 추가 */
+    padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .navbar.hidden {
+    transform: translateX(-50%) translateY(100%); /* 터치하지 않을 때 숨김 */
   }
 `;
 
