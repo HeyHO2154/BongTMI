@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import config from "../../config";
 
 const NaverCallback = () => {
   const location = useLocation();
@@ -13,7 +14,7 @@ const NaverCallback = () => {
 
     if (code) {
       axios
-        .post("http://localhost:8080/api/auth/naver/callback", { code, state })
+        .post(`${config.API_DEV}/api/auth/naver/callback`, { code, state })
         .then((res) => {
           console.log("User Data:", res.data);
           localStorage.setItem("user", JSON.stringify(res.data)); // 사용자 정보 저장
