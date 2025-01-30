@@ -101,12 +101,12 @@ const DetailBong: React.FC = () => {
         </ViewMoreButton>
       </Header>
       {/* 이미지 슬라이드 */}
-      <ImageContainer>
-        <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
-          <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
-        <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
-      </ImageContainer>
       <Content>
+        <ImageContainer>
+          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
+            <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
+          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
+        </ImageContainer>
         <h1>{bongData.progrmSj}</h1>
         <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
         <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>

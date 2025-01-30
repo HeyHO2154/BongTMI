@@ -195,7 +195,7 @@ const AddBong: React.FC = () => {
           <WarningTitle>⚠️ 경고!</WarningTitle>
           <WarningContent>
             로그인을 하지 않은 상태로 공고를 올릴 경우, 신뢰도가 낮아집니다.<br />
-            <a href="/my-page">로그인</a>을 통해 공고의 신뢰도를 올려보세요!
+            <a href="/user/login">로그인</a>을 통해 공고의 신뢰도를 올려보세요!
           </WarningContent>
         </WarningBox>
       ) : (
