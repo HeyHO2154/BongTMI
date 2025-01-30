@@ -4,6 +4,7 @@ import { BarChart, LineChart, PieChart } from "lucide-react";
 import axios from "axios";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement, PointElement, ArcElement } from "chart.js";
 import { Bar, Line, Pie } from "react-chartjs-2";
+import config from "../../config";
 
 interface MonthlyStat {
   month: string;
@@ -37,7 +38,7 @@ const Report: React.FC = () => {
   // ✅ API에서 봉사 데이터 가져오기
   const fetchVolunteerData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/volunteer/stats");
+      const response = await axios.get(`${config.API_DEV}/api/volunteer/stats`);
       setVolunteerData({
         ...response.data,
         monthlyStats: response.data.monthlyStats || [], // ✅ null 값 방지

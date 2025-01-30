@@ -157,7 +157,7 @@ const PostCard = styled.div`
   overflow: hidden;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  min-height: 60vh; /* ✅ 최소 높이 설정 */
+  min-height: 20vh; /* ✅ 최소 높이 설정 */
 `;
 
 const UserInfo = styled.div`

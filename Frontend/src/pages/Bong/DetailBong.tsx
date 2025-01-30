@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom"; // React Router 사용
+import config from "../../config";
 
 interface Bong {
   progrmRegistNo: string;
@@ -64,7 +65,7 @@ const DetailBong: React.FC = () => {
     const fetchBongData = async () => {
       try {
         const response = await axios.get<Bong>(
-          `http://localhost:8080/api/bong/info`,
+          `${config.API_DEV}/api/bong/info`,
           {
             params: { progrmRegistNo },
           }

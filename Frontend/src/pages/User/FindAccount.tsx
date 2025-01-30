@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import config from "../../config";
 
 const FindAccount: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ const FindAccount: React.FC = () => {
   // 아이디 찾기 요청
   const handleFindId = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/find-id", { email });
+      const response = await axios.post(`${config.API_DEV}/api/auth/find-id`, { email });
       setFoundId(response.data.id);
       setMessage(""); // 메시지 초기화
     } catch (error) {
@@ -22,7 +23,7 @@ const FindAccount: React.FC = () => {
   // 비밀번호 재설정 요청
   const handleResetPassword = async () => {
     try {
-      await axios.post("http://localhost:8080/api/auth/reset-password", { email });
+      await axios.post(`${config.API_DEV}/api/auth/reset-password`, { email });
       setMessage("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
     } catch (error) {
       setMessage("비밀번호 재설정 요청 실패.");

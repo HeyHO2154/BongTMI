@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // React Router 사용
+import config from "../config";
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -49,7 +50,7 @@ const Search: React.FC = () => {
   const fetchAllCards = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:8080/api/bong/all");
+      const response = await axios.get(`${config.API_DEV}/api/bong/all`);
       const formattedCards = response.data.map((bong: any) => {
         const source = bong.progrmRegistNo.substring(0, 3); // 출처 구분 (앞 3글자)
         let fromValue = bong.nanmmbyNmAdmn || "미등록 사용자"; // 기본값 설정
@@ -66,7 +67,7 @@ const Search: React.FC = () => {
           region: bong.nanmmbyNm || "지역 없음",
           type: bong.srvcClCode || "상세 설명 없음",
           date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
-          imageUrl: `http://localhost:8080/api/bong/image/${bong.progrmRegistNo}/1`,
+          imageUrl: `${config.API_DEV}/api/bong/image/${bong.progrmRegistNo}/1`,
           from: fromValue, // 추가된 필드
         };
       });

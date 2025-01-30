@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/register", formData);
+      const response = await axios.post(`${config.API_DEV}/api/auth/register`, formData);
       if (response.status === 201) {
         setMessage("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
         setTimeout(() => navigate("/login"), 2000);

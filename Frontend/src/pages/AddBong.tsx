@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 const AddBong: React.FC = () => {
   const navigate = useNavigate(); // ✅ 네비게이션 훅 사용
@@ -134,7 +135,7 @@ const AddBong: React.FC = () => {
   
     try {
       // 1. JSON 데이터 먼저 전송
-      await axios.post("http://localhost:8080/api/bong/add", JSON.stringify(formData), {
+      await axios.post(`${config.API_DEV}/api/bong/add`, JSON.stringify(formData), {
         headers: { "Content-Type": "application/json" },
       });
   
@@ -146,7 +147,7 @@ const AddBong: React.FC = () => {
           imageFormData.append("images", image);
         });
   
-        await axios.post(`http://localhost:8080/api/bong/upload/${formData.progrmRegistNo}`, imageFormData, {
+        await axios.post(`${config.API_DEV}/api/bong/upload/${formData.progrmRegistNo}`, imageFormData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }

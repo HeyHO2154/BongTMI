@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import styled from "styled-components";
+import config from "../../config";
 
 const handleKakaoLogin = () => {
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=aa593063067708935c526eedf855bc6e&redirect_uri=http://localhost:5173/auth/callback/kakao`;
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=aa593063067708935c526eedf855bc6e&redirect_uri=${config.API_DEV}/auth/callback/kakao`;
   window.location.href = kakaoAuthUrl;
 };
 const handleNaverLogin = () => {
   const clientId = "entZ4xGkP03kyHMWooKS"; // 네이버 개발자 센터에서 발급받은 클라이언트 ID
-  const redirectUri = "http://localhost:5173/auth/callback/naver"; // 네이버에 등록한 콜백 URL
+  const redirectUri = `${config.API_DEV}/auth/callback/naver`; // 네이버에 등록한 콜백 URL
   const state = "random_string"; // CSRF 방지를 위한 랜덤한 상태 값
 
   const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}`;

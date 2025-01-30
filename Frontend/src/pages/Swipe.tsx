@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios"; // API 호출을 위해 axios 사용
 import { useNavigate } from "react-router-dom"; // React Router 사용
 import { useLocation } from "react-router-dom"; // useLocation 추가
+import config from "../config";
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -35,8 +36,8 @@ const Swipe: React.FC = () => {
   const fetchCardData = async (progrmRegistNo?: string) => {
     try {
       const url = progrmRegistNo
-        ? `http://localhost:8080/api/bong/info?progrmRegistNo=${progrmRegistNo}` // 특정 카드 요청
-        : `http://localhost:8080/api/bong/random`; // 랜덤 카드 요청
+        ? `${config.API_DEV}/api/bong/info?progrmRegistNo=${progrmRegistNo}` // 특정 카드 요청
+        : `${config.API_DEV}/api/bong/random`; // 랜덤 카드 요청
       const response = await axios.get(url);
   
       const source = response.data.progrmRegistNo.substring(0, 3); // from 앞글자 3개 추출
@@ -52,7 +53,7 @@ const Swipe: React.FC = () => {
         region: response.data.postAdres || "지역 없음",
         type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
-        imageUrl: `http://localhost:8080/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
+        imageUrl: `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
         from: fromValue
       };
   
