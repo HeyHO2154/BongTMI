@@ -6,7 +6,7 @@ import re
 
 # MySQL 데이터베이스 설정
 db_config = {
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'user': 'root',
     'password': '1013',
     'database': 'hsj',

@@ -15,7 +15,7 @@ db_config = {
 }
 
 # 이미지 저장 경로
-base_path = r"C:\Users\PRO\Desktop\GitDesktop\BongTMI\DB\Image"
+base_path = r"/home/junma97/Desktop/DB/Image"
 
 # 이미지 다운로드 함수
 def download_images(query, save_path, num_images=3):
