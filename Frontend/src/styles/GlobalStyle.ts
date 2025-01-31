@@ -47,7 +47,6 @@ const GlobalStyle = createGlobalStyle`
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
   }
 
   .navbar.hidden {

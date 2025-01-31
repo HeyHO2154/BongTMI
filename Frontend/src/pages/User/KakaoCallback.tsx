@@ -1,38 +1,34 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import config from '../../config';
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import config from "../../config";
 
-const KakaoCallback: React.FC = () => {
+const KakaoCallback = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const code = queryParams.get('code');
+    const query = new URLSearchParams(location.search);
+    const code = query.get("code");
+    const state = query.get("state");
 
     if (code) {
-        axios
-        .post(
-          `${config.API_DEV}/api/auth/kakao/callback`,
-          { code },
-          { headers: { 'Content-Type': 'application/json' } }
-        )
-        .then((response) => {
-          console.log('Login successful:', response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
-          navigate('/my-page');
+      axios
+        .post(`${config.API_DEV}/api/auth/kakao/callback`, { code, state })
+        .then((res) => {
+          console.log("User Data:", res.data);
+          localStorage.setItem("user", JSON.stringify(res.data)); // 사용자 정보 저장
+          navigate("/my-page"); // 로그인 완료 후 홈으로 이동
         })
-        .catch((error) => {
-          console.error('Login failed:', error);
-          alert('로그인에 실패했습니다.');
-          navigate('/user/login');
+        .catch((err) => {
+          console.error(err);
+          alert("카카오 로그인 실패!");
+          navigate("/user/login");
         });
-      
-      
     }
-  }, [navigate]);
+  }, [location, navigate]);
 
-  return <div>로그인 요청 중..</div>;
+  return <div>카카오 로그인 처리 중...</div>;
 };
 
 export default KakaoCallback;

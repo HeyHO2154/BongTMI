@@ -28,14 +28,19 @@ public class KakaoAuthController {
     @PostMapping("/kakao/callback")
     public ResponseEntity<?> handleKakaoCallback(@RequestBody Map<String, String> requestBody) {
         String code = requestBody.get("code");
+        String state = requestBody.get("state");
+        
         if (code == null || code.isEmpty()) {
             return ResponseEntity.badRequest().body("Missing or invalid 'code' parameter");
         }
 
         // 액세스 토큰 요청
+        System.out.println(code);
         String accessToken = getAccessToken(code);
+        System.out.println(accessToken);
         // 사용자 정보 요청
         User userInfo = getUserInfo(accessToken);
+        System.out.println(userInfo);
         
         // 사용자 정보를 User 엔티티로 변환 후 저장
         User user = new User();
@@ -70,7 +75,7 @@ public class KakaoAuthController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "aa593063067708935c526eedf855bc6e"); // 카카오 REST API 키
-        params.add("redirect_uri", "http://localhost:5173/auth/callback/kakao");
+        params.add("redirect_uri", "http://praven.kro.kr/auth/callback/kakao");
         params.add("code", code);
 
         // HTTP 요청 보내기

@@ -2,6 +2,7 @@ package Main.Bong;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -33,6 +34,7 @@ public class Bong {
     private String fxnum; // FAX 번호
     private String postAdres; // 담당자 주소
     private String email; // 이메일
+    @Column(columnDefinition = "TEXT")
     private String progrmCn; // 내용
     private String sidoCd; // 시도 코드
     private String gugunCd; // 시군구 코드
