@@ -36,10 +36,8 @@ public class KakaoAuthController {
 
         // 액세스 토큰 요청
         String accessToken = getAccessToken(code);
-        System.out.println(accessToken);
         // 사용자 정보 요청
         User userInfo = getUserInfo(accessToken);
-        System.out.println(userInfo);
         
         // 사용자 정보를 User 엔티티로 변환 후 저장
         User user = new User();
