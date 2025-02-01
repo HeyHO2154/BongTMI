@@ -72,7 +72,7 @@ public class KakaoAuthController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "aa593063067708935c526eedf855bc6e"); // 카카오 REST API 키
-        params.add("redirect_uri", "http://praven.kro.kr/auth/callback/kakao");
+        params.add("redirect_uri", "https://praven.kro.kr/auth/callback/kakao");
         params.add("code", code);
 
         // HTTP 요청 보내기

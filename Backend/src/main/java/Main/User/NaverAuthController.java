@@ -73,7 +73,7 @@ public class NaverAuthController {
         params.add("grant_type", "authorization_code");
         params.add("client_id", "entZ4xGkP03kyHMWooKS"); // 네이버 Client ID
         params.add("client_secret", "UKKbQBF7fb"); // 네이버 Client Secret
-        params.add("redirect_uri", "http://localhost:5173/auth/callback/naver"); // 네이버에 등록된 리디렉트 URI
+        params.add("redirect_uri", "https://praven.kro.kr/auth/callback/naver"); // 네이버에 등록된 리디렉트 URI
         params.add("code", code);
         params.add("state", state);
 
