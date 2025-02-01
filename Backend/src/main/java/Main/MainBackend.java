@@ -10,7 +10,6 @@ public class MainBackend {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MainBackend.class, args);
-		System.out.println("성준이 최고");
 	}
 
 }
