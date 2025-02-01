@@ -35,7 +35,6 @@ public class KakaoAuthController {
         }
 
         // 액세스 토큰 요청
-        System.out.println(code);
         String accessToken = getAccessToken(code);
         System.out.println(accessToken);
         // 사용자 정보 요청
