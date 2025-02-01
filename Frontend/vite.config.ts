@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: '내 앱 이름',
-        short_name: '내 앱',
-        description: 'PWA 데모 앱',
+        name: '봉틈이',
+        short_name: '봉틈이',
+        description: '봉사는 틈틈이',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone', // 전체화면 모드
