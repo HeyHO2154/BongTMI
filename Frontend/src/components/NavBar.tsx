@@ -64,7 +64,7 @@ const NavBar: React.FC = () => {
       </NavButton>
       <NavButton to="/feed" $isActive={activeButton === "/feed"}>
         <FontAwesomeIcon icon={faEye} size="2x" />
-        후기 탐색
+        봉사 소식
       </NavButton>
       <NavButton
         to="/my-page"
