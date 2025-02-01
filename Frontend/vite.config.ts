@@ -19,12 +19,12 @@ export default defineConfig({
         orientation: 'portrait', // 세로 모드 고정 (선택 사항)
         icons: [
           {
-            src: '/pwa-192x192.png',
+            src: '/봉틈이.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/봉틈이.png',
             sizes: '512x512',
             type: 'image/png',
           },
