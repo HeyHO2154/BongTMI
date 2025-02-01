@@ -36,6 +36,7 @@ public class BongController {
     
     @GetMapping("/random")
     public Bong getRandomBong() {
+    	System.out.println("도희 최고");
         return bongService.getRandomBong();
     }
     
