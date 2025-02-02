@@ -3,7 +3,7 @@
   "host": "praven.kro.kr",
   "name": "BongTMI",
   "launcherName": "BongTMI",
-  "display": "fullscreen",
+  "display": "standalone",
   "themeColor": "#FFFFFF",
   "themeColorDark": "#000000",
   "navigationColor": "#000000",
@@ -16,11 +16,11 @@
   "iconUrl": "https://praven.kro.kr/BongTMI.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "C:\\Users\\PRO\\Desktop\\GitDesktop\\BongTMI\\Frontend\\android\\my-realse-key.jks",
-    "alias": "my-realse-key.jks"
+    "path": "C:\\Users\\PRO\\Desktop\\GitDesktop\\BongTMI\\Frontend\\android\\my-release-key.jks",
+    "alias": "key"
   },
-  "appVersionName": "1",
-  "appVersionCode": 1,
+  "appVersionName": "BongTMI",
+  "appVersionCode": 570003,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://praven.kro.kr/manifest.json",
@@ -45,5 +45,5 @@
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
-  "appVersion": "1"
+  "appVersion": "BongTMI"
 }
