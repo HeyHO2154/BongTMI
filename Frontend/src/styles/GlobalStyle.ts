@@ -6,6 +6,8 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important; /* 폰트 전체 강제 */
+    font-size: 18px; /* 원하는 크기로 변경 가능 */
+    line-height: 1.6; /* 가독성을 위해 줄 간격 조절 */
   }
 
   html, body {
