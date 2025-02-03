@@ -132,7 +132,7 @@ const DetailBong: React.FC = () => {
           <p><strong>이메일:</strong> {bongData.email}</p>
           <p><strong>내용:</strong> {bongData.progrmCn}</p>
           <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
-          <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>
+          <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>` 
       </Content>
       <Footer>
         <ApplyButton
@@ -214,14 +214,13 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
-  position: relative;
-  bottom: 60px; /* NavBar 위로 배치 */
   display: flex;
   justify-content: center;
   margin-top: 10px;
   margin-bottom: 40px;
   background-color: #fff;
   z-index: 10;
+  position: relative;
 `;
 
 const ApplyButton = styled.button`
