@@ -104,6 +104,17 @@ const Search: React.FC = () => {
     setIsLoading(false);
   };
 
+  const handleFilterChange = (key: keyof FilterState, value: string | boolean) => {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters, [key]: value };
+      return newFilters;
+    });
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm, filters]); // ✅ 검색어 & 필터 변경 시 자동 검색 실행  
+
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
     if (isLoading || offset >= allCards.length) return; // 더 불러올 데이터 없으면 중단
@@ -126,8 +137,6 @@ const Search: React.FC = () => {
       }
     }
   };
-
-
 
   const handleSearch = () => {
     let filtered = allCards.filter((card) => {
