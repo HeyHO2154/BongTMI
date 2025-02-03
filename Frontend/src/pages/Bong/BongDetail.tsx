@@ -184,7 +184,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100%; /* 기본적으로 전체 높이 */
-  min-height: calc(100vh - 80px); /* 최소한 Navbar를 제외한 높이 유지 */
+  min-height: calc(100vh - 140px); /* 최소한 Navbar를 제외한 높이 유지 */
   overflow-y: auto; /* 스크롤 가능하게 변경 */
   padding-bottom: 60px; /* NavBar 높이만큼 추가 */
 `;
@@ -214,13 +214,14 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
+  position: fixed;
+  bottom: 60px; /* NavBar 위로 배치 */
   display: flex;
   justify-content: center;
   margin-top: 10px;
   margin-bottom: 40px;
   background-color: #fff;
   z-index: 10;
-  position: relative;
 `;
 
 const ApplyButton = styled.button`
