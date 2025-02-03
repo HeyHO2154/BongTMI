@@ -347,7 +347,7 @@ const TextContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 추가 */
-  padding: 30px 30px 80px 30px; /* 상, 우, 하, 좌 순서로 설정 */
+  padding: 30px 20px 20px 20px; /* 상, 우, 하, 좌 순서로 설정 */
   border-radius: 8px; /* 박스 모서리를 둥글게 */
 `;
 
