@@ -8,23 +8,32 @@ import config from "../config";
 
 
 interface CardData {
-  id: string; // 고유 식별자 추가
+  id: string;
   label: string;
   region: string;
-  type: string;
+  type: string;           // ✅ 출처 (1365자원봉사, VMS사회복지, 사용자 등록)
   date: string;
-  imageUrl: string; // 이미지 URL 추가
-  from: string; // 출처 정보 추가
+  imageUrl: string;
+  from: string;
+  postAdress: string;     // ✅ 주소 정보 추가
+  progrmSttusSe: string;  // ✅ 모집 상태 추가
+  adultPosblAt: boolean;  // ✅ 성인 가능 여부 추가
+  yngbgsPosblAt: boolean; // ✅ 청소년 가능 여부 추가
+  grpPosblAt: boolean;    // ✅ 단체 가능 여부 추가
+  startDate: string;      // ✅ 봉사 시작일 추가
+  endDate: string;        // ✅ 봉사 종료일 추가
 }
 
+
 interface FilterState {
-  srvcClCode: string; // 봉사 분야
-  progrmSttusSe: string; // 모집 상태
-  adultPosblAt: boolean; // 성인 가능 여부
-  noticeStartDate: string; // 모집 시작일
-  noticeEndDate: string; // 모집 종료일
-  sidoCd: string; // 시도 코드
-  gugunCd: string; // 시군구 코드
+  type: string;           // 출처 (1365자원봉사, VMS사회복지, 사용자 등록)
+  progrmSttusSe: string;  // 모집 상태 (1: 모집대기, 2: 모집중, 3: 모집완료)
+  adultPosblAt: boolean;  // 성인 가능 여부
+  yngbgsPosblAt: boolean; // 청소년 가능 여부
+  grpPosblAt: boolean;    // 단체 가능 여부
+  startDate: string;      // 봉사 시작일
+  endDate: string;        // 봉사 종료일
+  postAdress: string;     // 전체 주소
 }
 
 const Search: React.FC = () => {
@@ -34,15 +43,18 @@ const Search: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const limit = 10; // 한 번에 로드할 개수
+  const [searchTerm, setSearchTerm] = useState(""); // ✅ 검색어 상태 추가
+
 
   const [filters, setFilters] = useState<FilterState>({
-    srvcClCode: "",
-    progrmSttusSe: "",
-    adultPosblAt: false,
-    noticeStartDate: "",
-    noticeEndDate: "",
-    sidoCd: "",
-    gugunCd: "",
+    type: "",           // 출처 (1365자원봉사, VMS사회복지, 사용자 등록)
+    progrmSttusSe: "",  // 모집 상태 (1: 모집대기, 2: 모집중, 3: 모집완료)
+    adultPosblAt: false, // 성인 가능 여부
+    yngbgsPosblAt: false, // 청소년 가능 여부
+    grpPosblAt: false,    // 단체 가능 여부
+    startDate: "",      // 봉사 시작일
+    endDate: "",        // 봉사 종료일
+    postAdress: "",     // 전체 주소
   });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -53,23 +65,33 @@ const Search: React.FC = () => {
     try {
       const response = await axios.get(`${config.API_DEV}/api/bong/all`);
       const formattedCards = response.data.map((bong: any) => {
+        
         const source = bong.progrmRegistNo.substring(0, 3); // 출처 구분 (앞 3글자)
         let fromValue = bong.nanmmbyNmAdmn || "미등록 사용자"; // 기본값 설정
-  
+        let typeValue = "USER"; // 기본값
         if (source === "SYO") {
           fromValue = "1365자원봉사";
+          typeValue = "1365자원봉사";
         } else if (source === "VMS") {
           fromValue = "VMS사회복지";
+          typeValue = "VMS사회복지";
         }
   
         return {
           id: bong.progrmRegistNo,
           label: bong.progrmSj || "제목 없음",
           region: bong.nanmmbyNm || "지역 없음",
-          type: bong.srvcClCode || "상세 설명 없음",
+          type: typeValue,  // ✅ 프로그램 등록번호로 type 결정
           date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
           imageUrl: `${config.API_DEV}/api/bong/image/${bong.progrmRegistNo}/1`,
-          from: fromValue, // 추가된 필드
+          from: bong.nanmmbyNmAdmn || "미등록 사용자",
+          postAdress: bong.postAdres || "",
+          progrmSttusSe: bong.progrmSttusSe,
+          adultPosblAt: bong.adultPosblAt === "Y",
+          yngbgsPosblAt: bong.yngbgsPosblAt === "Y",
+          grpPosblAt: bong.grpPosblAt === "Y",
+          startDate: bong.progrmBgnde,
+          endDate: bong.progrmEndde,
         };
       });
 
@@ -115,6 +137,25 @@ const Search: React.FC = () => {
     }));
   };
 
+  const handleSearch = () => {
+    let filtered = allCards.filter((card) => {
+      return (
+        (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) && // ✅ 검색어 필터
+        (filters.type ? card.type === filters.type : true) &&
+        (filters.progrmSttusSe ? card.progrmSttusSe === filters.progrmSttusSe : true) &&
+        (filters.adultPosblAt ? card.adultPosblAt : true) &&
+        (filters.yngbgsPosblAt ? card.yngbgsPosblAt : true) &&
+        (filters.grpPosblAt ? card.grpPosblAt : true) &&
+        (filters.startDate ? card.startDate >= filters.startDate : true) &&
+        (filters.endDate ? card.endDate <= filters.endDate : true) &&
+        (filters.postAdress ? card.postAdress.includes(filters.postAdress) : true)
+      );
+    });
+  
+    setVisibleCards(filtered);
+  };
+  
+
   const navigate = useNavigate(); // navigate 함수 생성
   const handleCardClick = (progrmRegistNo: string) => {
     //navigate(`/?progrmRegistNo=${progrmRegistNo}`); // 쿼리 파라미터로 전달
@@ -129,91 +170,60 @@ const Search: React.FC = () => {
     <Wrapper ref={wrapperRef} onScroll={handleScroll}>
       {/* 상단 검색창 */}
       <StickyBox>
-        <SearchBarWrapper>
-          <SearchBar placeholder="검색어를 입력하세요..." />
-          <FontAwesomeIcon
-            icon={faSearch}
-            size="lg"
-            style={{ cursor: "pointer" }} // 클릭 가능하도록 설정
-            onClick={() => console.log("Search icon clicked!")} // 클릭 이벤트 추가
-          />
-        </SearchBarWrapper>
+      <SearchBarWrapper>
+        <SearchBar
+          placeholder="검색어 입력"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <FontAwesomeIcon icon={faSearch} size="lg" onClick={handleSearch} />
+      </SearchBarWrapper>
         <FilterToggle onClick={() => setIsFilterVisible(!isFilterVisible)}>
           <FontAwesomeIcon icon={isFilterVisible ? faChevronUp : faChevronDown} size="sm" />
           <ToggleText>상세검색</ToggleText>
         </FilterToggle>
         {isFilterVisible && (
           <FilterWrapper>
-          <FilterLabel>봉사 분야</FilterLabel>
-          <FilterSelect
-            value={filters.srvcClCode}
-            onChange={(e) => handleFilterChange("srvcClCode", e.target.value)}
-          >
-            <option value="">전체</option>
-            <option value="0100">급식지원</option>
-            <option value="0199">생활편의지원</option>
-          </FilterSelect>
-        
-          <FilterLabel>모집 상태</FilterLabel>
-          <FilterSelect
-            value={filters.progrmSttusSe}
-            onChange={(e) =>
-              handleFilterChange("progrmSttusSe", e.target.value)
-            }
-          >
-            <option value="">전체</option>
-            <option value="1">모집대기</option>
-            <option value="2">모집중</option>
-            <option value="3">모집완료</option>
-          </FilterSelect>
-        
-          <FilterLabel>성인 여부</FilterLabel>
-          <CheckboxWrapper>
+            <FilterLabel>출처</FilterLabel>
+            <FilterSelect onChange={(e) => setFilters({ ...filters, type: e.target.value })}>
+              <option value="">전체</option>
+              <option value="1365자원봉사">1365자원봉사</option>
+              <option value="VMS사회복지">VMS사회복지</option>
+              <option value="USER">사용자 등록</option>
+            </FilterSelect>
+
+            <FilterLabel>모집 상태</FilterLabel>
+            <FilterSelect onChange={(e) => setFilters({ ...filters, progrmSttusSe: e.target.value })}>
+              <option value="">전체</option>
+              <option value="1">모집대기</option>
+              <option value="2">모집중</option>
+              <option value="3">모집완료</option>
+            </FilterSelect>
+
             <CheckboxLabel>
-              <input
-                type="checkbox"
-                checked={filters.adultPosblAt}
-                onChange={(e) =>
-                  handleFilterChange("adultPosblAt", e.target.checked)
-                }
-              />
-              가능
+              <input type="checkbox" onChange={(e) => setFilters({ ...filters, adultPosblAt: e.target.checked })} />
+              성인 가능
             </CheckboxLabel>
-          </CheckboxWrapper>
-        
-          <FilterLabel>봉사 기간</FilterLabel>
-          <DateWrapper>
-            <DateInput
-              type="date"
-              value={filters.noticeStartDate}
-              onChange={(e) =>
-                handleFilterChange("noticeStartDate", e.target.value)
-              }
-            />
-            <DateSeparator>~</DateSeparator>
-            <DateInput
-              type="date"
-              value={filters.noticeEndDate}
-              onChange={(e) =>
-                handleFilterChange("noticeEndDate", e.target.value)
-              }
-            />
-          </DateWrapper>
-        
-          <FilterLabel>지역</FilterLabel>
-          <FilterSelect
-            value={filters.sidoCd}
-            onChange={(e) => handleFilterChange("sidoCd", e.target.value)}
-          >
-            <option value="">지역 선택</option>
-            <option value="6110000">서울특별시</option>
-            <option value="6230000">부산광역시</option>
-            <option value="6410000">경기도</option>
-            <option value="6420000">강원도</option>
-            <option value="6510000">대구광역시</option>
-          </FilterSelect>
-        </FilterWrapper>        
+
+            <CheckboxLabel>
+              <input type="checkbox" onChange={(e) => setFilters({ ...filters, yngbgsPosblAt: e.target.checked })} />
+              청소년 가능
+            </CheckboxLabel>
+
+            <CheckboxLabel>
+              <input type="checkbox" onChange={(e) => setFilters({ ...filters, grpPosblAt: e.target.checked })} />
+              단체 가능
+            </CheckboxLabel>
+
+            <FilterLabel>봉사 기간</FilterLabel>
+            <DateWrapper>
+              <DateInput type="date" onChange={(e) => setFilters({ ...filters, startDate: e.target.value })} />
+              <DateSeparator>~</DateSeparator>
+              <DateInput type="date" onChange={(e) => setFilters({ ...filters, endDate: e.target.value })} />
+            </DateWrapper>
+          </FilterWrapper>
         )}
+
       </StickyBox>
 
       {/* 카드 리스트 */}
