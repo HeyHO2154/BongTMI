@@ -360,14 +360,10 @@ export default AddBong;
 
 // 스타일 정의
 const Wrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 157px);
-  box-sizing: border-box;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-  padding: 16px;
-  margin-bottom: 90px;
+  position: relative;
 `;
 
 const Title = styled.h1`
