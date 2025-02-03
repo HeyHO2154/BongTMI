@@ -151,7 +151,7 @@ const DetailBong: React.FC = () => {
             }
           }}
         >
-          신청하기
+          신청하기2
         </ApplyButton>
       </Footer>
     </Container>
@@ -183,10 +183,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%; /* 기본적으로 전체 높이 */
-  min-height: calc(100vh - 160px); /* 최소한 Navbar를 제외한 높이 유지 */
-  overflow-y: auto; /* 스크롤 가능하게 변경 */
+  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  overflow-y: auto; /* 스크롤 가능 */
+  padding-bottom: 60px; /* Footer 높이만큼 추가 */
 `;
+
 
 const Header = styled.div`
   width: 100%;
