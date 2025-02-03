@@ -360,6 +360,8 @@ export default AddBong;
 
 // 스타일 정의
 const Wrapper = styled.div`
+  flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 160px);
