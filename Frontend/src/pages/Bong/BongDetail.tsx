@@ -185,7 +185,6 @@ const Container = styled.div`
   align-items: center;
   height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
   overflow-y: auto; /* 스크롤 가능 */
-  padding-bottom: 60px; /* Footer 높이만큼 추가 */
 `;
 
 
@@ -213,7 +212,7 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
-  display: fixed;
+  display: flex;
   justify-content: center;
   margin-top: 10px;
   margin-bottom: 0px;
