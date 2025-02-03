@@ -71,7 +71,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
   text-align: center;
 `;
 
