@@ -92,7 +92,7 @@ const Search: React.FC = () => {
           grpPosblAt: bong.grpPosblAt === "Y",
           startDate: bong.progrmBgnde,
           endDate: bong.progrmEndde,
-          days: bong.progrmCnAt || "0000000",
+          days: bong.actWkdy || "0000000",
         };
       });
 
