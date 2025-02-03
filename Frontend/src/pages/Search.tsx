@@ -106,12 +106,18 @@ const Search: React.FC = () => {
   };
 
   const convertDaysToArray = (daysString: string): string[] => {
-    if (!daysString) return []; // ✅ 빈 값이면 빈 배열 반환
-    const daysMapping = ["월", "화", "수", "목", "금", "토", "일"];
-    return daysString
+    console.log("🧐 변환 전 daysString:", daysString); // ✅ 확인
+  
+    if (!daysString || daysString.length !== 7) return []; // ✅ 혹시 빈 값이면 체크
+    const daysMapping = ["일", "월", "화", "수", "목", "금", "토"];
+  
+    const result = daysString
       .split("")
       .map((bit, index) => (bit === "1" ? daysMapping[index] : null))
       .filter((day) => day !== null) as string[];
+  
+    console.log("✅ 변환 후:", result); // ✅ 변환 결과 확인
+    return result;
   };
   
   
