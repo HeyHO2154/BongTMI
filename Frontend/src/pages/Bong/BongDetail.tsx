@@ -213,10 +213,10 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
-  display: flex;
+  display: fixed;
   justify-content: center;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 0px;
   background-color: #fff;
   z-index: 10;
   position: relative;
