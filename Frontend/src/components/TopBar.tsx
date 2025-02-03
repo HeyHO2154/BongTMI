@@ -40,13 +40,17 @@ const BarWrapper = styled.div`
   top: 0;
   z-index: 100;
   background-color: #fff;
-  height: 65px;
+  min-height: 65px;  /* 최소 높이 고정 */
+  max-height: 65px;  /* 최대 높이 고정 */
+  height: 65px;  /* 높이 고정 */
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 좌우 정렬 */
-  padding: 0 16px; /* 좌우 여백 */
+  justify-content: space-between;
+  padding: 0 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* 내부 요소가 넘치더라도 높이 유지 */
 `;
+
 
 const Logo = styled.img`
   height: 46px;
