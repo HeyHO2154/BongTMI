@@ -71,8 +71,8 @@ async def scrape_vms():
         records = []
 
         #개발할떄는 용량 최소화를 위해 1페이지만
-        #max_pages = 1
-        max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
+        max_pages = 2
+        #max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
 
         for page_num in range(max_pages):
 

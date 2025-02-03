@@ -133,8 +133,8 @@ def process_and_store_volunteer_data():
     page_no = 1
     records = []  # 데이터를 모아두는 리스트
     #개발용이라 소량 페이지만 가져옴,
-    #while page_no <= 2:
-    while True:
+    while page_no <= 3:
+    #while True:
         xml_data = fetch_all_volunteer_data(page_no)
         volunteer_list = parse_xml_to_dict(xml_data)
         if not volunteer_list:
