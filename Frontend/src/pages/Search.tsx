@@ -172,7 +172,6 @@ const Search: React.FC = () => {
   };
   
   
-  
 
   const navigate = useNavigate(); // navigate 함수 생성
   const handleCardClick = (progrmRegistNo: string) => {
