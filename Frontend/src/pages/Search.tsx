@@ -159,7 +159,7 @@ const Search: React.FC = () => {
       return (
         (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
         (filters.type ? card.type === filters.type : true) &&
-        (filters.progrmSttusSe ? card.progrmSttusSe === filters.progrmSttusSe : true) &&
+        (filters.progrmSttusSe ? String(card.progrmSttusSe) === String(filters.progrmSttusSe) : true) &&
         matchesDay &&
         (filters.startDate ? card.startDate >= filters.startDate : true) &&
         (filters.endDate ? card.endDate <= filters.endDate : true) &&
