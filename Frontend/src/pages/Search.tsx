@@ -208,12 +208,12 @@ const Search: React.FC = () => {
         </FilterToggle>
         {isFilterVisible && (
           <FilterWrapper>
-            <FilterLabel>출처</FilterLabel>
+            <FilterLabel>신청 기관</FilterLabel>
             <FilterSelect onChange={(e) => setFilters({ ...filters, type: e.target.value })}>
               <option value="">전체</option>
               <option value="1365자원봉사">1365자원봉사</option>
               <option value="VMS사회복지">VMS사회복지</option>
-              <option value="USER">사용자 등록</option>
+              <option value="USER">봉틈이</option>
             </FilterSelect>
 
             <FilterLabel>모집 상태</FilterLabel>
