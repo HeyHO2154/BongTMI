@@ -421,6 +421,8 @@ const LoadingText = styled.div`
 `;
 
 const Badge = styled.div<{ from: string }>`
+  display: inline-block;  /* ✅ 글자 길이에 맞게 조정 */
+  width: fit-content;  /* ✅ 글자 길이에 맞게 너비 설정 */
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 14px;
