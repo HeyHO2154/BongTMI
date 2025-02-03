@@ -107,7 +107,7 @@ const Search: React.FC = () => {
 
   const convertDaysToArray = (daysString: string): string[] => {
     if (!daysString) return []; // ✅ 빈 값이면 빈 배열 반환
-    const daysMapping = ["일", "월", "화", "수", "목", "금", "토"];
+    const daysMapping = ["월", "화", "수", "목", "금", "토", "일"];
     return daysString
       .split("")
       .map((bit, index) => (bit === "1" ? daysMapping[index] : null))
@@ -153,8 +153,10 @@ const Search: React.FC = () => {
       const selectedDaysArray = filters.days;
   
       const matchesDay =
-        selectedDaysArray.length === 0 ||
-        selectedDaysArray.some((day) => cardDaysArray.includes(day));
+        selectedDaysArray.length === 0 ||  // 요일을 안 고르면 필터 X
+        selectedDaysArray.every((day) => cardDaysArray.includes(day)) &&  // 모든 선택된 요일이 포함되어야 함
+        cardDaysArray.every((day) => selectedDaysArray.includes(day));    // 불필요한 요일이 포함되면 안됨
+
   
       return (
         (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
