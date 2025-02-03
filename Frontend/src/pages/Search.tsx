@@ -68,7 +68,6 @@ const Search: React.FC = () => {
         
         const source = bong.progrmRegistNo.substring(0, 3); // 출처 구분 (앞 3글자)
         let fromValue = bong.nanmmbyNmAdmn || "미등록 사용자"; // 기본값 설정
-        fromValue;
         let typeValue = "USER"; // 기본값
         if (source === "SYO") {
           fromValue = "1365자원봉사";
@@ -85,7 +84,7 @@ const Search: React.FC = () => {
           type: typeValue,  // ✅ 프로그램 등록번호로 type 결정
           date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
           imageUrl: `${config.API_DEV}/api/bong/image/${bong.progrmRegistNo}/1`,
-          from: bong.nanmmbyNmAdmn || "미등록 사용자",
+          from: fromValue || "미등록 사용자",
           postAdress: bong.postAdres || "",
           progrmSttusSe: bong.progrmSttusSe,
           adultPosblAt: bong.adultPosblAt === "Y",
