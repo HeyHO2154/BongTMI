@@ -221,11 +221,10 @@ const Search: React.FC = () => {
           visibleCards.map((card: CardData) => (
             <Card key={card.id} onClick={() => handleCardClick(card.id)}>
               <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
-              <Badge from={card.from}>{card.from}</Badge>
               <CardText>
+                <Badge from={card.from}>{card.from}</Badge> {/* ✅ 제목 위로 이동 */}
                 <Label>{card.label}</Label>
                 <Context>{card.region}</Context>
-                {/* <Context>{card.type}</Context> */}
                 <DateCss>{card.date}</DateCss>
               </CardText>
             </Card>
@@ -423,8 +422,8 @@ const LoadingText = styled.div`
 
 const Badge = styled.div<{ from: string }>`
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 10px; /* 제목의 위 */
+  left: 10px; /* 왼쪽 정렬 */
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 14px;
