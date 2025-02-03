@@ -6,17 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const NavBarContainer = styled.nav`
-  position: fixed;
-  z-index: 999; /* NavBar를 모든 콘텐츠 위로 가져오기 */
-  width: 100%; /* 부모 컨테이너의 100% 폭 */
+  position: sticky;
+  bottom: 0;
+  width: 100%;
   background-color: #fff;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-around;
   padding: 20px 0;
-  position: absolute; /* app-container 내부에서 절대 위치 */
-  bottom: 0; /* 하단에 고정 */
+  z-index: 999;
 `;
+
 
 const NavButton = styled(NavLink).attrs<{ $isActive: boolean }>((props) => ({
   className: props.$isActive ? "active" : ""
