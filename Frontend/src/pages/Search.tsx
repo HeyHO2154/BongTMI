@@ -22,18 +22,18 @@ interface CardData {
   grpPosblAt: boolean;    // ✅ 단체 가능 여부 추가
   startDate: string;      // ✅ 봉사 시작일 추가
   endDate: string;        // ✅ 봉사 종료일 추가
+  days: string; // ✅ 추가된 필드 (1010100 형태)
 }
 
-
 interface FilterState {
-  type: string;           // 출처 (1365자원봉사, VMS사회복지, 사용자 등록)
-  progrmSttusSe: string;  // 모집 상태 (1: 모집대기, 2: 모집중, 3: 모집완료)
-  adultPosblAt: boolean;  // 성인 가능 여부
-  yngbgsPosblAt: boolean; // 청소년 가능 여부
-  grpPosblAt: boolean;    // 단체 가능 여부
+  type: string;           // 출처
+  progrmSttusSe: string;  // 모집 상태
   startDate: string;      // 봉사 시작일
   endDate: string;        // 봉사 종료일
-  postAdress: string;     // 전체 주소
+  postAdress: string;     // 주소 (사용자가 입력한 값 포함 검색)
+  sidoCd: string;         // 시/도 (지역 필터 추가)
+  gugunCd: string;        // 시/군/구 (지역 필터 추가)
+  days: string[];         // ✅ 요일 필터 (월,화,수,목,금,토,일 선택)
 }
 
 const Search: React.FC = () => {
@@ -47,15 +47,15 @@ const Search: React.FC = () => {
 
 
   const [filters, setFilters] = useState<FilterState>({
-    type: "",           // 출처 (1365자원봉사, VMS사회복지, 사용자 등록)
-    progrmSttusSe: "",  // 모집 상태 (1: 모집대기, 2: 모집중, 3: 모집완료)
-    adultPosblAt: false, // 성인 가능 여부
-    yngbgsPosblAt: false, // 청소년 가능 여부
-    grpPosblAt: false,    // 단체 가능 여부
-    startDate: "",      // 봉사 시작일
-    endDate: "",        // 봉사 종료일
-    postAdress: "",     // 전체 주소
-  });
+    type: "",
+    progrmSttusSe: "",
+    startDate: "",
+    endDate: "",
+    postAdress: "",
+    sidoCd: "",
+    gugunCd: "",
+    days: [],  // ✅ 요일 필터 추가
+  });  
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -92,6 +92,7 @@ const Search: React.FC = () => {
           grpPosblAt: bong.grpPosblAt === "Y",
           startDate: bong.progrmBgnde,
           endDate: bong.progrmEndde,
+          days: bong.progrmCnAt || "0000000",
         };
       });
 
@@ -104,16 +105,24 @@ const Search: React.FC = () => {
     setIsLoading(false);
   };
 
-  const handleFilterChange = (key: keyof FilterState, value: string | boolean) => {
+  const convertDaysToArray = (daysString: string): string[] => {
+    if (!daysString) return []; // ✅ 빈 값이면 빈 배열 반환
+    const daysMapping = ["일", "월", "화", "수", "목", "금", "토"];
+    return daysString
+      .split("")
+      .map((bit, index) => (bit === "1" ? daysMapping[index] : null))
+      .filter((day) => day !== null) as string[];
+  };
+  
+  
+  const handleFilterChange = (key: keyof FilterState, value: any) => {
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters, [key]: value };
       return newFilters;
     });
+    handleSearch(); // ✅ 필터 변경 시 자동 검색 실행
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchTerm, filters]); // ✅ 검색어 & 필터 변경 시 자동 검색 실행  
+  
 
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
@@ -140,21 +149,29 @@ const Search: React.FC = () => {
 
   const handleSearch = () => {
     let filtered = allCards.filter((card) => {
+      const cardDaysArray = convertDaysToArray(card.days);
+      const selectedDaysArray = filters.days;
+  
+      const matchesDay =
+        selectedDaysArray.length === 0 ||
+        selectedDaysArray.some((day) => cardDaysArray.includes(day));
+  
       return (
-        (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) && // ✅ 검색어 필터
+        (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
         (filters.type ? card.type === filters.type : true) &&
         (filters.progrmSttusSe ? card.progrmSttusSe === filters.progrmSttusSe : true) &&
-        (filters.adultPosblAt ? card.adultPosblAt : true) &&
-        (filters.yngbgsPosblAt ? card.yngbgsPosblAt : true) &&
-        (filters.grpPosblAt ? card.grpPosblAt : true) &&
+        matchesDay &&
         (filters.startDate ? card.startDate >= filters.startDate : true) &&
         (filters.endDate ? card.endDate <= filters.endDate : true) &&
-        (filters.postAdress ? card.postAdress.includes(filters.postAdress) : true)
+        (filters.sidoCd ? card.postAdress.includes(filters.sidoCd) : true) &&
+        (filters.gugunCd ? card.postAdress.includes(filters.gugunCd) : true)
       );
     });
   
     setVisibleCards(filtered);
   };
+  
+  
   
 
   const navigate = useNavigate(); // navigate 함수 생성
@@ -166,6 +183,11 @@ const Search: React.FC = () => {
   useEffect(() => {
     fetchAllCards();
   }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm, filters]);  // ✅ 검색어 & 필터 변경 시 자동 실행
+  
 
   return (
     <Wrapper ref={wrapperRef} onScroll={handleScroll}>
@@ -201,20 +223,43 @@ const Search: React.FC = () => {
               <option value="3">모집완료</option>
             </FilterSelect>
 
-            <CheckboxLabel>
-              <input type="checkbox" onChange={(e) => setFilters({ ...filters, adultPosblAt: e.target.checked })} />
-              성인 가능
-            </CheckboxLabel>
+            <FilterLabel>요일 선택</FilterLabel>
+            <CheckboxWrapper>
+              {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
+                <CheckboxLabel key={day}>
+                  <input
+                    type="checkbox"
+                    checked={filters.days.includes(day)}
+                    onChange={() => {
+                      let updatedDays = filters.days.includes(day)
+                        ? filters.days.filter((d) => d !== day) // 선택 해제
+                        : [...filters.days, day]; // 선택 추가
 
-            <CheckboxLabel>
-              <input type="checkbox" onChange={(e) => setFilters({ ...filters, yngbgsPosblAt: e.target.checked })} />
-              청소년 가능
-            </CheckboxLabel>
+                      handleFilterChange("days", updatedDays); // ✅ 요일 변경 시 자동 필터링 실행
+                    }}
+                  />
+                  {day}
+                </CheckboxLabel>
+              ))}
+            </CheckboxWrapper>
 
-            <CheckboxLabel>
-              <input type="checkbox" onChange={(e) => setFilters({ ...filters, grpPosblAt: e.target.checked })} />
-              단체 가능
-            </CheckboxLabel>
+
+            <FilterLabel>지역</FilterLabel>
+            <FilterSelect onChange={(e) => handleFilterChange("sidoCd", e.target.value)}>
+              <option value="">시/도 선택</option>
+              <option value="서울특별시">서울특별시</option>
+              <option value="부산광역시">부산광역시</option>
+              <option value="대구광역시">대구광역시</option>
+              <option value="인천광역시">인천광역시</option>
+            </FilterSelect>
+
+            <FilterSelect onChange={(e) => handleFilterChange("gugunCd", e.target.value)}>
+              <option value="">구/군 선택</option>
+              <option value="강남구">강남구</option>
+              <option value="송파구">송파구</option>
+              <option value="해운대구">해운대구</option>
+            </FilterSelect>
+
 
             <FilterLabel>봉사 기간</FilterLabel>
             <DateWrapper>
@@ -444,4 +489,10 @@ const Badge = styled.div<{ from: string }>`
       : from === "미등록 사용자"
       ? "rgb(218, 40, 40)" // 적색 (비 로그인)
       : "rgb(36, 177, 36)"}; // 녹색 (사용자 정의)
+`;
+
+const CheckboxWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
