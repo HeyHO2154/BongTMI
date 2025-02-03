@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; // React Router 사용
 import config from "../config";
 
+
 interface CardData {
   id: string; // 고유 식별자 추가
   label: string;
