@@ -151,7 +151,7 @@ const DetailBong: React.FC = () => {
             }
           }}
         >
-          신청하기2
+          신청하기
         </ApplyButton>
       </Footer>
     </Container>
@@ -213,17 +213,14 @@ const Content = styled.div`
 `;
 
 const Footer = styled.div`
-  position: fixed;
-  bottom: 60px; /* 하단 NavBar 위로 배치 */
-  left: 0;
-  width: 100%;
-  background-color: #fff;
   display: flex;
   justify-content: center;
-  padding: 10px 0;
-  z-index: 100;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  background-color: #fff;
+  z-index: 10;
+  position: relative;
 `;
-
 
 const ApplyButton = styled.button`
   padding: 12px 20px;
