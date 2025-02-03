@@ -127,15 +127,7 @@ const Search: React.FC = () => {
     }
   };
 
-  const handleFilterChange = (
-    key: keyof FilterState,
-    value: string | boolean
-  ) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [key]: value,
-    }));
-  };
+
 
   const handleSearch = () => {
     let filtered = allCards.filter((card) => {
@@ -336,11 +328,7 @@ const FilterSelect = styled.select`
   background-color: #f9f9f9;
 `;
 
-const CheckboxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
+
 
 const CheckboxLabel = styled.label`
   font-size: 0.9rem;
