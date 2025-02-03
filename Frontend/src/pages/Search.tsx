@@ -5,6 +5,7 @@ import { faSearch, faChevronDown, faChevronUp } from "@fortawesome/free-solid-sv
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // React Router 사용
 import config from "../config";
+import { sidoList, sigunguData } from "../components/locationData";
 
 
 interface CardData {
@@ -44,6 +45,8 @@ const Search: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const limit = 10; // 한 번에 로드할 개수
   const [searchTerm, setSearchTerm] = useState(""); // ✅ 검색어 상태 추가
+  const [selectedSido, setSelectedSido] = useState("");
+  const [selectedSigungu, setSelectedSigungu] = useState("");
 
 
   const [filters, setFilters] = useState<FilterState>({
@@ -173,7 +176,16 @@ const Search: React.FC = () => {
     setVisibleCards(filtered);
   };
   
-  
+  const handleLocationChange = (type: "sido" | "sigungu", value: string) => {
+    if (type === "sido") {
+      setSelectedSido(value);
+      setSelectedSigungu(""); // 시/도 변경 시 시/군/구 초기화
+      setFilters(prev => ({ ...prev, sidoCd: value, gugunCd: "" }));
+    } else {
+      setSelectedSigungu(value);
+      setFilters(prev => ({ ...prev, gugunCd: value }));
+    }
+  };  
 
   const navigate = useNavigate(); // navigate 함수 생성
   const handleCardClick = (progrmRegistNo: string) => {
