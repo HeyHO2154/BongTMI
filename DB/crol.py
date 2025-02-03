@@ -69,9 +69,10 @@ async def scrape_vms():
         await page.goto("https://www.vms.or.kr/partspace/recruit.do?sttdte=2025-01-01&enddte=2025-12-31&page=1")
         await page.wait_for_selector("ul.list_wrap li a", timeout=60000)
         records = []
-        #max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
+
         #개발할떄는 용량 최소화를 위해 1페이지만
-        max_pages = 1
+        #max_pages = 1
+        max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
 
         for page_num in range(max_pages):
 
@@ -155,5 +156,6 @@ async def scrape_vms():
 
         await browser.close()
 
-# 실행
-asyncio.run(scrape_vms())
+# ✅ import 시 자동 실행 방지
+if __name__ == "__main__":
+    asyncio.run(scrape_vms())

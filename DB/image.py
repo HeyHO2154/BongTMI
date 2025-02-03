@@ -84,5 +84,6 @@ def fetch_and_download():
     finally:
         connection.close()
 
+# ✅ import 시 자동 실행 방지
 if __name__ == "__main__":
     fetch_and_download()

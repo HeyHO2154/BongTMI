@@ -133,8 +133,8 @@ def process_and_store_volunteer_data():
     page_no = 1
     records = []  # 데이터를 모아두는 리스트
     #개발용이라 소량 페이지만 가져옴,
-    #실제로는 while true로 하면됨
-    while page_no <= 2:
+    #while page_no <= 2:
+    while True:
         xml_data = fetch_all_volunteer_data(page_no)
         volunteer_list = parse_xml_to_dict(xml_data)
         if not volunteer_list:
@@ -167,6 +167,6 @@ def process_and_store_volunteer_data():
     if records:
         save_to_mysql(records)
 
-# 실행
+# ✅ import 시 자동 실행 방지
 if __name__ == "__main__":
     process_and_store_volunteer_data()
