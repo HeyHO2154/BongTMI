@@ -68,7 +68,8 @@ const Search: React.FC = () => {
         
         const source = bong.progrmRegistNo.substring(0, 3); // 출처 구분 (앞 3글자)
         let fromValue = bong.nanmmbyNmAdmn || "미등록 사용자"; // 기본값 설정
-        let typeValue = "USER"; // 기본값
+        fromValue;
+        let typeValue = "USER"; // 기본값s
         if (source === "SYO") {
           fromValue = "1365자원봉사";
           typeValue = "1365자원봉사";
