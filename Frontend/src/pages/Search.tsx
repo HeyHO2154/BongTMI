@@ -246,12 +246,20 @@ export default Search;
 // 스타일 정의
 // --------------------
 
-const Wrapper = styled.div`
+const Wrapper2 = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 160px); /* TopBar 높이 제외 */
   position: relative;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
+  box-sizing: border-box;
+  overflow-y: auto;
 `;
 
 const StickyBox = styled.div`
