@@ -13,8 +13,8 @@ import MyPage from "./pages/MyPage";
 import DetailBong from "./pages/Bong/BongDetail";
 
 import Login from "./pages/User/UserLogin";
-import KakaoCallback from "./pages/User/KakaoCallback";
-import NaverCallback from "./pages/User/NaverCallback";
+import KakaoCallback from "./pages/User/OAuth/KakaoCallback";
+import NaverCallback from "./pages/User/OAuth/NaverCallback";
 import FindAccount from "./pages/User/UserFind";
 import Register from "./pages/User/UserRegister";
 
