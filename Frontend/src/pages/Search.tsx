@@ -200,7 +200,6 @@ const Search: React.FC = () => {
   useEffect(() => {
     handleSearch();
   }, [searchTerm, filters]);  // ✅ 검색어 & 필터 변경 시 자동 실행
-  
 
   return (
     <Wrapper ref={wrapperRef} onScroll={handleScroll}>
@@ -258,20 +257,30 @@ const Search: React.FC = () => {
 
 
             <FilterLabel>지역</FilterLabel>
-            <FilterSelect onChange={(e) => handleFilterChange("sidoCd", e.target.value)}>
-              <option value="">시/도 선택</option>
-              <option value="서울특별시">서울특별시</option>
-              <option value="부산광역시">부산광역시</option>
-              <option value="대구광역시">대구광역시</option>
-              <option value="인천광역시">인천광역시</option>
-            </FilterSelect>
+              <select
+                value={selectedSido}
+                onChange={(e) => handleLocationChange("sido", e.target.value)}
+                className="p-2 border rounded"
+              >
+                <option value="">시/도 선택</option>
+                {sidoList.map((sido) => (
+                  <option key={sido} value={sido}>{sido}</option>
+                ))}
+              </select>
 
-            <FilterSelect onChange={(e) => handleFilterChange("gugunCd", e.target.value)}>
-              <option value="">구/군 선택</option>
-              <option value="강남구">강남구</option>
-              <option value="송파구">송파구</option>
-              <option value="해운대구">해운대구</option>
-            </FilterSelect>
+              {selectedSido && (
+                <select
+                  value={selectedSigungu}
+                  onChange={(e) => handleLocationChange("sigungu", e.target.value)}
+                  className="p-2 border rounded"
+                >
+                  <option value="">시/군/구 선택</option>
+                  {sigunguData[selectedSido]?.map((sigungu) => (
+                    <option key={sigungu} value={sigungu}>{sigungu}</option>
+                  ))}
+                </select>
+              )}
+
 
 
             <FilterLabel>봉사 기간</FilterLabel>
