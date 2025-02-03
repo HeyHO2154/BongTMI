@@ -424,7 +424,7 @@ const LoadingText = styled.div`
 const Badge = styled.div<{ from: string }>`
   position: absolute;
   top: 10px;
-  left: 155px;
+  left: 20px;
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 14px;
