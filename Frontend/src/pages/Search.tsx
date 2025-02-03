@@ -388,15 +388,13 @@ const CardImage = styled.div`
 `;
 
 const CardText = styled.div`
-  position: absolute;
-  top: 30px;
-  left: 142px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 16px;
+  padding: 12px; /* 패딩 줄이기 */
 `;
+
 
 
 const Label = styled.div`
