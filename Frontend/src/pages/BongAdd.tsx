@@ -362,9 +362,11 @@ export default AddBong;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
+  height: calc(100vh - 160px);
   box-sizing: border-box;
   overflow-y: auto;
+  background-color: #f9f9f9;
+  padding: 16px;
 `;
 
 const Title = styled.h1`
