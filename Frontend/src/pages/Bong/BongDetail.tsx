@@ -107,35 +107,33 @@ const DetailBong: React.FC = () => {
             <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
           <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
         </ImageContainer>
-        <h1>{bongData.progrmSj}</h1>
-        <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
-        <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
-        <p><strong>봉사 시작일자:</strong> {bongData.progrmBgnde}</p>
-        <p><strong>봉사 종료일자:</strong> {bongData.progrmEndde}</p>
-        <p><strong>활동 시작 시간:</strong> {bongData.actBeginTm}</p>
-        <p><strong>활동 종료 시간:</strong> {bongData.actEndTm}</p>
-        <p><strong>모집 시작일자:</strong> {bongData.noticeBgnde}</p>
-        <p><strong>모집 종료일자:</strong> {bongData.noticeEndde}</p>
-        <p><strong>모집 인원:</strong> {bongData.rcritNmpr}</p>
-        <p><strong>활동 요일:</strong> {bongData.actWkdy}</p>
-        <p><strong>봉사 분야:</strong> {bongData.srvcClCode}</p>
-        <p><strong>성인 가능 여부:</strong> {bongData.adultPosblAt}</p>
-        <p><strong>청소년 가능 여부:</strong> {bongData.yngbgsPosblAt}</p>
-        <p><strong>단체 가능 여부:</strong> {bongData.grpPosblAt}</p>
-        <p><strong>모집 기관명:</strong> {bongData.mnnstNm}</p>
-        <p><strong>등록 기관명:</strong> {bongData.nanmmbyNm}</p>
-        <p><strong>봉사 장소:</strong> {bongData.actPlace}</p>
-        <p><strong>담당자명:</strong> {bongData.nanmmbyNmAdmn}</p>
-        <p><strong>전화번호:</strong> {bongData.telno}</p>
-        <p><strong>FAX 번호:</strong> {bongData.fxnum}</p>
-        <p><strong>담당자 주소:</strong> {bongData.postAdres}</p>
-        <p><strong>이메일:</strong> {bongData.email}</p>
-        <p><strong>내용:</strong> {bongData.progrmCn}</p>
-        <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
-        <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>
-      
+          <h1>{bongData.progrmSj}</h1>
+          <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
+          <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
+          <p><strong>봉사 시작일자:</strong> {bongData.progrmBgnde}</p>
+          <p><strong>봉사 종료일자:</strong> {bongData.progrmEndde}</p>
+          <p><strong>활동 시작 시간:</strong> {bongData.actBeginTm}</p>
+          <p><strong>활동 종료 시간:</strong> {bongData.actEndTm}</p>
+          <p><strong>모집 시작일자:</strong> {bongData.noticeBgnde}</p>
+          <p><strong>모집 종료일자:</strong> {bongData.noticeEndde}</p>
+          <p><strong>모집 인원:</strong> {bongData.rcritNmpr}</p>
+          <p><strong>활동 요일:</strong> {bongData.actWkdy}</p>
+          <p><strong>봉사 분야:</strong> {bongData.srvcClCode}</p>
+          <p><strong>성인 가능 여부:</strong> {bongData.adultPosblAt}</p>
+          <p><strong>청소년 가능 여부:</strong> {bongData.yngbgsPosblAt}</p>
+          <p><strong>단체 가능 여부:</strong> {bongData.grpPosblAt}</p>
+          <p><strong>모집 기관명:</strong> {bongData.mnnstNm}</p>
+          <p><strong>등록 기관명:</strong> {bongData.nanmmbyNm}</p>
+          <p><strong>봉사 장소:</strong> {bongData.actPlace}</p>
+          <p><strong>담당자명:</strong> {bongData.nanmmbyNmAdmn}</p>
+          <p><strong>전화번호:</strong> {bongData.telno}</p>
+          <p><strong>FAX 번호:</strong> {bongData.fxnum}</p>
+          <p><strong>담당자 주소:</strong> {bongData.postAdres}</p>
+          <p><strong>이메일:</strong> {bongData.email}</p>
+          <p><strong>내용:</strong> {bongData.progrmCn}</p>
+          <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
+          <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>` 
       </Content>
-
       <Footer>
         <ApplyButton
           onClick={() => {
@@ -185,21 +183,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100vh - 140px); /* TopBar(60px) + Navbar(60px) */
-  overflow: hidden; /* 전체 화면 스크롤 방지 */
-  padding: 0;
-
-  transform: translateY(20px);
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out forwards; /* 0.5초 동안 페이드인 효과 */
-
-  @keyframes fadeIn {
-    to {
-      transform: translateY(0); /* 제자리로 이동 */
-      opacity: 1; /* 완전히 보이게 */
-    }
-  }
+  height: 100%; /* 기본적으로 전체 높이 */
+  min-height: calc(100vh - 140px); /* 최소한 Navbar를 제외한 높이 유지 */
+  overflow-y: auto; /* 스크롤 가능하게 변경 */
+  padding-bottom: 60px; /* NavBar 높이만큼 추가 */
 `;
+
 
 const Header = styled.div`
   width: 100%;
