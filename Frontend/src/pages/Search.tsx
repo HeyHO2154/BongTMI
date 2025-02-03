@@ -106,17 +106,12 @@ const Search: React.FC = () => {
   };
 
   const convertDaysToArray = (daysString: string): string[] => {
-    console.log("🧐 변환 전 daysString:", daysString); // ✅ 확인
-  
     if (!daysString || daysString.length !== 7) return []; // ✅ 혹시 빈 값이면 체크
     const daysMapping = ["일", "월", "화", "수", "목", "금", "토"];
-  
     const result = daysString
       .split("")
       .map((bit, index) => (bit === "1" ? daysMapping[index] : null))
       .filter((day) => day !== null) as string[];
-  
-    console.log("✅ 변환 후:", result); // ✅ 변환 결과 확인
     return result;
   };
   
@@ -158,14 +153,11 @@ const Search: React.FC = () => {
       const cardDaysArray = convertDaysToArray(card.days);
       const selectedDaysArray = filters.days;
   
-      console.log("사용자 선택 요일:", selectedDaysArray);
-      console.log("데이터 요일:", cardDaysArray);
-  
       const matchesDay =
-        selectedDaysArray.length === 0 || // 선택한 요일이 없으면 필터 X
-        selectedDaysArray.some((day) => cardDaysArray.includes(day)); // 선택한 요일 중 하나라도 포함되면 통과
-  
-  
+        selectedDaysArray.length === 0 ||  // 요일을 안 고르면 필터 X
+        selectedDaysArray.every((day) => cardDaysArray.includes(day)) &&  // 모든 선택된 요일이 포함되어야 함
+        cardDaysArray.every((day) => selectedDaysArray.includes(day));    // 불필요한 요일이 포함되면 안됨
+        
       return (
         (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
         (filters.type ? card.type === filters.type : true) &&
