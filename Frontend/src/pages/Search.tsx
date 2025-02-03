@@ -246,20 +246,13 @@ export default Search;
 // 스타일 정의
 // --------------------
 
-const Wrapper2 = styled.div`
+const Wrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  min-height: 100vh; /* 최소 높이만 설정 → 내용이 많으면 자동으로 늘어남 */
+  overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
   position: relative;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
-  box-sizing: border-box;
-  overflow-y: auto;
 `;
 
 const StickyBox = styled.div`
