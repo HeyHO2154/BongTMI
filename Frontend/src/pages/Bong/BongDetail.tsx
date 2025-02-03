@@ -215,8 +215,8 @@ const Content = styled.div`
 const Footer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 40px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   background-color: #fff;
   z-index: 10;
   position: relative;
