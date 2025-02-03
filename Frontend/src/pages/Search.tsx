@@ -382,7 +382,7 @@ const Card = styled.div`
 
 
 const CardImage = styled.div`
-  flex: 0 0 25%;
+  flex: 0 0 30%;
   height: auto;
   background-size: cover;
   background-position: center;
