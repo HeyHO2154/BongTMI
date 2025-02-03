@@ -6,17 +6,17 @@ import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로
 import NavBar from "./components/NavBar";
 import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
-import AddBong from "./pages/AddBong";
+import AddBong from "./pages/BongAdd";
 import Feed from "./pages/Feed";
 import MyPage from "./pages/MyPage";
 
-import DetailBong from "./pages/Bong/DetailBong";
+import DetailBong from "./pages/Bong/BongDetail";
 
-import Login from "./pages/User/Login";
+import Login from "./pages/User/UserLogin";
 import KakaoCallback from "./pages/User/KakaoCallback";
 import NaverCallback from "./pages/User/NaverCallback";
-import FindAccount from "./pages/User/FindAccount";
-import Register from "./pages/User/Register";
+import FindAccount from "./pages/User/UserFind";
+import Register from "./pages/User/UserRegister";
 
 const App: React.FC = () => {
   const [isTouching, setIsTouching] = useState(false);
