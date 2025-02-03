@@ -323,6 +323,7 @@ const Wrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
   position: relative;
 `;
 
