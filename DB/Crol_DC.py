@@ -29,7 +29,7 @@ def download_image(image_url, feed_id):
                 os.makedirs(post_folder)
 
             # ✅ 저장 경로 지정 (FeedID 폴더 내 저장)
-            file_path = os.path.join(post_folder, f"{feed_id}.jpg")
+            file_path = os.path.join(post_folder, "Image_1.jpg")
 
             # 이미지 저장
             with open(file_path, "wb") as file:
