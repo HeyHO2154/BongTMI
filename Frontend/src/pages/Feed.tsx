@@ -117,7 +117,7 @@ const Feed: React.FC = () => {
 
             {/* 이미지 */}
             <FeedImageContainer>
-              <FeedImage src={feed.imageUrl} alt="Feed Image" />
+              <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
             </FeedImageContainer>
 
             {/* 버튼 */}
