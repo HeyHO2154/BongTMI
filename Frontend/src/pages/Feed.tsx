@@ -33,8 +33,6 @@ interface FeedData {
   likes: number;
   comments: number;
   imageUrl: string;
-  imageKey?: string; // ✅ API에서 가져올 이미지 키
-  profileUrl?: string;
 }
 
 const Feed: React.FC = () => {
@@ -51,7 +49,7 @@ const Feed: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=10`);
+      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=5`);
       const newFeeds = response.data;
 
       if (newFeeds.length === 0) {
@@ -60,8 +58,7 @@ const Feed: React.FC = () => {
         // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
         const feedsWithImages = newFeeds.map((feed: FeedData) => ({
           ...feed,
-          imageUrl: `${config.API_DEV}/api/bong/image/${feed.imageKey || "default.jpg"}`,
-          profileUrl: "/public/BongTMMI.png", // ✅ 고정된 프로필 이미지
+          imageUrl: `${config.API_DEV}/api/bong/image/${newFeeds.FeedID || "default.jpg"}`,
         }));
 
         setFeeds((prev) => [...prev, ...feedsWithImages]);
@@ -110,7 +107,7 @@ const Feed: React.FC = () => {
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
-                <ProfileImage src={feed.profileUrl} alt="Profile" />
+                <ProfileImage src="/assets/BongTMI1.png" alt="봉틈이" />
                 <Author>
                   {feed.author} <TimeAgo>{timeAgo(feed.createdAt)}</TimeAgo>
                 </Author>
