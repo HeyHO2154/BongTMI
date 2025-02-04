@@ -222,11 +222,14 @@ const FeedImageContainer = styled.div`
   background: #f3f3f3;
 `;
 
-const FeedImage = styled.img`
+const FeedImage = styled.div`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
+
 
 // ✅ 좋아요 & 댓글
 const FeedFooter = styled.div`
