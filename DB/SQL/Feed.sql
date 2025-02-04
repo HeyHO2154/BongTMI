@@ -5,10 +5,11 @@ DROP TABLE IF EXISTS Comment;
 
 -- 후기기 테이블
 CREATE TABLE Feed (
-    id INT AUTO_INCREMENT PRIMARY KEY,  -- 고유번호 (PK)
+    FeedID INT AUTO_INCREMENT PRIMARY KEY,  -- 고유번호 (PK)
     title VARCHAR(255) NOT NULL,        -- 제목
     author VARCHAR(100) NOT NULL,       -- 작성자
     created_at DATETIME DEFAULT NOW(),  -- 작성시간
+    image_url VARCHAR(500),				-- 이미지
     content TEXT NOT NULL,              -- 내용
     likes INT DEFAULT 0,                -- 좋아요 수
     views INT DEFAULT 0                 -- 조회수
