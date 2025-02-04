@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
 import axios from "axios";
-import config from "../config"
+import config from "../config";
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -56,7 +56,14 @@ const Feed: React.FC = () => {
       if (newFeeds.length === 0) {
         setHasMore(false);
       } else {
-        setFeeds((prev) => [...prev, ...newFeeds]);
+        // ✅ 이미지 URL 로드
+        const feedsWithImages = newFeeds.map((feed: FeedData) => ({
+          ...feed,
+          imageUrl: feed.imageUrl || "https://source.unsplash.com/500x500/?random", // 기본 이미지 적용
+          profileUrl: feed.profileUrl || "https://source.unsplash.com/50x50/?face", // 기본 프로필 이미지 적용
+        }));
+
+        setFeeds((prev) => [...prev, ...feedsWithImages]);
         pageRef.current += 1;
       }
     } catch (error) {
@@ -111,7 +118,9 @@ const Feed: React.FC = () => {
             </FeedHeader>
 
             {/* 이미지 */}
-            {feed.imageUrl && <FeedImage src={feed.imageUrl} alt="Feed Image" />}
+            <FeedImageContainer>
+              <FeedImage src={feed.imageUrl} alt="Feed Image" />
+            </FeedImageContainer>
 
             {/* 버튼 */}
             <FeedFooter>
@@ -208,10 +217,16 @@ const TimeAgo = styled.span`
   margin-left: 5px;
 `;
 
-// ✅ 게시물 이미지
-const FeedImage = styled.img`
+// ✅ 이미지 컨테이너
+const FeedImageContainer = styled.div`
   width: 100%;
   height: 400px;
+  background: #f3f3f3;
+`;
+
+const FeedImage = styled.img`
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 `;
 
@@ -250,20 +265,6 @@ const CommentButton = styled.div`
 const CommentCount = styled.span`
   font-size: 16px;
   margin-left: 5px;
-`;
-
-const FeedContent = styled.div`
-  padding: 10px;
-`;
-
-const ContentTitle = styled.h3`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const ContentText = styled.p`
-  font-size: 14px;
-  color: #333;
 `;
 
 const LoadingText = styled.div`
