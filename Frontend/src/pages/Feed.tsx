@@ -25,7 +25,7 @@ const timeAgo = (dateString: string) => {
 };
 
 interface FeedData {
-  FeedID: string;
+  feedID: string;
   title: string;
   author: string;
   createdAt: string;
@@ -57,10 +57,10 @@ const Feed: React.FC = () => {
       } else {
         // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
         const feedsWithImages = newFeeds.map((feed: FeedData) => {
-          const imageUrl = `${config.API_DEV}/api/bong/image/${feed.FeedID}/1`;
+          const imageUrl = `${config.API_DEV}/api/bong/image/${feed.feedID}/1`;
           
-          // ✅ 콘솔에 `imageUrl`이 올바르게 생성되었는지 확인
-          console.log(`FeedID: ${feed.FeedID}, ImageURL: ${imageUrl}`);
+          // // ✅ 콘솔에 `imageUrl`이 올바르게 생성되었는지 확인
+          // console.log(`FeedID: ${feed.feedID}, ImageURL: ${imageUrl}`);
           
           return {
             ...feed,
@@ -111,7 +111,7 @@ const Feed: React.FC = () => {
     <FeedWrapper>
       <FeedContainer>
         {feeds.map((feed, index) => (
-          <FeedCard key={feed.FeedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null}>
+          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
