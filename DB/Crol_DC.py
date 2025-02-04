@@ -8,7 +8,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 # 🔹 이미지 저장 폴더 설정
-IMAGE_SAVE_PATH = r"C:\Users\PRO\Desktop\GitDesktop\BongTMI\DB\Image"
+IMAGE_SAVE_PATH = r"/home/junma97/Desktop/DB/Image"
 
 # 폴더가 없으면 생성
 if not os.path.exists(IMAGE_SAVE_PATH):
@@ -80,7 +80,7 @@ def save_to_mysql(data):
 # 🔹 크롤링 함수
 async def scrape_dcinside():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)  # headless=False로 변경하여 크롤링 화면 확인 가능
+        browser = await p.chromium.launch(headless=True)  # headless=False로 변경하여 크롤링 화면 확인 가능
         page = await browser.new_page()
 
         all_post_urls = []  # 🔹 모든 게시물 URL 저장

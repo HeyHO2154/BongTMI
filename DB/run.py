@@ -1,14 +1,17 @@
 import schedule
 import time
 import asyncio
-from api import process_and_store_volunteer_data
-from crol import scrape_vms
-from image import fetch_and_download
+from API_1365 import process_and_store_volunteer_data
+from Crol_VMS import scrape_vms
+from Crol_DC import scrape_dcinside
+from Image import fetch_and_download
 from datetime import datetime
 
 # 크롤링 스크립트 실행 (비동기)
 async def run_scraper():
     await scrape_vms()
+async def run_scraper2():
+    await scrape_dcinside()
 
 # 전체 작업 실행 (API → 크롤링 → 이미지 다운로드 순서)
 def run_all_tasks():
@@ -26,11 +29,16 @@ def run_all_tasks():
     # 3. 이미지 다운로드 실행
     print("[3] 이미지 다운로드 실행 중...")
     fetch_and_download()
+
+    # 4. 디시 이미지 포함 크롤링
+    print("[2] 웹 크롤링 실행 중...")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run_scraper2())  # 크롤링이 끝날 때까지 대기
     
     print("=== 모든 작업 완료 ===")
 
 # ✅ 매일 밤 23:59에 실행 설정
-schedule.every().day.at("23:59").do(run_all_tasks)
+schedule.every().day.at("16:06").do(run_all_tasks)
 
 print("스케줄러 실행 중... (매일 밤 23:59에 실행)")
 while True:

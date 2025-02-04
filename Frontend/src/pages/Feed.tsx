@@ -1,124 +1,92 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Heart, MessageCircle, Send } from "lucide-react"; // 아이콘 라이브러리
+import { Heart, Send } from "lucide-react";
 
-// ✅ 더미 데이터 (게시글 목록)
-const dummyPosts = [
+interface FeedData {
+  id: string;
+  title: string;
+  author: string;
+  createdAt: string;
+  content: string;
+  likes: number;
+  views: number;
+}
+
+const dummyFeeds: FeedData[] = [
   {
-    id: 1,
-    user: {
-      name: "johndoe",
-      profileImg: "https://thumb.mt.co.kr/06/2024/12/2024121110110632754_1.jpg",
-    },
-    image: "https://i.ytimg.com/vi/7qIuReWbE28/maxresdefault.jpg",
-    likes: 120,
-    caption: "오늘 날씨 너무 좋다! 🌞 #자연 #힐링",
-    comments: [
-      { user: "alice", text: "와우 멋진 사진이네요!" },
-      { user: "bob", text: "여기 어디인가요?" },
-    ],
+    id: "DCI1051229",
+    title: "근데 차민은 비수기에 하면 남는게 있음?",
+    author: "user1",
+    createdAt: "2025-02-04 13:38:17",
+    content: "길게보면 걍 무료봉사라던데.",
+    likes: 10,
+    views: 150,
   },
   {
-    id: 2,
-    user: {
-      name: "janedoe",
-      profileImg: "https://cdn.hankyung.com/photo/202303/BF.32882728.1.jpg",
-    },
-    image: "https://i.ytimg.com/vi/qe0gepQh8N0/maxresdefault.jpg",
-    likes: 85,
-    caption: "도시의 야경이 정말 아름답다 🌃 #야경 #도시감성",
-    comments: [{ user: "chris", text: "야경이 너무 멋져요!" }],
+    id: "DCI1111473",
+    title: "지랄은 오브젝트 강타는 무조건 정글 소양이지",
+    author: "user2",
+    createdAt: "2025-02-04 13:47:47",
+    content: "그게 존재이유인데 그것조차 못하면 정글을 왜 함?",
+    likes: 5,
+    views: 80,
+  },
+  {
+    id: "DCI1351901",
+    title: "봉사랑 헌혈안해서 일반기술은 광탈이여도",
+    author: "user3",
+    createdAt: "2025-02-04 13:38:17",
+    content: "일반기술말고 기계로는 못가나?",
+    likes: 20,
+    views: 200,
+  },
+  {
+    id: "DCI1400001",
+    title: "게임 밸런스 왜이래?",
+    author: "user4",
+    createdAt: "2025-02-04 14:00:00",
+    content: "이게 말이 되냐고...",
+    likes: 12,
+    views: 250,
   },
 ];
 
 const Feed: React.FC = () => {
-  const [posts, setPosts] = useState(dummyPosts);
+  const [feeds, setFeeds] = useState(dummyFeeds);
 
-  // 좋아요 버튼 클릭 핸들러
-  const handleLike = (postId: number) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId ? { ...post, likes: post.likes + 1 } : post
+  const handleLike = (feedId: string) => {
+    setFeeds((prev) =>
+      prev.map((feed) =>
+        feed.id === feedId ? { ...feed, likes: feed.likes + 1 } : feed
       )
     );
-  };
-
-  // 댓글 추가 핸들러
-  const [commentInputs, setCommentInputs] = useState<{ [key: number]: string }>(
-    {}
-  );
-
-  const handleCommentChange = (postId: number, text: string) => {
-    setCommentInputs((prev) => ({ ...prev, [postId]: text }));
-  };
-
-  const handleAddComment = (postId: number) => {
-    if (!commentInputs[postId]) return;
-
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              comments: [...post.comments, { user: "me", text: commentInputs[postId] }],
-            }
-          : post
-      )
-    );
-
-    // 입력값 초기화
-    setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
   };
 
   return (
     <FeedWrapper>
       <FeedContainer>
-        {posts.map((post) => (
-          <PostCard key={post.id}>
-            {/* 사용자 정보 */}
-            <UserInfo>
-              <ProfileImage src={post.user.profileImg} alt={post.user.name} />
-              <Username>{post.user.name}</Username>
-            </UserInfo>
+        {feeds.map((feed) => (
+          <FeedCard key={feed.id}>
+            <FeedHeader>
+              <Title>{feed.title}</Title>
+              <Author>{feed.author}</Author>
+            </FeedHeader>
 
-            {/* 게시글 이미지 */}
-            <PostImage src={post.image} alt="post" />
+            <Content>{feed.content}</Content>
 
-            {/* 액션 버튼 */}
-            <Actions>
-              <Heart onClick={() => handleLike(post.id)} />
-              <MessageCircle />
-              <Send />
-            </Actions>
+            <FeedFooter>
+              <Stats>
+                <span>❤️ {feed.likes}</span>
+                <span>👁️ {feed.views}</span>
+              </Stats>
+              <Actions>
+                <Heart onClick={() => handleLike(feed.id)} />
+                <Send />
+              </Actions>
+            </FeedFooter>
 
-            {/* 좋아요 개수 */}
-            <Likes>{post.likes} likes</Likes>
-
-            {/* 게시글 설명 */}
-            <Caption>
-              <strong>{post.user.name}</strong> {post.caption}
-            </Caption>
-
-            {/* 댓글 */}
-            <Comments>
-              {post.comments.map((comment, index) => (
-                <Comment key={index}>
-                  <strong>{comment.user}</strong> {comment.text}
-                </Comment>
-              ))}
-            </Comments>
-
-            {/* 댓글 입력 */}
-            <CommentInputContainer>
-              <CommentInput
-                type="text"
-                placeholder="댓글을 입력하세요..."
-                value={commentInputs[post.id] || ""}
-                onChange={(e) => handleCommentChange(post.id, e.target.value)}
-              />
-              <CommentButton onClick={() => handleAddComment(post.id)}>게시</CommentButton>
-            </CommentInputContainer>
-          </PostCard>
+            <CreatedAt>{feed.createdAt}</CreatedAt>
+          </FeedCard>
         ))}
       </FeedContainer>
     </FeedWrapper>
@@ -132,11 +100,11 @@ export default Feed;
 // --------------------
 
 const FeedWrapper = styled.div`
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* ✅ 상단 정렬 */
-  overflow-y: hidden; /* ✅ 부모가 스크롤을 가지지 않도록 */
+  align-items: flex-start;
+  height: 100vh;  /* 화면 전체 높이 */
+  overflow-y: auto; /* ✅ 전체 컨테이너에서 스크롤 가능하게 변경 */
 `;
 
 const FeedContainer = styled.div`
@@ -144,91 +112,77 @@ const FeedContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  overflow-y: auto;
-  height: 83vh; /* ✅ 전체 높이 */
-  max-height: 100vh; /* ✅ 스크롤이 가능하도록 */
   width: 100%;
+  min-height: 100vh; /* ✅ 최소 높이 설정으로 스크롤 가능하게 */
 `;
 
-const PostCard = styled.div`
-  width: 500px;
+const FeedCard = styled.div`
+  width: 90%;
+  max-width: 500px;
+  height: 250px; /* 카드 크기 고정 */
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  min-height: 20vh; /* ✅ 최소 높이 설정 */
-`;
-
-const UserInfo = styled.div`
+  padding: 15px;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+
+const FeedHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
-
-const Username = styled.span`
+const Title = styled.h3`
+  font-size: 18px;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const PostImage = styled.img`
-  width: 100%;
-  height: auto;
+const Author = styled.span`
+  font-size: 14px;
+  color: gray;
+`;
+
+const Content = styled.p`
+  font-size: 16px;
+  flex-grow: 1;
+`;
+
+const FeedFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+`;
+
+const Stats = styled.div`
+  font-size: 14px;
+  color: gray;
+  display: flex;
+  gap: 10px;
 `;
 
 const Actions = styled.div`
   display: flex;
   gap: 10px;
-  padding: 10px;
   font-size: 24px;
   cursor: pointer;
 `;
 
-const Likes = styled.div`
-  font-weight: bold;
-  padding: 0 10px;
-`;
-
-const Caption = styled.p`
-  padding: 0 10px;
-`;
-
-const Comments = styled.div`
-  padding: 0 10px;
-`;
-
-const Comment = styled.p`
-  font-size: 14px;
-  margin: 5px 0;
-`;
-
-const CommentInputContainer = styled.div`
-  display: flex;
-  padding: 10px;
-  border-top: 1px solid #eee;
-  background: white; /* ✅ 배경색 추가 */
-  position: sticky; /* ✅ 댓글창 고정 */
-  bottom: 0; /* ✅ 항상 하단에 유지 */
-  width: 100%; /* ✅ 부모 요소 크기 맞춤 */
-`;
-
-const CommentInput = styled.input`
-  flex: 1;
-  border: none;
-  padding: 10px;
-  font-size: 14px;
-`;
-
-const CommentButton = styled.button`
-  background: transparent;
-  border: none;
-  color: #0095f6;
-  font-weight: bold;
-  cursor: pointer;
+const CreatedAt = styled.div`
+  font-size: 12px;
+  color: gray;
+  text-align: right;
+  margin-top: 5px;
 `;
