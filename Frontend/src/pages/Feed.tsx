@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
+import axios from "axios";
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -29,63 +30,74 @@ interface FeedData {
   createdAt: string;
   content: string;
   likes: number;
-  comments: number; // ✅ 댓글 개수 추가
+  comments: number;
   imageUrl?: string;
   profileUrl?: string;
 }
 
-const dummyFeeds: FeedData[] = [
-  {
-    id: "DCI1051229",
-    title: "근데 차민은 비수기에 하면 남는게 있음?",
-    author: "user1",
-    createdAt: "2025-02-03 13:38:17",
-    content: "길게보면 걍 무료봉사라던데.",
-    likes: 10,
-    comments: 5,
-    imageUrl: "https://source.unsplash.com/500x500/?nature",
-    profileUrl: "https://source.unsplash.com/50x50/?face",
-  },
-  {
-    id: "DCI1111473",
-    title: "지랄은 오브젝트 강타는 무조건 정글 소양이지",
-    author: "user2",
-    createdAt: "2025-02-01 13:47:47",
-    content: "그게 존재이유인데 그것조차 못하면 정글을 왜 함?",
-    likes: 5,
-    comments: 2,
-    imageUrl: "https://source.unsplash.com/500x500/?gaming",
-    profileUrl: "https://source.unsplash.com/50x50/?gamer",
-  },
-  {
-    id: "DCI1351901",
-    title: "봉사랑 헌혈안해서 일반기술은 광탈이여도",
-    author: "user3",
-    createdAt: "2025-01-28 13:38:17",
-    content: "일반기술말고 기계로는 못가나?",
-    likes: 20,
-    comments: 10,
-    imageUrl: "https://source.unsplash.com/500x500/?technology",
-    profileUrl: "https://source.unsplash.com/50x50/?engineer",
-  },
-];
-
 const Feed: React.FC = () => {
-  const [feeds, setFeeds] = useState(dummyFeeds);
+  const [feeds, setFeeds] = useState<FeedData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const pageRef = useRef(1);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastFeedElementRef = useRef<HTMLDivElement | null>(null);
 
-  const handleLike = (feedId: string) => {
-    setFeeds((prev) =>
-      prev.map((feed) =>
-        feed.id === feedId ? { ...feed, likes: feed.likes + 1 } : feed
-      )
-    );
-  };
+  // ✅ API 데이터 불러오기
+  const fetchFeeds = useCallback(async () => {
+    if (!hasMore || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:8080/api/feeds?page=${pageRef.current}&size=10`);
+      const newFeeds = response.data;
+
+      if (newFeeds.length === 0) {
+        setHasMore(false);
+      } else {
+        setFeeds((prev) => [...prev, ...newFeeds]);
+        pageRef.current += 1;
+      }
+    } catch (error) {
+      console.error("데이터 로드 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, hasMore]);
+
+  // ✅ 최초 1회 실행
+  useEffect(() => {
+    fetchFeeds();
+  }, []);
+
+  // ✅ 무한 스크롤 이벤트 감지
+  useEffect(() => {
+    if (!hasMore) return;
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      if (entries[0].isIntersecting) {
+        fetchFeeds();
+      }
+    };
+
+    observer.current = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: "100px",
+      threshold: 1.0,
+    });
+
+    if (lastFeedElementRef.current) {
+      observer.current.observe(lastFeedElementRef.current);
+    }
+
+    return () => observer.current?.disconnect();
+  }, [fetchFeeds, hasMore]);
 
   return (
     <FeedWrapper>
       <FeedContainer>
-        {feeds.map((feed) => (
-          <FeedCard key={feed.id}>
+        {feeds.map((feed, index) => (
+          <FeedCard key={feed.id} ref={index === feeds.length - 1 ? lastFeedElementRef : null}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
@@ -103,7 +115,7 @@ const Feed: React.FC = () => {
             {/* 버튼 */}
             <FeedFooter>
               <Actions>
-                <LikeButton onClick={() => handleLike(feed.id)}>
+                <LikeButton>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
@@ -121,6 +133,8 @@ const Feed: React.FC = () => {
             </FeedContent>
           </FeedCard>
         ))}
+
+        {isLoading && <LoadingText>로딩 중...</LoadingText>}
       </FeedContainer>
     </FeedWrapper>
   );
@@ -147,7 +161,6 @@ const FeedContainer = styled.div`
   padding: 10px;
   width: 100%;
   max-width: 600px;
-  overflow-y: auto;
 `;
 
 const FeedCard = styled.div`
@@ -162,7 +175,7 @@ const FeedCard = styled.div`
   border: 1px solid #ddd;
 `;
 
-// ✅ 사용자 정보 (프로필 영역)
+// ✅ 사용자 정보
 const FeedHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -201,7 +214,7 @@ const FeedImage = styled.img`
   object-fit: cover;
 `;
 
-// ✅ 버튼 및 좋아요/댓글 정보
+// ✅ 좋아요 & 댓글
 const FeedFooter = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -238,7 +251,6 @@ const CommentCount = styled.span`
   margin-left: 5px;
 `;
 
-// ✅ 본문 내용
 const FeedContent = styled.div`
   padding: 10px;
 `;
@@ -251,4 +263,10 @@ const ContentTitle = styled.h3`
 const ContentText = styled.p`
   font-size: 14px;
   color: #333;
+`;
+
+const LoadingText = styled.div`
+  text-align: center;
+  color: #888;
+  margin-top: 16px;
 `;
