@@ -58,7 +58,7 @@ const Feed: React.FC = () => {
         // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
         const feedsWithImages = newFeeds.map((feed: FeedData) => ({
           ...feed,
-          imageUrl: `${config.API_DEV}/api/bong/image/${feed.FeedID || "default.jpg"}`,
+          imageUrl: `${config.API_DEV}/api/bong/image/${feed.FeedID || "default.jpg"}/1`,
         }));
 
         setFeeds((prev) => [...prev, ...feedsWithImages]);
@@ -229,7 +229,6 @@ const FeedImage = styled.div`
   background-position: center;
   background-repeat: no-repeat;
 `;
-
 
 // ✅ 좋아요 & 댓글
 const FeedFooter = styled.div`
