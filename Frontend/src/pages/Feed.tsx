@@ -46,21 +46,28 @@ const Feed: React.FC = () => {
   // ✅ API 데이터 불러오기
   const fetchFeeds = useCallback(async () => {
     if (!hasMore || isLoading) return;
-
+  
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=5`);
       const newFeeds = response.data;
-
+  
       if (newFeeds.length === 0) {
         setHasMore(false);
       } else {
         // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
-        const feedsWithImages = newFeeds.map((feed: FeedData) => ({
-          ...feed,
-          imageUrl: `${config.API_DEV}/api/bong/image/${feed.FeedID || "default.jpg"}/1`,
-        }));
-
+        const feedsWithImages = newFeeds.map((feed: FeedData) => {
+          const imageUrl = `${config.API_DEV}/api/bong/image/${feed.FeedID}/1`;
+          
+          // ✅ 콘솔에 `imageUrl`이 올바르게 생성되었는지 확인
+          console.log(`FeedID: ${feed.FeedID}, ImageURL: ${imageUrl}`);
+          
+          return {
+            ...feed,
+            imageUrl: imageUrl,
+          };
+        });
+  
         setFeeds((prev) => [...prev, ...feedsWithImages]);
         pageRef.current += 1;
       }
@@ -70,6 +77,7 @@ const Feed: React.FC = () => {
       setIsLoading(false);
     }
   }, [isLoading, hasMore]);
+  
 
   // ✅ 최초 1회 실행
   useEffect(() => {
