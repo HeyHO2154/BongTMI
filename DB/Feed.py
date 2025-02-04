@@ -23,12 +23,11 @@ def save_to_mysql(data):
             sql = """
             INSERT INTO Feed (
                 FeedID, title, author, content, likes, views
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ) VALUES (%s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
                 title=VALUES(title),
                 author=VALUES(author),
                 content=VALUES(content),
-                image_url=VALUES(image_url),
                 views=VALUES(views)
             """
             cursor.executemany(sql, data)

@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS Comment;
 
 -- 후기기 테이블
 CREATE TABLE Feed (
-    FeedID INT AUTO_INCREMENT PRIMARY KEY,  -- 고유번호 (PK)
+    FeedID VARCHAR(100) PRIMARY KEY,  -- 고유번호 (PK)
     title VARCHAR(255) NOT NULL,        -- 제목
     author VARCHAR(100) NOT NULL,       -- 작성자
     created_at DATETIME DEFAULT NOW(),  -- 작성시간
