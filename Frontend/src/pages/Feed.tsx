@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
 import axios from "axios";
+import config from "../config"
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -49,7 +50,7 @@ const Feed: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/feeds?page=${pageRef.current}&size=10`);
+      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=10`);
       const newFeeds = response.data;
 
       if (newFeeds.length === 0) {
