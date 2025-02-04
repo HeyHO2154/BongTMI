@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Heart, Send } from "lucide-react";
+import { Heart, Send, MoreHorizontal } from "lucide-react";
 
 interface FeedData {
   id: string;
@@ -10,6 +10,8 @@ interface FeedData {
   content: string;
   likes: number;
   views: number;
+  imageUrl?: string;
+  profileUrl?: string; // ✅ 프로필 이미지 추가
 }
 
 const dummyFeeds: FeedData[] = [
@@ -21,6 +23,8 @@ const dummyFeeds: FeedData[] = [
     content: "길게보면 걍 무료봉사라던데.",
     likes: 10,
     views: 150,
+    imageUrl: "https://source.unsplash.com/500x500/?nature",
+    profileUrl: "https://source.unsplash.com/50x50/?face",
   },
   {
     id: "DCI1111473",
@@ -30,6 +34,8 @@ const dummyFeeds: FeedData[] = [
     content: "그게 존재이유인데 그것조차 못하면 정글을 왜 함?",
     likes: 5,
     views: 80,
+    imageUrl: "https://source.unsplash.com/500x500/?gaming",
+    profileUrl: "https://source.unsplash.com/50x50/?gamer",
   },
   {
     id: "DCI1351901",
@@ -39,15 +45,8 @@ const dummyFeeds: FeedData[] = [
     content: "일반기술말고 기계로는 못가나?",
     likes: 20,
     views: 200,
-  },
-  {
-    id: "DCI1400001",
-    title: "게임 밸런스 왜이래?",
-    author: "user4",
-    createdAt: "2025-02-04 14:00:00",
-    content: "이게 말이 되냐고...",
-    likes: 12,
-    views: 250,
+    imageUrl: "https://source.unsplash.com/500x500/?technology",
+    profileUrl: "https://source.unsplash.com/50x50/?engineer",
   },
 ];
 
@@ -67,25 +66,33 @@ const Feed: React.FC = () => {
       <FeedContainer>
         {feeds.map((feed) => (
           <FeedCard key={feed.id}>
+            {/* 사용자 정보 */}
             <FeedHeader>
-              <Title>{feed.title}</Title>
-              <Author>{feed.author}</Author>
+              <Profile>
+                <ProfileImage src={feed.profileUrl} alt="Profile" />
+                <Author>{feed.author}</Author>
+              </Profile>
+              <MoreHorizontal />
             </FeedHeader>
 
-            <Content>{feed.content}</Content>
+            {/* 이미지 */}
+            {feed.imageUrl && <FeedImage src={feed.imageUrl} alt="Feed Image" />}
 
+            {/* 버튼 */}
             <FeedFooter>
-              <Stats>
-                <span>❤️ {feed.likes}</span>
-                <span>👁️ {feed.views}</span>
-              </Stats>
               <Actions>
                 <Heart onClick={() => handleLike(feed.id)} />
                 <Send />
               </Actions>
+              <Stats>❤️ {feed.likes}</Stats>
             </FeedFooter>
 
-            <CreatedAt>{feed.createdAt}</CreatedAt>
+            {/* 게시글 내용 */}
+            <FeedContent>
+              <ContentTitle>{feed.title}</ContentTitle>
+              <ContentText>{feed.content}</ContentText>
+              <CreatedAt>{feed.createdAt}</CreatedAt>
+            </FeedContent>
           </FeedCard>
         ))}
       </FeedContainer>
@@ -103,74 +110,84 @@ const FeedWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 100vh;  /* 화면 전체 높이 */
-  overflow-y: auto; /* ✅ 전체 컨테이너에서 스크롤 가능하게 변경 */
+  height: 100vh;
+  overflow-y: auto;
 `;
 
 const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   width: 100%;
-  min-height: 100vh; /* ✅ 최소 높이 설정으로 스크롤 가능하게 */
+  max-width: 600px;
+  overflow-y: auto;
 `;
 
 const FeedCard = styled.div`
-  width: 90%;
-  max-width: 500px;
-  height: 250px; /* 카드 크기 고정 */
+  width: 100%;
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  padding: 15px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  border: 1px solid #ddd;
 `;
 
-
+// ✅ 사용자 정보 (프로필 영역)
 const FeedHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 8px;
+  padding: 10px;
 `;
 
-const Title = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const Profile = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
 
 const Author = styled.span`
-  font-size: 14px;
-  color: gray;
+  font-weight: bold;
 `;
 
-const Content = styled.p`
+// ✅ 게시물 이미지
+const FeedImage = styled.img`
+  width: 100%;
+  height: 400px; /* ✅ 인스타그램 스타일 */
+  object-fit: cover;
+`;
+
+// ✅ 본문 내용
+const FeedContent = styled.div`
+  padding: 10px;
+`;
+
+const ContentTitle = styled.h3`
   font-size: 16px;
-  flex-grow: 1;
+  font-weight: bold;
 `;
 
+const ContentText = styled.p`
+  font-size: 14px;
+  color: #333;
+`;
+
+// ✅ 버튼 및 좋아요 정보
 const FeedFooter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
-`;
-
-const Stats = styled.div`
-  font-size: 14px;
-  color: gray;
-  display: flex;
-  gap: 10px;
+  padding: 10px;
 `;
 
 const Actions = styled.div`
@@ -178,6 +195,11 @@ const Actions = styled.div`
   gap: 10px;
   font-size: 24px;
   cursor: pointer;
+`;
+
+const Stats = styled.div`
+  font-size: 14px;
+  font-weight: bold;
 `;
 
 const CreatedAt = styled.div`
