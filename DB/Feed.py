@@ -1,10 +1,50 @@
 import asyncio
+import os
+import requests
 from playwright.async_api import async_playwright
 import pymysql
 import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 
+# 🔹 이미지 저장 폴더 설정
+IMAGE_SAVE_PATH = r"C:\Users\PRO\Desktop\GitDesktop\BongTMI\DB\Image"
+
+# 폴더가 없으면 생성
+if not os.path.exists(IMAGE_SAVE_PATH):
+    os.makedirs(IMAGE_SAVE_PATH)
+
+# 🔹 이미지 다운로드 함수
+def download_image(image_url, feed_id):
+    try:
+        headers = {
+            "Referer": "https://gall.dcinside.com/"  # ✅ 디시인사이드 Referer 추가
+        }
+        response = requests.get(image_url, headers=headers, stream=True)
+
+        if response.status_code == 200:
+            # ✅ 개별 게시글 폴더 생성 (FeedID 폴더)
+            post_folder = os.path.join(IMAGE_SAVE_PATH, feed_id)
+            if not os.path.exists(post_folder):
+                os.makedirs(post_folder)
+
+            # ✅ 저장 경로 지정 (FeedID 폴더 내 저장)
+            file_path = os.path.join(post_folder, f"{feed_id}.jpg")
+
+            # 이미지 저장
+            with open(file_path, "wb") as file:
+                for chunk in response.iter_content(1024):
+                    file.write(chunk)
+
+            print(f"✅ 이미지 저장 완료: {file_path}")
+            return file_path  # 저장된 이미지 경로 반환
+        else:
+            print(f"❌ 이미지 다운로드 실패: {image_url} (HTTP {response.status_code})")
+            return None
+    except Exception as e:
+        print(f"❌ 이미지 다운로드 중 오류 발생: {e}")
+        return None
+    
 # 🔹 MySQL 데이터베이스 설정
 db_config = {
     'host': '127.0.0.1',
@@ -94,11 +134,16 @@ async def scrape_dcinside():
                 for tag in soup(["script", "style"]):  # 광고, 스크립트 제거
                     tag.decompose()
                 content = soup.get_text(separator="\n", strip=True)  # 줄바꿈 유지
-
+                
+                # ✅ 첫 번째 이미지 URL 추출
+                first_image_tag = soup.find("img")
+                image_url = first_image_tag["src"] if first_image_tag else None  # 첫 번째 이미지 URL 저장
+                # ✅ 이미지가 있으면 다운로드 실행
+                if image_url:
+                    download_image(image_url, FeedID)
 
                 author = "디시인사이드"
-                created_at_raw = await page.locator("#container > section > article:nth-child(3) > div.view_content_wrap > header > div > div > div.fl > span.gall_date").text_content() or "N/A"
-
+                
                 # ✅ 좋아요, 조회수 기본값 0
                 views = 0
                 likes = 0  
