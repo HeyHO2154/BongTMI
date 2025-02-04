@@ -32,7 +32,8 @@ interface FeedData {
   content: string;
   likes: number;
   comments: number;
-  imageUrl?: string;
+  imageUrl: string;
+  imageKey?: string; // ✅ API에서 가져올 이미지 키
   profileUrl?: string;
 }
 
@@ -56,11 +57,11 @@ const Feed: React.FC = () => {
       if (newFeeds.length === 0) {
         setHasMore(false);
       } else {
-        // ✅ 이미지 URL 로드
+        // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
         const feedsWithImages = newFeeds.map((feed: FeedData) => ({
           ...feed,
-          imageUrl: feed.imageUrl || "https://source.unsplash.com/500x500/?random", // 기본 이미지 적용
-          profileUrl: feed.profileUrl || "https://source.unsplash.com/50x50/?face", // 기본 프로필 이미지 적용
+          imageUrl: `${config.API_DEV}/api/bong/image/${feed.imageKey || "default.jpg"}`,
+          profileUrl: "/public/BongTMMI.png", // ✅ 고정된 프로필 이미지
         }));
 
         setFeeds((prev) => [...prev, ...feedsWithImages]);
@@ -271,4 +272,24 @@ const LoadingText = styled.div`
   text-align: center;
   color: #888;
   margin-top: 16px;
+`;
+
+
+const FeedContent = styled.div`
+  padding: 10px;
+`;
+
+const ContentTitle = styled.h3`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const ContentText = styled.p`
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
+  -webkit-box-orient: vertical;
 `;
