@@ -96,7 +96,7 @@ const MyPage: React.FC = () => {
             </Col>
 
             <Col span={8} className="user-actions">
-              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/navigate")}>
+              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
                 통계
               </Button>
               <Button type="default" icon={<LogoutOutlined />} onClick={() => navigate("/user/login")}>
