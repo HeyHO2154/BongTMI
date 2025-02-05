@@ -47,6 +47,8 @@ const MyPage: React.FC = () => {
     return null; // 로딩 중에는 아무것도 렌더링하지 않음
   }
 
+  const [activeTab, setActiveTab] = useState<"작성한 봉사" | "관심 봉사" | "작성한 피드" | "관심 피드">("작성한 봉사");
+
   return (
     <Container>
       <Header>
@@ -77,6 +79,21 @@ const MyPage: React.FC = () => {
             </Col>
           </Row>
         </ProfileCard>
+        {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
+        <ButtonGroup>
+          <Button type={activeTab === "작성한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성한 봉사")}>
+            작성한 봉사
+          </Button>
+          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
+          </Button>
+          <Button type={activeTab === "작성한 피드" ? "primary" : "default"} onClick={() => setActiveTab("작성한 피드")}>
+            작성한 피드
+          </Button>
+          <Button type={activeTab === "관심 피드" ? "primary" : "default"} onClick={() => setActiveTab("관심 피드")}>
+            관심 피드
+          </Button>
+        </ButtonGroup>
       </Header>
       <Content>
         <List
@@ -152,17 +169,17 @@ const UserDetails = styled.div`
   }
 `;
 
-// const ButtonGroup = styled.div`
-//   display: flex; /* 버튼을 Flexbox로 배치 */
-//   justify-content: center; /* 버튼을 가로 중앙에 정렬 */
-//   gap: 10px; /* 버튼 간 간격 설정 */
-//   margin-top: 10px;
+const ButtonGroup = styled.div`
+  display: flex; /* 버튼을 Flexbox로 배치 */
+  justify-content: center; /* 버튼을 가로 중앙에 정렬 */
+  gap: 10px; /* 버튼 간 간격 설정 */
+  margin-top: 10px;
 
-//   button {
-//     font-size: 14px;
-//     padding: 10px 15px;
-//   }
-// `;
+  button {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+`;
 
 const Content = styled.div`
   flex: 1 1 auto;
