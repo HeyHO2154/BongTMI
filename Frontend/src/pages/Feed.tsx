@@ -289,6 +289,13 @@ const FeedContent = styled.div`
 const ContentTitle = styled.h3`
   font-size: 18px;
   font-weight: bold;
+  height: 48px; /* 대략 2줄 높이 (줄 바꿈 고려) */
+  line-height: 24px; /* 줄 높이를 24px로 설정 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 2줄 표시 */
+  -webkit-box-orient: vertical;
 `;
 
 // const ContentText = styled.p`
