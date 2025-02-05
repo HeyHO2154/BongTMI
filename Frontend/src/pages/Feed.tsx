@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
 import axios from "axios";
 import config from "../config";
+import { useNavigate } from "react-router-dom";
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -49,7 +50,7 @@ const Feed: React.FC = () => {
   
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=5`);
+      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=1`);
       const newFeeds = response.data;
   
       if (newFeeds.length === 0) {
@@ -107,6 +108,8 @@ const Feed: React.FC = () => {
     return () => observer.current?.disconnect();
   }, [fetchFeeds, hasMore]);
 
+  const navigate = useNavigate();
+
   return (
     <FeedWrapper>
       <FeedContainer>
@@ -152,6 +155,10 @@ const Feed: React.FC = () => {
 
         {isLoading && <LoadingText>로딩 중...</LoadingText>}
       </FeedContainer>
+
+        {/* 글 작성하기 버튼 */}
+      <FloatingButton onClick={() => navigate("/feed-write")}>+</FloatingButton>
+
     </FeedWrapper>
   );
 };
@@ -307,3 +314,38 @@ const ContentTitle = styled.h3`
 //   -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
 //   -webkit-box-orient: vertical;
 // `;
+
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:hover::after {
+    content: "글 작성하기";
+    position: absolute;
+    right: 70px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+`;
