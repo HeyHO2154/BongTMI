@@ -26,7 +26,7 @@ public class FeedService {
     public Feed saveFeed(Feed feedDto) {
     	Feed feed = new Feed();
     	feed.setAuthor(feedDto.getAuthor());
-    	feed.setContent(feed.getContent());
+    	feed.setContent(feedDto.getContent());
     	feed.setFeedID(feedDto.getFeedID());
     	feed.setTitle(feedDto.getTitle());
         return feedRepository.save(feed);
