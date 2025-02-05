@@ -47,7 +47,10 @@ const MyPage: React.FC = () => {
     return null; // 로딩 중에는 아무것도 렌더링하지 않음
   }
 
-  const [activeTab, setActiveTab] = useState<"작성한 봉사" | "관심 봉사" | "작성한 피드" | "관심 피드">("작성한 봉사");
+  const [activeTab, setActiveTab] = useState<"작성한 봉사" | "관심 봉사" | "작성한 피드" | "관심 피드">(
+    () => "작성한 봉사"
+  );
+  
 
   return (
     <Container>
