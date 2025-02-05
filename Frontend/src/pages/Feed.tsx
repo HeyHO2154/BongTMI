@@ -329,6 +329,7 @@ const FloatingButton = styled.button`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
+  z-index: 1000;
 
   &:hover {
     background-color:rgb(230, 141, 26);
