@@ -58,45 +58,43 @@ const FeedAdd: React.FC = () => {
   };
 
   return (
-    <Container>
-      <FormWrapper onSubmit={handleSubmit}>
-        <Title>후기 작성</Title>
-        <Input
-          type="text"
-          placeholder="제목을 입력하세요"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+    <Container onSubmit={handleSubmit}>
+      <Title>후기 작성</Title>
+      <Input
+        type="text"
+        placeholder="제목을 입력하세요"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <Input
+        type="text"
+        placeholder="작성자 이름"
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+      />
+      <Textarea
+        placeholder="내용을 입력하세요..."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <FileInputWrapper>
+        <label htmlFor="file-upload">사진 업로드 (최대 3장)</label>
+        <FileInput
+          type="file"
+          id="file-upload"
+          multiple
+          accept="image/*"
+          onChange={handleFileChange}
         />
-        <Input
-          type="text"
-          placeholder="작성자 이름"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        <Textarea
-          placeholder="내용을 입력하세요..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <FileInputWrapper>
-          <label htmlFor="file-upload">사진 업로드 (최대 3장)</label>
-          <FileInput
-            type="file"
-            id="file-upload"
-            multiple
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </FileInputWrapper>
-        {images.length > 0 && (
-          <PreviewContainer>
-            {images.map((file, index) => (
-              <PreviewImage key={index} src={URL.createObjectURL(file)} alt="preview" />
-            ))}
-          </PreviewContainer>
-        )}
-        <SubmitButton type="submit">등록</SubmitButton>
-      </FormWrapper>
+      </FileInputWrapper>
+      {images.length > 0 && (
+        <PreviewContainer>
+          {images.map((file, index) => (
+            <PreviewImage key={index} src={URL.createObjectURL(file)} alt="preview" />
+          ))}
+        </PreviewContainer>
+      )}
+      <SubmitButton type="submit">등록</SubmitButton>
     </Container>
   );
 };
@@ -104,82 +102,81 @@ const FeedAdd: React.FC = () => {
 export default FeedAdd;
 
 // ✅ 스타일 정의
-const Container = styled.div`
+const Container = styled.form`
   width: 100vw;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f9f9f9;
-`;
-
-const FormWrapper = styled.form`
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 800px;
-  display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 20px;
+  gap: 15px;
 `;
 
 const Title = styled.h2`
-  text-align: center;
   font-size: 24px;
   font-weight: bold;
+  width: 80%;
+  text-align: left;
 `;
 
 const Input = styled.input`
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ddd;
+  width: 80%;
+  padding: 15px;
+  font-size: 18px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
+  background: white;
 `;
 
 const Textarea = styled.textarea`
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ddd;
+  width: 80%;
+  height: 200px;
+  padding: 15px;
+  font-size: 18px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
-  height: 150px;
+  background: white;
   resize: none;
 `;
 
 const FileInputWrapper = styled.div`
+  width: 80%;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  font-size: 18px;
 `;
 
 const FileInput = styled.input`
-  font-size: 16px;
+  font-size: 18px;
 `;
 
 const PreviewContainer = styled.div`
+  width: 80%;
   display: flex;
   gap: 10px;
   margin-top: 10px;
 `;
 
 const PreviewImage = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 5px;
 `;
 
 const SubmitButton = styled.button`
-  padding: 12px;
+  width: 80%;
+  padding: 15px;
   font-size: 18px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: 0.3s;
 
   &:hover {
     background-color: #0056b3;

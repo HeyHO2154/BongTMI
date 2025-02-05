@@ -315,13 +315,13 @@ const ContentTitle = styled.h3`
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
   bottom: 120px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
+  right: 22px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   background-color:rgb(231, 174, 100);
   color: white;
-  font-size: 36px;
+  font-size: 38px;
   // font-weight: bold;
   border: none;
   display: flex;
@@ -346,7 +346,7 @@ const FloatingButton = styled.button`
     color: white;
     padding: 6px 10px;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 15px;
     white-space: nowrap;
   }
 `;
