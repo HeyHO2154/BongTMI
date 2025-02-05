@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Main.Bong.Bong;
+
 @Service
 public class FeedService {
 
@@ -20,5 +22,15 @@ public class FeedService {
 		}
         return Feeds;
     }
+    
+    public Feed saveFeed(Feed feedDto) {
+    	Feed feed = new Feed();
+    	feed.setAuthor(feedDto.getAuthor());
+    	feed.setContent(feed.getContent());
+    	feed.setFeedID(feedDto.getFeedID());
+    	feed.setTitle(feedDto.getTitle());
+        return feedRepository.save(feed);
+    }
+
 
 }

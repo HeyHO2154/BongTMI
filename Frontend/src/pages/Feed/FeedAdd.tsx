@@ -19,38 +19,61 @@ const FeedAdd: React.FC = () => {
     }
   };
 
-  // 폼 제출 핸들러
+  // USR 고유번호 생성
+  const generateFeedID = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    return `FEED${year}${month}${day}${hours}${minutes}${seconds}`;
+  };
+
+  // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const feedID = generateFeedID();
+
     if (!title || !author || !content) {
       alert("제목, 작성자, 내용을 입력해주세요.");
       return;
     }
 
+    const jsonData = {
+      feedID: feedID,
+      title: title,
+      author: author,
+      createdAt: new Date().toISOString(),
+      content: content,
+      likes: 0,
+      views: 0,
+    };
+
     try {
-      // 1️⃣ 피드 데이터 먼저 전송
-      const response = await axios.post(`${config.API_DEV}/api/feeds`, {
-        title,
-        author,
-        content,
+      // 1️⃣ JSON 데이터 먼저 전송
+      await axios.post(`${config.API_DEV}/api/feeds/add`, JSON.stringify(jsonData), {
+        headers: { "Content-Type": "application/json" },
       });
 
-      if (response.status === 201) {
-        const feedID = response.data.feedID; // 새로 생성된 피드 ID
-
-        // 2️⃣ 이미지 업로드 처리 (선택 사항)
-        if (images.length > 0) {
-          const formData = new FormData();
-          images.forEach((image) => formData.append("images", image));
-
-          await axios.post(`${config.API_DEV}/api/feeds/upload/${feedID}`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
+        // 2. 이미지 업로드 처리
+        if (images && images.length > 0) {
+            const imageFormData = new FormData();
+            images.forEach((image, index) => {
+                index;  //노란경고 방지
+                imageFormData.append("images", image);
+            });
+        
+            await axios.post(`${config.API_DEV}/api/bong/upload/${feedID}`, imageFormData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
         }
 
-        alert("후기가 성공적으로 등록되었습니다!");
-        navigate("/"); // 피드 목록으로 이동
-      }
+      alert("후기가 성공적으로 등록되었습니다!");
+      navigate("/"); // 피드 목록으로 이동
     } catch (error) {
       console.error("후기 등록 실패:", error);
       alert("후기 등록 중 오류가 발생했습니다.");
@@ -77,10 +100,10 @@ const FeedAdd: React.FC = () => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-        <FileInputWrapper>
+      <FileInputWrapper>
         <FileInputLabel htmlFor="file-upload">사진 업로드 (최대 3장)</FileInputLabel>
         <FileInput type="file" id="file-upload" multiple accept="image/*" onChange={handleFileChange} />
-        </FileInputWrapper>
+      </FileInputWrapper>
       {images.length > 0 && (
         <PreviewContainer>
           {images.map((file, index) => (
