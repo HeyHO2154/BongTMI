@@ -88,7 +88,7 @@ const MyPage: React.FC = () => {
           <Button type={activeTab === "신청한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("신청한 봉사")}>
             신청한 봉사
           </Button>
-          <Button type={activeTab === "좋아요한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("좋아요한 봉사")}>
+          <Button type={activeTab === "좋아한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("좋아한 봉사")}>
             좋아요한 봉사
           </Button>
           <Button type={activeTab === "작성한 후기" ? "primary" : "default"} onClick={() => setActiveTab("작성한 후기")}>
