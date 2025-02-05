@@ -77,16 +77,10 @@ const FeedAdd: React.FC = () => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <FileInputWrapper>
-        <label htmlFor="file-upload">사진 업로드 (최대 3장)</label>
-        <FileInput
-          type="file"
-          id="file-upload"
-          multiple
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-      </FileInputWrapper>
+        <FileInputWrapper>
+        <FileInputLabel htmlFor="file-upload">사진 업로드 (최대 3장)</FileInputLabel>
+        <FileInput type="file" id="file-upload" multiple accept="image/*" onChange={handleFileChange} />
+        </FileInputWrapper>
       {images.length > 0 && (
         <PreviewContainer>
           {images.map((file, index) => (
@@ -101,80 +95,112 @@ const FeedAdd: React.FC = () => {
 
 export default FeedAdd;
 
-// ✅ 스타일 정의
+// ✅ 스타일 정의 (업데이트됨)
 const Container = styled.form`
   flex: 1;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 160px); /* TopBar 높이 제외 */
-  position: relative;
+  padding: 20px;
+  gap: 15px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
-  width: 80%;
-  text-align: left;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 `;
 
 const Input = styled.input`
-  width: 80%;
-  padding: 15px;
+  width: 100%;
+  max-width: 800px;
+  padding: 14px;
   font-size: 18px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
   background: white;
+  outline: none;
+  transition: border 0.2s;
+
+  &:focus {
+    border-color: #007bff;
+  }
 `;
 
 const Textarea = styled.textarea`
-  width: 80%;
-  height: 200px;
-  padding: 15px;
+  width: 100%;
+  max-width: 800px;
+  height: 220px;
+  padding: 14px;
   font-size: 18px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
   background: white;
   resize: none;
+  outline: none;
+  transition: border 0.2s;
+
+  &:focus {
+    border-color: #007bff;
+  }
 `;
 
 const FileInputWrapper = styled.div`
-  width: 80%;
+  width: 100%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 18px;
+  padding: 10px 0;
+`;
+
+const FileInputLabel = styled.label`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
 `;
 
 const FileInput = styled.input`
   font-size: 18px;
+  cursor: pointer;
 `;
 
 const PreviewContainer = styled.div`
-  width: 80%;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-top: 10px;
+  max-width: 800px;
 `;
 
 const PreviewImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
 `;
 
 const SubmitButton = styled.button`
-  width: 80%;
+  width: 100%;
+  max-width: 800px;
   padding: 15px;
-  font-size: 18px;
+  font-size: 20px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s, transform 0.2s;
+  font-weight: bold;
+  text-align: center;
 
   &:hover {
     background-color: #0056b3;
+    transform: scale(1.02);
   }
 `;
