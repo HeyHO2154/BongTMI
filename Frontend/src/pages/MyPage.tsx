@@ -74,7 +74,7 @@ const dummyBongs: BongData[] = [
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const [user] = useState<{ nickname: string; email: string }>({
-    nickname: "테스트 유저",
+    nickname: "테스트 유저2",
     email: "test@example.com",
   });
 
