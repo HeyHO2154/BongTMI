@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,24 @@ import config from "../../config";
 const FeedAdd: React.FC = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
+
+  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+
+  useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+  
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        navigate("/user/login");
+      }
+    }, [navigate]);
+  
+    if (!user) {
+      return null;
+    }
 
   // 이미지 업로드 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +53,7 @@ const FeedAdd: React.FC = () => {
 
     const feedID = generateFeedID();
 
-    if (!title || !author || !content) {
+    if (!title || !content) {
       alert("제목, 작성자, 내용을 입력해주세요.");
       return;
     }
@@ -46,7 +61,7 @@ const FeedAdd: React.FC = () => {
     const jsonData = {
       feedID: feedID,
       title: title,
-      author: author,
+      author: user.nickname,
       createdAt: new Date().toISOString(),
       content: content,
       likes: 0,
@@ -88,12 +103,6 @@ const FeedAdd: React.FC = () => {
         placeholder="제목을 입력하세요"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-      />
-      <Input
-        type="text"
-        placeholder="작성자 이름"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
       />
       <Textarea
         placeholder="내용을 입력하세요..."
