@@ -51,7 +51,6 @@ const MyPage: React.FC = () => {
     () => "작성한 봉사"
   );
   
-
   return (
     <Container>
       <Header>
@@ -84,18 +83,11 @@ const MyPage: React.FC = () => {
         </ProfileCard>
         {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
         <ButtonGroup>
-          <Button type={activeTab === "작성한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성한 봉사")}>
+          <Button type={activeTab === "작성한 봉사" ? "primary" : ("default" as "default" | "primary")} 
+                  onClick={() => setActiveTab("작성한 봉사")}>
             작성한 봉사
           </Button>
-          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
-            관심 봉사
-          </Button>
-          <Button type={activeTab === "작성한 피드" ? "primary" : "default"} onClick={() => setActiveTab("작성한 피드")}>
-            작성한 피드
-          </Button>
-          <Button type={activeTab === "관심 피드" ? "primary" : "default"} onClick={() => setActiveTab("관심 피드")}>
-            관심 피드
-          </Button>
+
         </ButtonGroup>
       </Header>
       <Content>
