@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
-import { UserOutlined, BarChartOutlined , LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
+//import { UserOutlined, BarChartOutlined , LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
@@ -38,10 +39,10 @@ const MyPage: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user"); // 사용자 정보 제거
-    navigate("/user/login"); // 로그인 페이지로 리다이렉트
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("user"); // 사용자 정보 제거
+  //   navigate("/user/login"); // 로그인 페이지로 리다이렉트
+  // };
 
   if (!user) {
     return null; // 로딩 중에는 아무것도 렌더링하지 않음
