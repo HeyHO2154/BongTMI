@@ -18,4 +18,6 @@ public class FeedController {
     public List<Feed> getRandFeeds(@RequestParam int feedCount) {
         return feedService.getRandFeeds(feedCount);
     }
+    
+    
 }

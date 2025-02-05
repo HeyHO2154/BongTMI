@@ -314,7 +314,7 @@ const ContentTitle = styled.h3`
 
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
-  bottom: 110px;
+  bottom: 120px;
   right: 20px;
   width: 60px;
   height: 60px;
@@ -331,7 +331,7 @@ const FloatingButton = styled.button`
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   z-index: 1000;
-  opacity: 0.7; /* 기본 상태에서 반투명 */
+  opacity: 0.5; /* 기본 상태에서 반투명 */
 
   &:hover {
     background-color:rgb(230, 141, 26);
