@@ -313,13 +313,13 @@ const ContentTitle = styled.h3`
 // `;
 
 const FloatingButton = styled.button`
-  position: fixed;
+  position: absolute; /* FeedWrapper 내부에서 배치 */
   bottom: 20px;
   right: 20px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color:rgb(231, 174, 100);
   color: white;
   font-size: 24px;
   border: none;
@@ -331,7 +331,7 @@ const FloatingButton = styled.button`
   transition: background 0.3s, transform 0.2s;
 
   &:hover {
-    background-color: #0056b3;
+    background-color:rgb(230, 141, 26);
   }
 
   &:hover::after {

@@ -15,7 +15,7 @@ public class FeedController {
 
     // 전체 게시글 조회 API
     @GetMapping
-    public List<Feed> getRandFeeds(@PathVariable int feedCount) {
+    public List<Feed> getRandFeeds(@RequestParam int feedCount) {
         return feedService.getRandFeeds(feedCount);
     }
 }
