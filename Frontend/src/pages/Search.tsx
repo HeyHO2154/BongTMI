@@ -331,6 +331,7 @@ const Wrapper = styled.div`
   min-height: 100vh; /* 최소 높이만 설정 → 내용이 많으면 자동으로 늘어남 */
   overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
   position: relative;
+  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
 `;
 
 const StickyBox = styled.div`

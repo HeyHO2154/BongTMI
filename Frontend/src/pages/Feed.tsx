@@ -166,7 +166,7 @@ const FeedWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 100vh;
+  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
   overflow-y: auto;
 `;
 
