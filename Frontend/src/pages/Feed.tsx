@@ -314,14 +314,15 @@ const ContentTitle = styled.h3`
 
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
-  bottom: 60px;
+  bottom: 80px;
   left: 20px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
   background-color:rgb(231, 174, 100);
   color: white;
-  font-size: 24px;
+  font-size: 48px;
+  font-weight: bold;
   border: none;
   display: flex;
   align-items: center;
@@ -338,12 +339,12 @@ const FloatingButton = styled.button`
   &:hover::after {
     content: "글 작성하기";
     position: absolute;
-    right: 70px;
+    left: 70px;
     background: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 6px 10px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 20px;
     white-space: nowrap;
   }
 `;

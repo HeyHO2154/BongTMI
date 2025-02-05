@@ -8,6 +8,8 @@ import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
 import AddBong from "./pages/BongAdd";
 import Feed from "./pages/Feed";
+import FeedAdd from "./pages/Feed/FeedAdd";
+
 import MyPage from "./pages/MyPage";
 
 import DetailBong from "./pages/Bong/BongDetail";
@@ -65,7 +67,10 @@ const App: React.FC = () => {
             <Route path="/" element={<Swipe />} />
             <Route path="/search" element={<Search />} />
             <Route path="/add-bong" element={<AddBong />} />
+
             <Route path="/feed" element={<Feed />} />
+            <Route path="/feed-write" element={<FeedAdd />} />
+
             <Route path="/my-page" element={<MyPage />} />
 
             <Route path="/detail/:progrmRegistNo" element={<DetailBong />} />
