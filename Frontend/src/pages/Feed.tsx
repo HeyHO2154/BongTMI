@@ -314,7 +314,7 @@ const ContentTitle = styled.h3`
 
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
-  bottom: 100px;
+  bottom: 140px;
   right: 20px;
   width: 60px;
   height: 60px;
