@@ -118,7 +118,7 @@ const Title = styled.h2`
 const Input = styled.input`
   width: 100%;
   max-width: 800px;
-  padding: 14px;
+  padding: 14px 20px;
   font-size: 18px;
   border: 2px solid #ddd;
   border-radius: 8px;
@@ -135,7 +135,7 @@ const Textarea = styled.textarea`
   width: 100%;
   max-width: 800px;
   height: 220px;
-  padding: 14px;
+  padding: 14px 20px;
   font-size: 18px;
   border: 2px solid #ddd;
   border-radius: 8px;
@@ -188,7 +188,7 @@ const PreviewImage = styled.img`
 const SubmitButton = styled.button`
   width: 100%;
   max-width: 800px;
-  padding: 15px;
+  padding: 15px 20px;
   font-size: 20px;
   background-color: #007bff;
   color: white;
