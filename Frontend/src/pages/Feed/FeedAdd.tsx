@@ -103,15 +103,11 @@ export default FeedAdd;
 
 // ✅ 스타일 정의
 const Container = styled.form`
-  width: 100vw;
-  height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
-  padding: 20px;
-  gap: 15px;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  position: relative;
 `;
 
 const Title = styled.h2`

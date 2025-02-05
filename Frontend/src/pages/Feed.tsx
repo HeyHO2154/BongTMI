@@ -341,12 +341,12 @@ const FloatingButton = styled.button`
   &:hover::after {
     content: "글 작성하기";
     position: absolute;
-    right: 70px;
+    right: 75px;
     background: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 6px 10px;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 16px;
     white-space: nowrap;
   }
 `;
