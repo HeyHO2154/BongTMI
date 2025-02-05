@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
-import { UserOutlined, HeartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, BarChartOutlined , LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
@@ -47,6 +47,8 @@ const MyPage: React.FC = () => {
     return null; // 로딩 중에는 아무것도 렌더링하지 않음
   }
 
+  const [activeTab, setActiveTab] = useState<"작성한 봉사" | "관심 봉사" | "작성한 피드" | "관심 피드">("작성한 봉사");
+
   return (
     <Container>
       <Header>
@@ -61,24 +63,31 @@ const MyPage: React.FC = () => {
                 </UserDetails>
               </ProfileInfo>
             </Col>
-            <Col span={8} className="volunteer-stats">
-              <Text type="secondary" className="stats-label">봉사 시간</Text>
-              <Title level={3} className="stats-value">1,724시간</Title>
+
+            <Col span={8} className="user-actions">
+              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
+                통계
+              </Button>
+              <Button type="default" size="middle" icon={<LogoutOutlined />} onClick={handleLogout}>
+                로그아웃
+              </Button>
             </Col>
           </Row>
         </ProfileCard>
+
+        {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
         <ButtonGroup>
-          <Button type="primary" size="middle">봉사 내역 관리</Button>
-          <Button type="default" size="middle" icon={<HeartOutlined />}>
-            좋아요 한 공고
+          <Button type={activeTab === "작성한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성한 봉사")}>
+            작성한 봉사
           </Button>
-          <Button
-            type="default"
-            size="middle"
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-          >
-            로그아웃
+          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
+          </Button>
+          <Button type={activeTab === "작성한 피드" ? "primary" : "default"} onClick={() => setActiveTab("작성한 피드")}>
+            작성한 피드
+          </Button>
+          <Button type={activeTab === "관심 피드" ? "primary" : "default"} onClick={() => setActiveTab("관심 피드")}>
+            관심 피드
           </Button>
         </ButtonGroup>
       </Header>
