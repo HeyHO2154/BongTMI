@@ -50,7 +50,7 @@ const Feed: React.FC = () => {
   
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.API_DEV}/api/feeds?page=${pageRef.current}&size=1`);
+      const response = await axios.get(`${config.API_DEV}/api/feeds?feedCount=10`);
       const newFeeds = response.data;
   
       if (newFeeds.length === 0) {
@@ -59,10 +59,7 @@ const Feed: React.FC = () => {
         // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
         const feedsWithImages = newFeeds.map((feed: FeedData) => {
           const imageUrl = `${config.API_DEV}/api/bong/image/${feed.feedID}/1`;
-          
-          // // ✅ 콘솔에 `imageUrl`이 올바르게 생성되었는지 확인
-          // console.log(`FeedID: ${feed.feedID}, ImageURL: ${imageUrl}`);
-          
+      
           return {
             ...feed,
             imageUrl: imageUrl,

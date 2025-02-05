@@ -27,7 +27,7 @@ const dummyData = [
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
-  const [activeTab, setActiveTab] = useState(() => "작성한 봉사"); // ✅ 초기값 보장
+  const [activeTab, setActiveTab] = useState(() => "작성 봉사"); // ✅ 초기값 보장
   const hasNavigated = useRef(false); // ✅ navigate 중복 실행 방지
 
   useEffect(() => {
@@ -82,17 +82,17 @@ const MyPage: React.FC = () => {
         </ProfileCard>
         {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
         <ButtonGroup>
-          <Button type={activeTab === "작성한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성한 봉사")}>
-            작성한 봉사
+          <Button type={activeTab === "작성 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성 봉사")}>
+            작성 봉사
           </Button>
-          <Button type={activeTab === "신청한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("신청한 봉사")}>
-            신청한 봉사
+          <Button type={activeTab === "신청 봉사" ? "primary" : "default"} onClick={() => setActiveTab("신청 봉사")}>
+            신청 봉사
           </Button>
-          <Button type={activeTab === "좋아한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("좋아한 봉사")}>
-            좋아한 봉사
+          <Button type={activeTab === "좋아 봉사" ? "primary" : "default"} onClick={() => setActiveTab("좋아 봉사")}>
+            좋아 봉사
           </Button>
-          <Button type={activeTab === "작성한 후기" ? "primary" : "default"} onClick={() => setActiveTab("작성한 후기")}>
-            작성한 후기
+          <Button type={activeTab === "작성 후기" ? "primary" : "default"} onClick={() => setActiveTab("작성 후기")}>
+            작성 후기
           </Button>
         </ButtonGroup>
       </Header>

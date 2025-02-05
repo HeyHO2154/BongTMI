@@ -10,22 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/feeds")
 public class FeedController {
 
-    private final FeedService feedService;
-
-    @Autowired
-    public FeedController(FeedService feedService) {
-        this.feedService = feedService;
-    }
+	@Autowired
+    private FeedService feedService;
 
     // 전체 게시글 조회 API
     @GetMapping
-    public List<Feed> getAllFeeds() {
-        return feedService.getAllFeeds();
-    }
-
-    // 특정 게시글 조회 API
-    @GetMapping("/{feedID}")
-    public Feed getFeedById(@PathVariable String feedID) {
-        return feedService.getFeedById(feedID);
+    public List<Feed> getRandFeeds(@PathVariable int feedCount) {
+        return feedService.getRandFeeds(feedCount);
     }
 }
