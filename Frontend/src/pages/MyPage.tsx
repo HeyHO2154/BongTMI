@@ -65,12 +65,12 @@ const MyPage: React.FC = () => {
             </Col>
 
             <Col span={8} className="user-actions">
-              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
+              {/* <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
                 통계
               </Button>
               <Button type="default" size="middle" icon={<LogoutOutlined />} onClick={handleLogout}>
                 로그아웃
-              </Button>
+              </Button> */}
             </Col>
           </Row>
         </ProfileCard>
