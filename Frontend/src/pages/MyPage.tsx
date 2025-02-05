@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
@@ -27,27 +27,28 @@ const dummyData = [
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+  const [activeTab, setActiveTab] = useState(() => "작성한 봉사"); // ✅ 초기값 보장
+  const hasNavigated = useRef(false); // ✅ navigate 중복 실행 방지
 
   useEffect(() => {
-    // 로컬 스토리지에서 사용자 정보 가져오기
     const storedUser = localStorage.getItem("user");
+
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // 사용자 정보 저장
-    } else {
-      navigate("/user/login"); // 로그인 페이지로 이동
+      setUser(JSON.parse(storedUser));
+    } else if (!hasNavigated.current) {
+      hasNavigated.current = true;
+      navigate("/user/login");
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // 사용자 정보 제거
-    navigate("/user/login"); // 로그인 페이지로 리다이렉트
+    localStorage.removeItem("user");
+    navigate("/user/login");
   };
 
   if (!user) {
-    return null; // 로딩 중에는 아무것도 렌더링하지 않음
+    return null;
   }
-
-  const [activeTab, setActiveTab] = useState(() => "작성한 봉사");
 
   return (
     <Container>
