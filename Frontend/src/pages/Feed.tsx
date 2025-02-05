@@ -226,7 +226,7 @@ const TimeAgo = styled.span`
 // ✅ 이미지 컨테이너
 const FeedImageContainer = styled.div`
   width: 100%;
-  height: 400px;
+  height: 200px;
   background: #f3f3f3;
 `;
 
