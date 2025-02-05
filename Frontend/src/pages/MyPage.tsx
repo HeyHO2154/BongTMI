@@ -1,51 +1,84 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
-import { UserOutlined, HeartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, BarChartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
-const dummyData = [
+interface FeedData {
+  feedID: string;
+  title: string;
+  author: string;
+  createdAt: string;
+  content: string;
+  likes: number;
+  comments: number;
+  imageUrl: string;
+}
+
+interface BongData {
+  id: string;
+  label: string;
+  region: string;
+  type: string;
+  date: string;
+  imageUrl: string;
+  from: string;
+}
+
+const dummyFeeds: FeedData[] = [
   {
-    title: "2024-01-15 아름다운가게 봉사",
-    description: "도움이 필요한 사람들에게 나눔을 실천할 수 있어 기뻤습니다.",
-    image: "https://picsum.photos/300?random=1",
+    feedID: "feed1",
+    title: "봉사활동 후기 - 따뜻한 나눔",
+    author: "김철수",
+    createdAt: "2024-02-01 10:00",
+    content: "오늘 봉사활동을 다녀왔어요. 너무 의미 있는 시간이었습니다!",
+    likes: 15,
+    comments: 5,
+    imageUrl: "https://via.placeholder.com/300",
   },
   {
-    title: "2024-01-10 지역사회 환경정화 활동",
-    description: "쓰레기를 줍고 깨끗한 환경을 만드는 데 동참했습니다.",
-    image: "https://picsum.photos/300?random=2",
+    feedID: "feed2",
+    title: "환경보호 캠페인 참여 후기",
+    author: "이영희",
+    createdAt: "2024-01-28 14:30",
+    content: "환경 보호 캠페인에 참여하고 왔습니다. 많은 걸 배우고 왔어요!",
+    likes: 30,
+    comments: 10,
+    imageUrl: "https://via.placeholder.com/300",
+  },
+];
+
+const dummyBongs: BongData[] = [
+  {
+    id: "bong1",
+    label: "노인 복지 봉사",
+    region: "서울",
+    type: "복지",
+    date: "2024-02-10",
+    imageUrl: "https://via.placeholder.com/300",
+    from: "서울 복지 센터",
   },
   {
-    title: "2024-01-10 지역사회 환경정화 활동",
-    description: "쓰레기를 줍고 깨끗한 환경을 만드는 데 동참했습니다.",
-    image: "https://picsum.photos/300?random=3",
+    id: "bong2",
+    label: "환경 보호 봉사",
+    region: "부산",
+    type: "환경",
+    date: "2024-02-15",
+    imageUrl: "https://via.placeholder.com/300",
+    from: "부산 환경 단체",
   },
 ];
 
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+  const [user] = useState<{ nickname: string; email: string }>({
+    nickname: "테스트 유저",
+    email: "test@example.com",
+  });
 
-  useEffect(() => {
-    // 로컬 스토리지에서 사용자 정보 가져오기
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); // 사용자 정보 저장
-    } else {
-      navigate("/user/login"); // 로그인 페이지로 이동
-    }
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user"); // 사용자 정보 제거
-    navigate("/user/login"); // 로그인 페이지로 리다이렉트
-  };
-
-  if (!user) {
-    return null; // 로딩 중에는 아무것도 렌더링하지 않음
-  }
+  const [activeTab, setActiveTab] = useState<"작성한 봉사" | "관심 봉사" | "작성한 피드" | "관심 피드">("작성한 봉사");
 
   return (
     <Container>
@@ -61,43 +94,78 @@ const MyPage: React.FC = () => {
                 </UserDetails>
               </ProfileInfo>
             </Col>
-            <Col span={8} className="volunteer-stats">
-              <Text type="secondary" className="stats-label">봉사 시간</Text>
-              <Title level={3} className="stats-value">1,724시간</Title>
+
+            <Col span={8} className="user-actions">
+              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/navigate")}>
+                통계
+              </Button>
+              <Button type="default" icon={<LogoutOutlined />} onClick={() => navigate("/user/login")}>
+                로그아웃
+              </Button>
             </Col>
           </Row>
         </ProfileCard>
+
+        {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
         <ButtonGroup>
-          <Button type="primary" size="middle">봉사 내역 관리</Button>
-          <Button type="default" size="middle" icon={<HeartOutlined />}>
-            좋아요 한 공고
+          <Button type={activeTab === "작성한 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성한 봉사")}>
+            작성한 봉사
           </Button>
-          <Button
-            type="default"
-            size="middle"
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-          >
-            로그아웃
+          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
+          </Button>
+          <Button type={activeTab === "작성한 피드" ? "primary" : "default"} onClick={() => setActiveTab("작성한 피드")}>
+            작성한 피드
+          </Button>
+          <Button type={activeTab === "관심 피드" ? "primary" : "default"} onClick={() => setActiveTab("관심 피드")}>
+            관심 피드
           </Button>
         </ButtonGroup>
       </Header>
+
       <Content>
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={dummyData}
-          renderItem={(item) => (
-            <List.Item>
-              <VolunteerCard cover={<img alt={item.title} src={item.image} />}>
-                <Card.Meta
-                  title={item.title}
-                  description={<Text type="secondary">{item.description}</Text>}
-                />
-              </VolunteerCard>
-            </List.Item>
-          )}
-        />
+        <SectionTitle>{activeTab}</SectionTitle>
+
+        {activeTab.includes("봉사") ? (
+          <List
+            itemLayout="vertical"
+            size="large"
+            dataSource={dummyBongs}
+            renderItem={(item) => (
+              <List.Item key={item.id}>
+                <BongCard cover={<img alt={item.label} src={item.imageUrl} />}>
+                  <Card.Meta
+                    title={item.label}
+                    description={<Text type="secondary">{item.region} | {item.type} | {item.date}</Text>}
+                  />
+                </BongCard>
+              </List.Item>
+            )}
+          />
+        ) : (
+          <List
+            itemLayout="vertical"
+            size="large"
+            dataSource={dummyFeeds}
+            renderItem={(item) => (
+              <List.Item key={item.feedID}>
+                <FeedCard>
+                  <Card.Meta
+                    title={item.title}
+                    description={
+                      <>
+                        <Text strong>{item.author}</Text> <br />
+                        <Text type="secondary">{item.createdAt} | 좋아요 {item.likes} | 댓글 {item.comments}</Text>
+                        <p>{item.content}</p>
+                      </>
+                    }
+                  />
+                  <FeedImage src={item.imageUrl} alt={item.title} />
+                </FeedCard>
+              </List.Item>
+            )}
+          />
+        )}
       </Content>
     </Container>
   );
@@ -110,77 +178,73 @@ export default MyPage;
 // --------------------
 
 const Container = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  position: relative;
 `;
 
 const Header = styled.div`
-  flex: 0 0 auto;
-  padding: 15px 20px;
+  padding: 20px;
   background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 0px 0px;
 `;
 
 const ProfileCard = styled(Card)`
-  margin-bottom: 10px;
-  padding: 0px 15px;
   border-radius: 10px;
   background-color: #f5f5f5;
-  box-shadow: none;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+const Content = styled.div`
+  padding: 20px;
+`;
+
+const SectionTitle = styled(Title).attrs({ level: 4 })`
+  margin-top: 20px;
+`;
+
+const BongCard = styled(Card)`
+  border-radius: 10px;
+`;
+
+const FeedCard = styled(Card)`
+  border-radius: 10px;
+`;
+
+const FeedImage = styled.img`
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
 `;
 
 const ProfileInfo = styled.div`
   display: flex;
   align-items: center;
-
-  .user-avatar {
-    background-color: #f56a00;
-    margin-right: 15px;
-  }
 `;
 
 const UserDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+
   .user-name {
-    margin: 0;
     font-size: 18px;
+    font-weight: bold;
   }
 
   .user-email {
     font-size: 14px;
     color: #888;
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex; /* 버튼을 Flexbox로 배치 */
-  justify-content: center; /* 버튼을 가로 중앙에 정렬 */
-  gap: 10px; /* 버튼 간 간격 설정 */
-  margin-top: 10px;
-
-  button {
-    font-size: 14px;
-    padding: 10px 15px;
-  }
-`;
-
-const Content = styled.div`
-  flex: 1 1 auto;
-  overflow-y: auto;
-  padding: 20px;
-`;
-
-const VolunteerCard = styled(Card)`
-  margin-bottom: 20px;
-  border-radius: 10px;
-
-  img {
-    border-radius: 10px;
-    height: 150px;
-    object-fit: cover;
   }
 `;

@@ -18,6 +18,8 @@ import NaverCallback from "./pages/User/OAuth/NaverCallback";
 import FindAccount from "./pages/User/UserFind";
 import Register from "./pages/User/UserRegister";
 
+import Report from "./pages/User/Report";
+
 const App: React.FC = () => {
   const [isTouching, setIsTouching] = useState(false);
   isTouching;
@@ -73,6 +75,7 @@ const App: React.FC = () => {
             <Route path="/auth/callback/naver" element={<NaverCallback />} />
             <Route path="/user/find-account" element={<FindAccount />} />
             <Route path="/user/register" element={<Register />} />
+            <Route path="/user/report" element={<Report />} />
 
           </Routes>
           <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}
