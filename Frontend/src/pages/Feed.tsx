@@ -145,7 +145,7 @@ const Feed: React.FC = () => {
             {/* 게시글 내용 */}
             <FeedContent>
               <ContentTitle>{feed.title}</ContentTitle>
-              <ContentText>{feed.content}</ContentText>
+              {/* <ContentText>{feed.content}</ContentText> */}
             </FeedContent>
           </FeedCard>
         ))}
@@ -287,16 +287,16 @@ const FeedContent = styled.div`
 `;
 
 const ContentTitle = styled.h3`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 `;
 
-const ContentText = styled.p`
-  font-size: 14px;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
-  -webkit-box-orient: vertical;
-`;
+// const ContentText = styled.p`
+//   font-size: 14px;
+//   color: #333;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   display: -webkit-box;
+//   -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
+//   -webkit-box-orient: vertical;
+// `;
