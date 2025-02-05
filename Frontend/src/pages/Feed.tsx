@@ -314,15 +314,15 @@ const ContentTitle = styled.h3`
 
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
-  bottom: 80px;
-  left: 20px;
-  width: 56px;
-  height: 56px;
+  bottom: 100px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background-color:rgb(231, 174, 100);
   color: white;
-  font-size: 48px;
-  font-weight: bold;
+  font-size: 36px;
+  // font-weight: bold;
   border: none;
   display: flex;
   align-items: center;
