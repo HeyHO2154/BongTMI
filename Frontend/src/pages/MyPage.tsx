@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
-import { UserOutlined, HeartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
@@ -61,11 +61,11 @@ const MyPage: React.FC = () => {
                 </UserDetails>
               </ProfileInfo>
             </Col>
-            <Col span={8} className="volunteer-stats">
-            <Button type="primary" size="middle">봉사 내역 관리</Button>
-            <Button type="default" size="middle" icon={<HeartOutlined />}>
-              좋아요 한 공고
-            </Button>
+
+            <Col span={8} className="user-actions">
+              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
+                통계
+              </Button>
             <Button
               type="default"
               size="middle"
