@@ -497,33 +497,6 @@ const NoticeContent = styled.p`
   line-height: 1.5;
 `;
 
-const WarningBox = styled.div`
-  background-color: #f8d7da;
-  border-left: 5px solid #dc3545;
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-`;
-
-const WarningTitle = styled.h2`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #a71d2a;
-  padding-bottom: 12px;
-`;
-
-const WarningContent = styled.p`
-  font-size: 1rem;
-  color: #721c24;
-  line-height: 1.5;
-  a {
-    color: #c82333;
-    font-weight: bold;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`;
-
 const InfoBox = styled.div`
   background-color: #d4edda; /* 연한 초록색 */
   border-left: 5px solid #28a745; /* 진한 초록색 테두리 */
