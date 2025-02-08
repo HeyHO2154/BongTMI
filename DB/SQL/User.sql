@@ -18,8 +18,8 @@ CREATE TABLE User (
 
 -- 공고 히스토리 (1+4=5, 좋아요+신청하기기)
 CREATE TABLE LikeBong (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    BongID INT NOT NULL,
+    UserID VARCHAR(100) PRIMARY KEY,
+    BongID VARCHAR(100) NOT NULL,
     selection_status TINYINT NOT NULL -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
 );
 

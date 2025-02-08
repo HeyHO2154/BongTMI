@@ -1,41 +1,57 @@
 package Main.User.LikeBong;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "LikeBong")
 public class LikeBong {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 기본 키 (Auto Increment)
+    @Column(length = 100, nullable = false)
+    private String userId; // ✅ VARCHAR(100) → String 타입 변경 (OAuth ID 지원)
 
-    @Column(nullable = false)
-    private Long bongId; // 공고 ID
-
-    @Column(nullable = false)
-    private Long userId; // 유저 ID (비로그인 시 처리 안함)
+    @Column(length = 100, nullable = false)
+    private String bongId; // ✅ VARCHAR(100) → String 타입 변경
 
     @Column(nullable = false)
     private int selectionStatus; // 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
-    
-    // 기본 생성자 (JPA용)
+
+    // ✅ 기본 생성자 (JPA용)
     public LikeBong() {
     }
 
-    // 필요한 생성자 추가
-    public LikeBong(Long id, Long bongId, Long userId, int selectionStatus) {
-        this.id = id;
-        this.bongId = bongId;
+    // ✅ 모든 필드를 포함하는 생성자 추가
+    public LikeBong(String userId, String bongId, int selectionStatus) {
         this.userId = userId;
+        this.bongId = bongId;
         this.selectionStatus = selectionStatus;
     }
 
-    // 비트마스크 추가 기능
+    // ✅ Getter & Setter 추가
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getBongId() {
+        return bongId;
+    }
+
+    public void setBongId(String bongId) {
+        this.bongId = bongId;
+    }
+
+    public int getSelectionStatus() {
+        return selectionStatus;
+    }
+
+    public void setSelectionStatus(int selectionStatus) {
+        this.selectionStatus = selectionStatus;
+    }
+
+    // ✅ 비트마스크 추가 기능
     public void addSelection(int status) {
         this.selectionStatus |= status; // OR 연산으로 추가
     }
@@ -47,38 +63,4 @@ public class LikeBong {
     public boolean hasSelection(int status) {
         return (this.selectionStatus & status) != 0;
     }
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getBongId() {
-		return bongId;
-	}
-
-	public void setBongId(Long bongId) {
-		this.bongId = bongId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public int getSelectionStatus() {
-		return selectionStatus;
-	}
-
-	public void setSelectionStatus(int selectionStatus) {
-		this.selectionStatus = selectionStatus;
-	}
-    
-    
 }
