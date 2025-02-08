@@ -188,7 +188,7 @@ const Swipe: React.FC = () => {
         // ✅ 모든 카드에 같은 애니메이션 적용
         const allCards = document.querySelectorAll(`[data-index]`);
         allCards.forEach((card) => {
-            (card as HTMLElement).style.transition = "transform 0.3s ease-out";
+            (card as HTMLElement).style.transition = "transform 1s ease-out";
             (card as HTMLElement).style.transform = "translateY(-150%)"; // 화면 위로 밀기
         });
 
@@ -214,7 +214,7 @@ const Swipe: React.FC = () => {
     // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
     const newCardPromise = fetchCardData();
 
-    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초로 줄이기
+    (topCard as HTMLElement).style.transition = "transform 1s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
     const newCard = await newCardPromise; // 미리 가져온 데이터 사용
