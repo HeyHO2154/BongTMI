@@ -12,7 +12,8 @@ import FeedAdd from "./pages/Feed/FeedAdd";
 
 import MyPage from "./pages/MyPage";
 
-import DetailBong from "./pages/Bong/BongDetail";
+import BongDetail from "./pages/Bong/BongDetail";
+import FeedDetail from "./pages/Feed/FeedDetail";
 
 import Login from "./pages/User/UserLogin";
 import KakaoCallback from "./pages/User/OAuth/KakaoCallback";
@@ -73,7 +74,8 @@ const App: React.FC = () => {
 
             <Route path="/my-page" element={<MyPage />} />
 
-            <Route path="/detail/:progrmRegistNo" element={<DetailBong />} />
+            <Route path="/detail/:progrmRegistNo" element={<BongDetail />} />
+            <Route path="/feed/:feedID" element={<FeedDetail />} />
 
             <Route path="/user/login" element={<Login />} />
             <Route path="/auth/callback/kakao" element={<KakaoCallback />} />
