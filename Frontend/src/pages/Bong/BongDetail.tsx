@@ -153,8 +153,6 @@ const DetailBong: React.FC = () => {
               }),
             });
 
-            console.log("✅ 신청하기 기록됨"+bongData.progrmRegistNo.toString()+","+userData.id);
-
             // ✅ 저장 완료 후 해당 공고의 신청 페이지로 이동
             const baseUrl =
               bongData.progrmRegistNo.startsWith("SYO")
