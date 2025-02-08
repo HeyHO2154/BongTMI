@@ -14,7 +14,7 @@ interface FeedDetailData {
   content: string;
   likes: number;
   comments: number;
-  imageUrls: string[]; // ✅ 여러 개의 이미지 URL 저장
+  imageUrls: string[];
 }
 
 const FeedDetail: React.FC = () => {
@@ -26,15 +26,11 @@ const FeedDetail: React.FC = () => {
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
-        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`)
+        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
 
         setFeed({
           ...response.data,
-          imageUrls: [
-            `${config.API_DEV}/api/bong/image/${response.data.feedID}/1`,
-            `${config.API_DEV}/api/bong/image/${response.data.feedID}/2`,
-            `${config.API_DEV}/api/bong/image/${response.data.feedID}/3`,
-          ],
+          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`], // ✅ 1번 이미지만 사용
         });
       } catch (error) {
         console.error("피드 로드 실패:", error);
@@ -52,94 +48,124 @@ const FeedDetail: React.FC = () => {
   if (!feed) return <ErrorText>feedID: {feedID}, 데이터가 없습니다.</ErrorText>;
 
   return (
-    <Container>
-      <Title>{feed.title}</Title>
-      <AuthorInfo>
-        <span>{feed.author}</span>
-        <span>{new Date(feed.createdAt).toLocaleDateString()}</span>
-      </AuthorInfo>
+    <Wrapper>
+      <FeedCard>
+        <FeedHeader>
+          <ProfileImage src="/assets/BongTMI1.png" alt="프로필 이미지" />
+          <ProfileInfo>
+            <Author>{feed.author}</Author>
+            <TimeAgo>{new Date(feed.createdAt).toLocaleDateString()}</TimeAgo>
+          </ProfileInfo>
+        </FeedHeader>
 
-      {/* ✅ 여러 개의 이미지 지원 */}
-      <ImageGallery>
-        {feed.imageUrls.map((imageUrl, index) => (
-          <FeedImage key={index} src={imageUrl} alt={`이미지 ${index + 1}`} />
-        ))}
-      </ImageGallery>
+        {/* ✅ 1번 이미지만 표시 */}
+        {feed.imageUrls[0] && <FeedImage src={feed.imageUrls[0]} alt="게시물 이미지" />}
 
-      <Content>{feed.content}</Content>
+        <Content>{feed.content}</Content>
 
-      {/* 좋아요 & 댓글 버튼 (UI만) */}
-      <Actions>
-        <ActionButton>
-          <ThumbsUp />
-          <span>{feed.likes}</span>
-        </ActionButton>
-        <ActionButton>
-          <MessageCircle />
-          <span>{feed.comments}</span>
-        </ActionButton>
-      </Actions>
+        <Actions>
+          <ActionButton>
+            <ThumbsUp />
+            <span>{feed.likes}</span>
+          </ActionButton>
+          <ActionButton>
+            <MessageCircle />
+            <span>{feed.comments}</span>
+          </ActionButton>
+        </Actions>
 
-      {/* 댓글 UI 추가 */}
-      <CommentSection>
-        <CommentTitle>댓글</CommentTitle>
-        <CommentInput placeholder="댓글을 입력하세요..." />
-        <CommentList>
-          {/* 여기에 나중에 댓글 데이터 추가 가능 */}
-          <CommentItem>
-            <CommentAuthor>사용자1</CommentAuthor>
-            <CommentText>좋은 글이네요!</CommentText>
-          </CommentItem>
-          <CommentItem>
-            <CommentAuthor>사용자2</CommentAuthor>
-            <CommentText>감사합니다!</CommentText>
-          </CommentItem>
-        </CommentList>
-      </CommentSection>
-    </Container>
+        {/* ✅ 댓글 UI 추가 (SNS 스타일) */}
+        <CommentSection>
+          <CommentTitle>댓글</CommentTitle>
+          <CommentInput placeholder="댓글을 입력하세요..." />
+          <CommentList>
+            <CommentItem>
+              <CommentAuthor>사용자1</CommentAuthor>
+              <CommentText>좋은 글이네요!</CommentText>
+            </CommentItem>
+            <CommentItem>
+              <CommentAuthor>사용자2</CommentAuthor>
+              <CommentText>감사합니다!</CommentText>
+            </CommentItem>
+          </CommentList>
+        </CommentSection>
+      </FeedCard>
+    </Wrapper>
   );
 };
 
 export default FeedDetail;
 
+// --------------------
 // 스타일 정의
-const Container = styled.div`
-  padding: 16px;
-  max-width: 600px;
-  margin: auto;
-`;
+// --------------------
 
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-`;
-
-const AuthorInfo = styled.div`
-  font-size: 14px;
-  color: #555;
+// 전체 페이지 감싸는 컨테이너
+const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* ✅ 전체 화면 높이 */
+  padding: 16px;
+  overflow-y: auto; /* ✅ 스크롤 가능하도록 설정 */
 `;
 
-// ✅ 여러 개의 이미지가 표시될 갤러리
-const ImageGallery = styled.div`
+// SNS 스타일의 피드 카드
+const FeedCard = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 16px;
+  padding: 16px;
 `;
 
+// 피드 헤더 (프로필 정보)
+const FeedHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;
+
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Author = styled.span`
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+const TimeAgo = styled.span`
+  font-size: 12px;
+  color: gray;
+`;
+
+// 이미지 (한 장만 표시)
 const FeedImage = styled.img`
   width: 100%;
   border-radius: 8px;
+  margin-top: 8px;
 `;
 
+// 본문 내용
 const Content = styled.p`
   font-size: 16px;
   margin-top: 12px;
 `;
 
+// 좋아요 & 댓글 버튼
 const Actions = styled.div`
   display: flex;
   gap: 20px;
@@ -156,12 +182,14 @@ const ActionButton = styled.button`
   font-size: 16px;
 `;
 
+// 댓글 섹션
 const CommentSection = styled.div`
   margin-top: 20px;
 `;
 
 const CommentTitle = styled.h2`
   font-size: 18px;
+  margin-bottom: 10px;
 `;
 
 const CommentInput = styled.input`
@@ -169,7 +197,6 @@ const CommentInput = styled.input`
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 8px;
 `;
 
 const CommentList = styled.div`
