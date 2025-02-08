@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
 import axios from "axios";
@@ -38,86 +38,73 @@ interface FeedData {
 }
 
 const Feed: React.FC = () => {
-  const [feeds, setFeeds] = useState<FeedData[]>([]);
+  const [allCards, setAllCards] = useState<FeedData[]>([]); // 전체 데이터를 저장
+  const [visibleCards, setVisibleCards] = useState<FeedData[]>([]); // 화면에 보여질 카드
   const [isLoading, setIsLoading] = useState(false);
-  const lastFeedElementRef = useRef<HTMLDivElement | null>(null);
-
-  
-  // ✅ 무한 스크롤 이벤트 감지
-  const [visibleFeeds, setVisibleFeeds] = useState<FeedData[]>([]);
-  const [offset, setOffset] = useState(10);
-  const limit = 10; // 한 번에 표시할 개수
+  const [offset, setOffset] = useState(0);
+  const limit = 10; // 한 번에 로드할 개수
 
   // ✅ API 데이터 불러오기
-  const fetchFeeds = useCallback(async () => {
-    if (isLoading) return;
-
+  const fetchFeeds = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
-      const allFeeds = response.data;
-
-      // ✅ 이미지 경로 추가 및 최신순 정렬
-      const feedsWithImages = allFeeds.map((feed: FeedData) => ({
+      const allFeeds = response.data.map((feed: FeedData) => ({
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
       }));
 
-      setFeeds(feedsWithImages); // ✅ 전체 데이터 저장
-
-      // ✅ visibleFeeds가 비어 있으면 처음 10개 채우기
-      if (visibleFeeds.length === 0) {
-        setVisibleFeeds(feedsWithImages.slice(0, offset));
-      }
+      setAllCards(allFeeds);
+      setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
+      setOffset(limit);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, visibleFeeds.length]); // ✅ visibleFeeds.length 의존성 추가
+  }; 
 
-  // ✅ 최초 1회 실행
-  useEffect(() => {
-    fetchFeeds();
-  }, []);
+  // 스크롤 시 추가 로딩 함수
+  const loadMoreCards = () => {
+    if (isLoading || offset >= allCards.length) return; // 더 불러올 데이터 없으면 중단
+    setIsLoading(true);
 
-  // ✅ visibleFeeds 업데이트 (스크롤 시 추가 로드)
-  useEffect(() => {
-    setVisibleFeeds(feeds.slice(0, offset));
-  }, [feeds, offset]);
-
-// ✅ 스크롤 감지해서 추가 로드
-const handleScroll = () => {
-  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
-    if (offset < feeds.length) {
+    setTimeout(() => {
+      setVisibleCards((prevCards) => [...prevCards, ...allCards.slice(offset, offset + limit)]);
       setOffset((prevOffset) => prevOffset + limit);
-    }
-  }
-};
-
-// ✅ useEffect에서 handleScroll 실행
-useEffect(() => {
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, [visibleFeeds.length]); // ✅ visibleFeeds.length 변경 감지
+      setIsLoading(false);
+    }, 500);
+  };
 
   const handleFeedClick = (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
     e.stopPropagation(); // ✅ 좋아요 & 댓글 클릭 시 이동 방지
     navigate(`/feed/${feedID}`);
   };
-  
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // 스크롤 감지 이벤트
+  const handleScroll = () => {
+    const wrapper = wrapperRef.current;
+    if (wrapper) {
+      const { scrollTop, scrollHeight, clientHeight } = wrapper;
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        loadMoreCards();
+      }
+    }
+  };
+
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [feeds.length]); // ✅ feeds.length가 변경될 때마다 실행  
+    fetchFeeds();
+  }, []);
 
   const navigate = useNavigate();
 
   return (
-    <FeedWrapper>
+    <FeedWrapper ref={wrapperRef} onScroll={handleScroll}>
       <FeedContainer>
-        {visibleFeeds.map((feed, index) => (
-          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null} onClick={(e) => handleFeedClick(e, feed.feedID)}>
+        {visibleCards.map((feed: FeedData) => (
+          <FeedCard key={feed.feedID} onClick={(e) => handleFeedClick(e, feed.feedID)}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
