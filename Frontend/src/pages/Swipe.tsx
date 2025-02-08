@@ -187,7 +187,7 @@ const Swipe: React.FC = () => {
         const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
 
         if (topCard) {
-            (topCard as HTMLElement).style.transition = "transform 0.5s ease-out";
+            (topCard as HTMLElement).style.transition = "transform 0s ease-out";
             (topCard as HTMLElement).style.transform = "translateY(-100%)";
 
             topCard.addEventListener(
