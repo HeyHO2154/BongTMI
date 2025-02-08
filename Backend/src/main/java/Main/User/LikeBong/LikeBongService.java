@@ -15,14 +15,17 @@ public class LikeBongService {
     public LikeBong updateSelection(String userId, String bongId, int action) {
         Optional<LikeBong> existingLike = likeBongRepository.findByUserIdAndBongId(userId, bongId);
         LikeBong likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
-        System.out.println("디버깅");
-        System.out.println(action);
-        System.out.println(likeBong.getSelectionStatus());
+        
         if (existingLike.isPresent()) {
             likeBong = existingLike.get();
             likeBong.addSelection(action); // 비트마스크로 상태 추가
         }
 
+        System.out.println("디버깅");
+        System.out.println("userId "+userId);
+        System.out.println("bongId "+bongId);
+        System.out.println("action "+action);
+        System.out.println("selection_status "+likeBong.getSelectionStatus());
         return likeBongRepository.save(likeBong);
     }
 
