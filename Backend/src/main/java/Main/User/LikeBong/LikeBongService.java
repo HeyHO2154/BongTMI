@@ -14,13 +14,11 @@ public class LikeBongService {
     // ✅ 공고에 대한 사용자 액션 추가 (좋아요, 싫어요, 신청하기)
     public LikeBong updateSelection(String userId, String bongId, int action) {
         Optional<LikeBong> existingLike = likeBongRepository.findByUserIdAndBongId(userId, bongId);
-        LikeBong likeBong;
+         LikeBong likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
 
         if (existingLike.isPresent()) {
             likeBong = existingLike.get();
             likeBong.addSelection(action); // 비트마스크로 상태 추가
-        } else {
-            likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
         }
 
         return likeBongRepository.save(likeBong);
