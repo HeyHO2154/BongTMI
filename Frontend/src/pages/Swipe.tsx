@@ -216,13 +216,15 @@ const Swipe: React.FC = () => {
     // 최상단 카드 선택
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
     if (!topCard) return;
-  
+
+    // 현재 드래그 위치 기반으로 최종 이동 거리 계산
+    const finalX = dragX * 3; // 현재 드래그된 위치를 기준으로 더 멀리 이동 (3배)
+    const finalRotate = dragX > 0 ? 30 : -30; // 방향에 따라 회전 조정
+
     // 애니메이션 적용
-    (topCard as HTMLElement).style.transition = "transform 5s ease-out";
-    (topCard as HTMLElement).style.transform = direction === "left"
-      ? "translateX(200%) rotate(30deg)" // 더 크게 이동하여 확실하게 보이게 함
-      : "translateX(-200%) rotate(-30deg)";
-  
+    (topCard as HTMLElement).style.transition = "transform 0.5s ease-out";
+    (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
+
     // 애니메이션이 끝나면 실행
     setTimeout(async () => {
         // 새 카드 데이터 가져오기
@@ -236,11 +238,13 @@ const Swipe: React.FC = () => {
             return updatedCards;
         });
 
+        // 위치 초기화
         setDragX(0);
         setDragY(0);
         setCurrentIndex(cards.length - 1); // 최상단 인덱스 유지
     }, 500); // 0.5초 후에 실행 (애니메이션 지속 시간과 맞춤)
-};
+  };
+
   
   return (
     <Wrapper>
