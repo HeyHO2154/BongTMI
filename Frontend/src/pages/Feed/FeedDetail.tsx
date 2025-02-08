@@ -127,11 +127,10 @@ export default FeedDetail;
 
 /* ✅ 전체 화면 적용 */
 const Wrapper = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar 높이 제외 */
-  position: relative;
+  height: 100vh;
+  overflow-y: auto;
 `;
 
 /* ✅ 전체 화면을 차지하는 피드 이미지 */
