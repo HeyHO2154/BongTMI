@@ -187,11 +187,6 @@ const FeedCard = styled.div`
   flex-direction: column;
   border: 1px solid #ddd;
   cursor: pointer; /* ✅ 마우스 올릴 때 손가락 표시 */
-  transition: transform 0.1s ease-in-out;
-
-  &:hover {
-    transform: scale(1.02); /* 약간 확대 효과 */
-  }
 `;
 
 // ✅ 사용자 정보
