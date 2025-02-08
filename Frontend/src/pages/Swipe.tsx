@@ -16,8 +16,8 @@ interface CardData {
   from: String;
 }
 
-const SWIPE_THRESHOLD_X = 150; // 스와이프 판정 기준 (px)
-const SWIPE_THRESHOLD_Y = 200; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_X = 100; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 100; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -215,8 +215,6 @@ const Swipe: React.FC = () => {
 
     // 카드 마저 넘어가게 애니메이션
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
-    console.log(currentIndex);
-    console.log(cards[currentIndex]);
     if (topCard) {
       (topCard as HTMLElement).style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out";
       (topCard as HTMLElement).style.transform = direction === "left"
@@ -230,23 +228,25 @@ const Swipe: React.FC = () => {
         const newCard = await fetchCardData();
         if (!newCard) return; // API 호출 실패 시 중단
       
-        setCards((prevCards) => {
-          const updatedCards = [...prevCards]; // 기존 배열 복사
+        setTimeout(() => {
+          setCards((prevCards) => {
+            const updatedCards = [...prevCards]; // 기존 배열 복사
 
-          // 배열을 위로 한 칸씩 이동
-          for (let i = updatedCards.length - 1; i > 0; i--) {
-            updatedCards[i] = updatedCards[i - 1]; // 이전 카드의 정보를 현재 위치에 복사
-          }
+            // 배열을 위로 한 칸씩 이동
+            for (let i = updatedCards.length - 1; i > 0; i--) {
+              updatedCards[i] = updatedCards[i - 1]; // 이전 카드의 정보를 현재 위치에 복사
+            }
+        
+            // 새 카드를 0번 인덱스에 추가
+            updatedCards[0] = newCard;
+            return updatedCards;
+          });
       
-          // 새 카드를 0번 인덱스에 추가
-          updatedCards[0] = newCard;
-          return updatedCards;
-        });
-      
-        // 위치 초기화
-        setDragX(0);
-        setDragY(0);
-        setCurrentIndex(cards.length - 1); // 항상 최상단 인덱스를 맨 마지막으로 설정
+          // 위치 초기화
+          setDragX(0);
+          setDragY(0);
+          setCurrentIndex(cards.length - 1); // 항상 최상단 인덱스를 맨 마지막으로 설정
+        }, 500);
       }, { once: true }); // transitionend 이벤트 한 번만 실행
     }
   };
