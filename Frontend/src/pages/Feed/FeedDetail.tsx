@@ -26,9 +26,7 @@ const FeedDetail: React.FC = () => {
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
-        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info`, {
-          params: { feedID }, // ✅ params로 API 요청
-        });
+        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`)
 
         setFeed({
           ...response.data,
