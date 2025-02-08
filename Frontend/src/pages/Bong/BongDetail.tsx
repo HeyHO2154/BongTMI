@@ -88,6 +88,10 @@ const DetailBong: React.FC = () => {
     if (progrmRegistNo) fetchBongData();
   }, [progrmRegistNo]);
 
+  // ✅ 로그인된 사용자 정보 가져오기
+  const storedUser = localStorage.getItem("user");
+  const userData = storedUser ? JSON.parse(storedUser) : null;
+  
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
   if (!bongData) return <div>progrmRegistNo: {progrmRegistNo}, 데이터가 없습니다.</div>;
@@ -135,8 +139,23 @@ const DetailBong: React.FC = () => {
           <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>` 
       </Content>
       <Footer>
-        <ApplyButton
-          onClick={() => {
+      <ApplyButton
+        onClick={async () => {
+          try {
+            // ✅ 신청하기(4) 저장 API 호출
+            await fetch(`${config.API_DEV}/api/user/like`, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                userId: userData.id,
+                bongId: bongData.progrmRegistNo.toString(),
+                action: "4", // ✅ 신청하기(4) 기록
+              }),
+            });
+
+            console.log("✅ 신청하기 기록됨");
+
+            // ✅ 저장 완료 후 해당 공고의 신청 페이지로 이동
             const baseUrl =
               bongData.progrmRegistNo.startsWith("SYO")
                 ? `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=`
@@ -149,10 +168,14 @@ const DetailBong: React.FC = () => {
             } else {
               window.location.href = `${bongData.fxnum}`;
             }
-          }}
-        >
-          신청하기
-        </ApplyButton>
+          } catch (error) {
+            console.error("❌ API 요청 실패:", error);
+          }
+        }}
+      >
+        신청하기
+      </ApplyButton>
+
       </Footer>
     </Container>
   );
