@@ -85,7 +85,11 @@ const Feed: React.FC = () => {
         setOffset((prevOffset) => prevOffset + limit);
       }
     }
-  };  
+  };
+
+  const handleFeedClick = (feedID: string) => {
+    navigate(`/feed/${feedID}`);
+  };
   
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -98,7 +102,7 @@ const Feed: React.FC = () => {
     <FeedWrapper>
       <FeedContainer>
         {visibleFeeds.map((feed, index) => (
-          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null}>
+          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null} onClick={() => handleFeedClick(feed.feedID)}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
