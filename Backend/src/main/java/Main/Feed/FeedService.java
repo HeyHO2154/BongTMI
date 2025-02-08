@@ -2,8 +2,11 @@ package Main.Feed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import Main.Bong.Bong;
@@ -14,7 +17,11 @@ public class FeedService {
 	@Autowired
     private FeedRepository feedRepository;
 
-    // 전체 게시글 조회
+    public List<Feed> getAllFeed() {
+    	List<Feed> feed = feedRepository.findAllFeed();
+		return feed;
+	}
+    
     public List<Feed> getRandFeeds(int feedCount) {
     	List<Feed> Feeds = new ArrayList<>();
     	for (int i = 0; i < feedCount; i++) {
@@ -22,6 +29,15 @@ public class FeedService {
 		}
         return Feeds;
     }
+    
+    public ResponseEntity<Feed> getInfoFeed(String feedID) {
+		Optional<Feed> feed = feedRepository.findById(feedID);
+        if (feed.isPresent()) {
+            return ResponseEntity.ok(feed.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+	}
     
     public Feed saveFeed(Feed feedDto) {
     	Feed feed = new Feed();

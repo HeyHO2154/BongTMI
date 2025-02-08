@@ -39,43 +39,30 @@ interface FeedData {
 const Feed: React.FC = () => {
   const [feeds, setFeeds] = useState<FeedData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const pageRef = useRef(1);
-  const observer = useRef<IntersectionObserver | null>(null);
   const lastFeedElementRef = useRef<HTMLDivElement | null>(null);
 
   // ✅ API 데이터 불러오기
   const fetchFeeds = useCallback(async () => {
-    if (!hasMore || isLoading) return;
+    if (isLoading) return;
   
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.API_DEV}/api/feeds?feedCount=10`);
-      const newFeeds = response.data;
+      const response = await axios.get(`${config.API_DEV}/api/feeds/all`);
+      const allFeeds = response.data;
   
-      if (newFeeds.length === 0) {
-        setHasMore(false);
-      } else {
-        // ✅ Swipe.tsx 방식 적용 - 이미지 API 사용
-        const feedsWithImages = newFeeds.map((feed: FeedData) => {
-          const imageUrl = `${config.API_DEV}/api/bong/image/${feed.feedID}/1`;
-      
-          return {
-            ...feed,
-            imageUrl: imageUrl,
-          };
-        });
+      // ✅ 이미지 경로 추가 및 최신순 정렬 (백엔드에서 이미 최신순 제공하지만, 안전하게 다시 정렬)
+      const feedsWithImages = allFeeds.map((feed: FeedData) => ({
+        ...feed,
+        imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+      }));
   
-        setFeeds((prev) => [...prev, ...feedsWithImages]);
-        pageRef.current += 1;
-      }
+      setFeeds(feedsWithImages); // 최신순으로 한 번에 저장
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading, hasMore]);
-  
+  }, [isLoading]);  
 
   // ✅ 최초 1회 실행
   useEffect(() => {
@@ -83,34 +70,34 @@ const Feed: React.FC = () => {
   }, []);
 
   // ✅ 무한 스크롤 이벤트 감지
+  const [visibleFeeds, setVisibleFeeds] = useState<FeedData[]>([]);
+  const [offset, setOffset] = useState(10);
+  const limit = 10; // 한 번에 표시할 개수
+  
   useEffect(() => {
-    if (!hasMore) return;
-
-    const observerCallback: IntersectionObserverCallback = (entries) => {
-      if (entries[0].isIntersecting) {
-        fetchFeeds();
+    setVisibleFeeds(feeds.slice(0, offset));
+  }, [feeds, offset]);
+  
+  // ✅ 스크롤 감지해서 추가 로드
+  const handleScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+      if (offset < feeds.length) { // ✅ 남은 데이터가 있을 때만 추가 로드
+        setOffset((prevOffset) => prevOffset + limit);
       }
-    };
-
-    observer.current = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: "100px",
-      threshold: 1.0,
-    });
-
-    if (lastFeedElementRef.current) {
-      observer.current.observe(lastFeedElementRef.current);
     }
-
-    return () => observer.current?.disconnect();
-  }, [fetchFeeds, hasMore]);
+  };  
+  
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);  
 
   const navigate = useNavigate();
 
   return (
     <FeedWrapper>
       <FeedContainer>
-        {feeds.map((feed, index) => (
+        {visibleFeeds.map((feed, index) => (
           <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null}>
             {/* 사용자 정보 */}
             <FeedHeader>
