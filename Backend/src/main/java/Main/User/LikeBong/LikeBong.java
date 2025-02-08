@@ -12,11 +12,11 @@ public class LikeBong {
     @Column(length = 100, nullable = false)
     private String bongId; // ✅ VARCHAR(100) → String 타입 변경
 
-    @Column(nullable = false)
-    private int selectionStatus; // 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private int selectionStatus; // ✅ 기본값 0 설정
 
-    // ✅ 기본 생성자 (JPA용)
     public LikeBong() {
+        this.selectionStatus = 0; // ✅ 기본값 0
     }
 
     // ✅ 모든 필드를 포함하는 생성자 추가
