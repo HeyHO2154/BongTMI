@@ -184,35 +184,24 @@ const Swipe: React.FC = () => {
   const checkSwipe = () => {
     if (dragY < -SWIPE_THRESHOLD_Y && currentIndex >= 0) {
         const progrmRegistNo = cards[currentIndex].id;
-        const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
 
-        if (topCard) {
-            // ✅ 애니메이션 효과 적용 (0s → 0.3s)
-            (topCard as HTMLElement).style.transition = "transform 0.3s ease-out";
-            (topCard as HTMLElement).style.transform = "translateY(-150%)";
+        // ✅ 모든 카드에 같은 애니메이션 적용
+        const allCards = document.querySelectorAll(`[data-index]`);
+        allCards.forEach((card) => {
+            (card as HTMLElement).style.transition = "transform 0.3s ease-out";
+            (card as HTMLElement).style.transform = "translateY(-150%)"; // 화면 위로 밀기
+        });
 
-            topCard.addEventListener(
-                "transitionend",
-                () => {
-                    // ✅ 최상단 카드 제거 후 UI 업데이트
-                    setCards((prevCards) => {
-                        const updatedCards = [...prevCards];
-                        updatedCards.pop(); // 최상단 카드 삭제
-                        return updatedCards;
-                    });
-
-                    setCurrentIndex((prev) => Math.max(prev - 1, 0)); // 최상단 인덱스 업데이트
-                    navigate(`/detail/${progrmRegistNo}`);
-                },
-                { once: true }
-            );
-        }
+        setTimeout(() => {
+            navigate(`/detail/${progrmRegistNo}`);
+        }, 300); // 0.3초 후 이동
     } else if (dragX > SWIPE_THRESHOLD_X) {
         swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
         swipe("left");
     }
   };
+
 
   const swipe = async (direction: "left" | "right") => {
     console.log("Swiping...", direction);
