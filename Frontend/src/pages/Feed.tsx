@@ -44,25 +44,27 @@ const Feed: React.FC = () => {
   // ✅ API 데이터 불러오기
   const fetchFeeds = useCallback(async () => {
     if (isLoading) return;
-  
+
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
       const allFeeds = response.data;
-  
-      // ✅ 이미지 경로 추가 및 최신순 정렬 (백엔드에서 이미 최신순 제공하지만, 안전하게 다시 정렬)
+
+      // ✅ 이미지 경로 추가 및 최신순 정렬
       const feedsWithImages = allFeeds.map((feed: FeedData) => ({
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
       }));
-  
-      setFeeds(feedsWithImages); // 최신순으로 한 번에 저장
+
+      setFeeds(feedsWithImages); // ✅ 전체 데이터 저장
+      setVisibleFeeds((prev) => feedsWithImages.slice(0, prev.length + 10)); // ✅ 이전 상태 + 10개 추가
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading]);  
+  }, [isLoading]); // ✅ offset을 의존성 배열에서 제거
+
 
   // ✅ 최초 1회 실행
   useEffect(() => {
@@ -76,7 +78,7 @@ const Feed: React.FC = () => {
   
   useEffect(() => {
     setVisibleFeeds(feeds.slice(0, offset));
-  }, [feeds, offset]);
+  }, [feeds, offset]);  
   
   // ✅ 스크롤 감지해서 추가 로드
   const handleScroll = () => {
@@ -95,7 +97,7 @@ const Feed: React.FC = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);  
+  }, [feeds.length]); // ✅ feeds.length가 변경될 때마다 실행  
 
   const navigate = useNavigate();
 
