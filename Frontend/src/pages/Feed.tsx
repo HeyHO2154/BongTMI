@@ -121,6 +121,12 @@ const Feed: React.FC = () => {
               <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
             </FeedImageContainer>
 
+            {/* 게시글 내용 */}
+            <FeedContent>
+              <ContentTitle>{feed.title}</ContentTitle>
+              {/* <ContentText>{feed.content}</ContentText> */}
+            </FeedContent>
+
             {/* 버튼 */}
             <FeedFooter>
               <Actions>
@@ -136,11 +142,6 @@ const Feed: React.FC = () => {
               </Actions>
             </FeedFooter>
 
-            {/* 게시글 내용 */}
-            <FeedContent>
-              <ContentTitle>{feed.title}</ContentTitle>
-              {/* <ContentText>{feed.content}</ContentText> */}
-            </FeedContent>
           </FeedCard>
         ))}
 
