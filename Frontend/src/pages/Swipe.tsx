@@ -203,9 +203,9 @@ const Swipe: React.FC = () => {
     } else if (dragX < -SWIPE_THRESHOLD_X) {
         swipe("left");
     }
-};
+  };
 
-const swipe = async (direction: "left" | "right") => {
+  const swipe = async (direction: "left" | "right") => {
     console.log("Swiping...", direction);
 
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
@@ -214,11 +214,15 @@ const swipe = async (direction: "left" | "right") => {
     const finalX = dragX > 0 ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
     const finalRotate = dragX > 0 ? 30 : -30;
 
-    (topCard as HTMLElement).style.transition = "transform 0.5s ease-out";
+    // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
+    const newCardPromise = fetchCardData();
+
+    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
+    // ✅ 애니메이션 지속 시간을 300ms로 줄여서 더 빠르게 진행
     setTimeout(async () => {
-        const newCard = await fetchCardData();
+        const newCard = await newCardPromise; // 미리 가져온 데이터 사용
         if (!newCard) return;
 
         setCards((prevCards) => {
@@ -228,12 +232,13 @@ const swipe = async (direction: "left" | "right") => {
             return updatedCards;
         });
 
-        // ✅ 애니메이션이 끝난 후 dragX, dragY 초기화
-        // setDragX(0);
-        // setDragY(0);
+        // ✅ 초기화 작업 즉시 실행 (setTimeout 없음)
+        setDragX(0);
+        setDragY(0);
         setCurrentIndex(cards.length - 1);
-    }, 500); // 애니메이션 지속 시간과 맞춤
+    }, 300); // 🔥 500ms → 300ms로 변경하여 빠르게 반응
   };
+
 
   
   return (
