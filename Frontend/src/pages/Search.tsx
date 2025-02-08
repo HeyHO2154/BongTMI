@@ -84,7 +84,7 @@ const Search: React.FC = () => {
         return {
           id: bong.progrmRegistNo,
           label: bong.progrmSj || "제목 없음",
-          region: bong.nanmmbyNm || "지역 없음",
+          region: bong.postAdres || "지역 없음",
           type: typeValue,  // ✅ 프로그램 등록번호로 type 결정
           date: `모집마감일: ${new Date(bong.progrmEndde).toLocaleDateString()}`,
           imageUrl: `${config.API_DEV}/api/bong/image/${bong.progrmRegistNo}/1`,
