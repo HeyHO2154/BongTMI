@@ -223,12 +223,13 @@ const CommentInput = styled.input`
 `;
 
 const CommentList = styled.div`
-  margin-top: 12px;
-  border-top: 1px solid #ddd;
+  margin-top: 14px;
+  border-top: 2px solid #ddd;
 `;
 
 const CommentItem = styled.div`
   padding: 8px;
+  border-bottom: 1px solid #ddd;
 `;
 
 const CommentAuthor = styled.span`
