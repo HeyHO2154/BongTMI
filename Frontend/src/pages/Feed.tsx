@@ -47,7 +47,7 @@ const Feed: React.FC = () => {
   
     setIsLoading(true);
     try {
-      const response = await axios.get(`${config.API_DEV}/api/feeds/all`);
+      const response = await axios.get(`${config.API_DEV}/api/feed/all`);
       const allFeeds = response.data;
   
       // ✅ 이미지 경로 추가 및 최신순 정렬 (백엔드에서 이미 최신순 제공하지만, 안전하게 다시 정렬)

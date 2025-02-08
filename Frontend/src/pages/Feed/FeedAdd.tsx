@@ -70,7 +70,7 @@ const FeedAdd: React.FC = () => {
 
     try {
       // 1️⃣ JSON 데이터 먼저 전송
-      await axios.post(`${config.API_DEV}/api/feeds/add`, JSON.stringify(jsonData), {
+      await axios.post(`${config.API_DEV}/api/feed/add`, JSON.stringify(jsonData), {
         headers: { "Content-Type": "application/json" },
       });
 

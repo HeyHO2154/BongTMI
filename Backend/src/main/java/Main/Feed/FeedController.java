@@ -16,7 +16,7 @@ import Main.Bong.Bong;
 
 @RestController
 @CrossOrigin(origins = "${Front_URL}")
-@RequestMapping("/api/feeds")
+@RequestMapping("/api/feed")
 public class FeedController {
 
 	@Autowired
