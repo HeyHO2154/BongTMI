@@ -131,15 +131,37 @@ const Search: React.FC = () => {
 
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
-    if (isLoading || offset >= allCards.length) return; // 더 불러올 데이터 없으면 중단
+    if (isLoading) return;
+  
+    const filteredCards = allCards.filter((card) => {
+      const cardDaysArray = convertDaysToArray(card.days);
+      const selectedDaysArray = filters.days;
+  
+      const matchesDay =
+        selectedDaysArray.length === 0 || selectedDaysArray.some((day) => cardDaysArray.includes(day));
+  
+      return (
+        (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
+        (filters.type ? card.type === filters.type : true) &&
+        (filters.progrmSttusSe ? String(card.progrmSttusSe) === String(filters.progrmSttusSe) : true) &&
+        matchesDay &&
+        (filters.startDate ? card.startDate >= filters.startDate : true) &&
+        (filters.endDate ? card.endDate <= filters.endDate : true) &&
+        (filters.sidoCd ? card.postAdress.includes(filters.sidoCd) : true) &&
+        (filters.gugunCd ? card.postAdress.includes(filters.gugunCd) : true)
+      );
+    });
+  
+    if (offset >= filteredCards.length) return;
+  
     setIsLoading(true);
-
     setTimeout(() => {
-      setVisibleCards((prevCards) => [...prevCards, ...allCards.slice(offset, offset + limit)]);
+      setVisibleCards((prevCards) => [...prevCards, ...filteredCards.slice(offset, offset + limit)]);
       setOffset((prevOffset) => prevOffset + limit);
       setIsLoading(false);
     }, 500);
   };
+  
 
   // 스크롤 감지 이벤트
   const handleScroll = () => {
