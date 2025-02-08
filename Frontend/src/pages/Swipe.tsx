@@ -199,18 +199,6 @@ const Swipe: React.FC = () => {
         swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
         swipe("left");
-    } else {
-      // ✅ PC에서도 부드러운 복귀 애니메이션 적용
-      requestAnimationFrame(() => {
-        const allCards = document.querySelectorAll(`[data-index]`);
-        allCards.forEach((card) => {
-            (card as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 트랜지션 강제 적용
-            (card as HTMLElement).style.transform = "translateX(0) translateY(0)";
-        });
-
-        setDragX(0);
-        setDragY(0);
-    });
     }
   };
 
@@ -223,30 +211,27 @@ const Swipe: React.FC = () => {
     const finalX = dragX > 0 ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
     const finalRotate = dragX > 0 ? 30 : -30;
 
-    // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
-    const newCardPromise = fetchCardData();
-
-    (topCard as HTMLElement).style.transition = "transform 0s ease-out"; // ✅ 0.3초로 줄이기
+    // ✅ 좌우 스와이프도 부드럽게 적용
+    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초 적용
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
-    const newCard = await newCardPromise; // 미리 가져온 데이터 사용
-    if (!newCard) return;
+    setTimeout(async () => {
+        const newCard = await fetchCardData();
+        if (!newCard) return;
 
-    setCards((prevCards) => {
-        const updatedCards = [...prevCards];
-        updatedCards.pop();
-        updatedCards.unshift(newCard);
-        return updatedCards;
-    });
+        setCards((prevCards) => {
+            const updatedCards = [...prevCards];
+            updatedCards.pop();
+            updatedCards.unshift(newCard);
+            return updatedCards;
+        });
 
-    // ✅ 초기화 작업 즉시 실행 (setTimeout 없음)
-    setDragX(0);
-    setDragY(0);
-    setCurrentIndex(cards.length - 1);
+        setDragX(0);
+        setDragY(0);
+        setCurrentIndex(cards.length - 1);
+    }, 300); // ✅ 0.3초 후 변경 (애니메이션 시간과 맞춤)
   };
 
-
-  
   return (
     <Wrapper>
       {cards.map((card, index) => {
