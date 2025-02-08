@@ -107,7 +107,7 @@ const Feed: React.FC = () => {
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
-                <ProfileImage src="/assets/BongTMI1.png" alt="봉틈이" />
+                <ProfileImage src="/assets/DC.png" alt="디시인사이드" />
                 <Author>
                   {feed.author} <TimeAgo>{timeAgo(feed.createdAt)}</TimeAgo>
                 </Author>
