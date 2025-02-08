@@ -187,12 +187,21 @@ const Swipe: React.FC = () => {
         const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
 
         if (topCard) {
-            (topCard as HTMLElement).style.transition = "transform 0s ease-out";
-            (topCard as HTMLElement).style.transform = "translateY(-100%)";
+            // ✅ 애니메이션 효과 적용 (0s → 0.3s)
+            (topCard as HTMLElement).style.transition = "transform 0.3s ease-out";
+            (topCard as HTMLElement).style.transform = "translateY(-150%)";
 
             topCard.addEventListener(
                 "transitionend",
                 () => {
+                    // ✅ 최상단 카드 제거 후 UI 업데이트
+                    setCards((prevCards) => {
+                        const updatedCards = [...prevCards];
+                        updatedCards.pop(); // 최상단 카드 삭제
+                        return updatedCards;
+                    });
+
+                    setCurrentIndex((prev) => Math.max(prev - 1, 0)); // 최상단 인덱스 업데이트
                     navigate(`/detail/${progrmRegistNo}`);
                 },
                 { once: true }
