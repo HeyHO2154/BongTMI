@@ -42,7 +42,7 @@ const Feed: React.FC = () => {
   const [visibleCards, setVisibleCards] = useState<FeedData[]>([]); // 화면에 보여질 카드
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
-  const limit = 10; // 한 번에 로드할 개수
+  const limit = 5; // 한 번에 로드할 개수
 
   // ✅ API 데이터 불러오기
   const fetchFeeds = async () => {
