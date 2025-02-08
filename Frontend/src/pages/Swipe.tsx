@@ -199,6 +199,18 @@ const Swipe: React.FC = () => {
         swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
         swipe("left");
+    } else {
+      // ✅ PC에서도 부드러운 복귀 애니메이션 적용
+      requestAnimationFrame(() => {
+        const allCards = document.querySelectorAll(`[data-index]`);
+        allCards.forEach((card) => {
+            (card as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 트랜지션 강제 적용
+            (card as HTMLElement).style.transform = "translateX(0) translateY(0)";
+        });
+
+        setDragX(0);
+        setDragY(0);
+    });
     }
   };
 
