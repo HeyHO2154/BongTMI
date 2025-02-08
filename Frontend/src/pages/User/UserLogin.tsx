@@ -93,7 +93,7 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 30px;
+  padding-top: 20px;
 `;
 
 const LoginButton = styled.button`
