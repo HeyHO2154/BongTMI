@@ -217,7 +217,7 @@ const Swipe: React.FC = () => {
     // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
     const newCardPromise = fetchCardData();
 
-    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초로 줄이기
+    (topCard as HTMLElement).style.transition = "transform 0s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
     const newCard = await newCardPromise; // 미리 가져온 데이터 사용
