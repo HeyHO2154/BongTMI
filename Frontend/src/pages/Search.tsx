@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; // React Router 사용
 import config from "../config";
 import { sidoList, sigunguData } from "../components/locationData";
+import Loading from "../components/Lodaing";
 
 
 interface CardData {
@@ -309,11 +310,11 @@ const Search: React.FC = () => {
             </Card>
           ))
         ) : (
-          <LoadingText>봉사 데이터를 불러오는 중...</LoadingText>
+          <Loading/>
         )}
       </CardList>
 
-      {isLoading && <LoadingText>Loading...</LoadingText>}
+      {isLoading && <LoadingText><Loading/></LoadingText>}
     </Wrapper>
   );
 };

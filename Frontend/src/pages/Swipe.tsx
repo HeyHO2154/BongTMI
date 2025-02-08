@@ -4,6 +4,7 @@ import axios from "axios"; // API 호출을 위해 axios 사용
 import { useNavigate } from "react-router-dom"; // React Router 사용
 import { useLocation } from "react-router-dom"; // useLocation 추가
 import config from "../config";
+import Loading from "../components/Lodaing";
 
 interface CardData {
   id: string; // 고유 식별자 추가
@@ -306,7 +307,7 @@ const Swipe: React.FC = () => {
         );
       })}
 
-      {currentIndex < 0 && <NoMoreCards>더 이상 카드가 없습니다!</NoMoreCards>}
+      {currentIndex < 0 && <NoMoreCards><Loading/></NoMoreCards>}
     </Wrapper>
   );
 
