@@ -1,6 +1,6 @@
 // src/components/NavBar.tsx
-import React, { useState, useEffect } from "react";
-import { NavLink, useLocation} from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +17,6 @@ const NavBarContainer = styled.nav`
   z-index: 999;
 `;
 
-
 const NavButton = styled(NavLink).attrs<{ $isActive: boolean }>((props) => ({
   className: props.$isActive ? "active" : ""
 }))`
@@ -33,43 +32,27 @@ const NavButton = styled(NavLink).attrs<{ $isActive: boolean }>((props) => ({
 `;
 
 const NavBar: React.FC = () => {
-  const location = useLocation();
   const [activeButton, setActiveButton] = useState<string>("");
 
-  useEffect(() => {
-    // 마이페이지 이동 시 로그인 여부 확인
-    const isDetailPage = /^\/detail/.test(location.pathname); // '/detail'로 시작하는 경로 확인
-    if (location.pathname === "/my-page" || location.pathname === "/user/login" || location.pathname === "/user/find-account" || location.pathname === "/user/register") {
-      setActiveButton("my-page");
-    } else if (isDetailPage) {
-      setActiveButton("/"); // '/detail'로 시작하는 경로에서 setActiveButton("/") 호출
-    } else {
-      setActiveButton(location.pathname); // 다른 버튼들 활성화 상태 업데이트
-    }
-  });
-  
   return (
     <NavBarContainer>
-      <NavButton to="/" $isActive={activeButton === "/"}>
+      <NavButton to="/" $isActive={activeButton === "/"} onClick={() => setActiveButton("/")}>
         <FontAwesomeIcon icon={faHeart} size="2x" />
         봉사 추천
       </NavButton>
-      <NavButton to="/search" $isActive={activeButton === "/search"}>
+      <NavButton to="/search" $isActive={activeButton === "/search"} onClick={() => setActiveButton("/search")}>
         <FontAwesomeIcon icon={faSearch} size="2x" />
         봉사 검색
       </NavButton>
-      <NavButton to="/add-bong" $isActive={activeButton === "/add-bong"}>
+      <NavButton to="/add-bong" $isActive={activeButton === "/add-bong"} onClick={() => setActiveButton("/add-bong")}>
         <FontAwesomeIcon icon={faPlus} size="2x" />
         봉사 등록
       </NavButton>
-      <NavButton to="/feed" $isActive={activeButton === "/feed"}>
+      <NavButton to="/feed" $isActive={activeButton === "/feed"} onClick={() => setActiveButton("/feed")}>
         <FontAwesomeIcon icon={faEye} size="2x" />
         봉사 소식
       </NavButton>
-      <NavButton
-        to="/my-page"
-        $isActive={activeButton === "my-page"}
-      >
+      <NavButton to="/my-page" $isActive={activeButton === "/my-page"} onClick={() => setActiveButton("/my-page")}>
         <FontAwesomeIcon icon={faUser} size="2x" />
         마이페이지
       </NavButton>

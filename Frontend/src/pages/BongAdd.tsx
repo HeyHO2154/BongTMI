@@ -64,6 +64,17 @@ const AddBong: React.FC = () => {
     gugunCd: "00",
     images: [],  // <-- 추가됨
   });
+
+  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      navigate("/user/login");
+    }
+  }, [navigate]);
   
 
   // 입력값 변경 시 처리
@@ -112,10 +123,6 @@ const AddBong: React.FC = () => {
   
     return `USR${year}${month}${day}${hours}${minutes}${seconds}`;
   };
-
-  //사용자 정보
-  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
-  user;  //노란경고 방지
 
   // 폼 제출 처리
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,6 +187,10 @@ const AddBong: React.FC = () => {
     }
   }, []);
 
+  if (!user) {
+    return null; // 로그인 상태가 아니면 아무것도 렌더링하지 않음
+  }
+
   return (
     <Wrapper>
       <Title>봉사 공고 등록</Title>
@@ -190,22 +201,12 @@ const AddBong: React.FC = () => {
           악용, 남용 적발 시 계정 정지 조치합니다.
         </NoticeContent>
       </NoticeBox>
-      {user === null ? (
-        <WarningBox>
-          <WarningTitle>⚠️ 경고!</WarningTitle>
-          <WarningContent>
-            로그인을 하지 않은 상태로 공고를 올릴 경우, 신뢰도가 낮아집니다.<br />
-            <a href="/user/login">로그인</a>을 통해 공고의 신뢰도를 올려보세요!
-          </WarningContent>
-        </WarningBox>
-      ) : (
-        <InfoBox>
+      <InfoBox>
           <InfoBoxTitle>✅ 계정 확인됨</InfoBoxTitle>
           <InfoBoxContent>
             <strong>{user.nickname}</strong>님으로 로그인이 되어있습니다. 공고 등록 시 반영됩니다.
           </InfoBoxContent>
-        </InfoBox>
-      )}
+      </InfoBox>
       <Form onSubmit={handleSubmit}>
         <Section>
           <SectionTitle>기본 정보</SectionTitle>

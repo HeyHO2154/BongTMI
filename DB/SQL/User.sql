@@ -20,16 +20,7 @@ CREATE TABLE User (
 CREATE TABLE LikeBong (
     id INT AUTO_INCREMENT PRIMARY KEY,
     BongID INT NOT NULL,
-    selection_status TINYINT NOT NULL, -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
-    FOREIGN KEY (BongID) REFERENCES Bong(progrmRegistNo) ON DELETE CASCADE
-);
-
--- 후기 히스토리
-CREATE TABLE LikeFeed (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    FeedID INT NOT NULL,
-    selection_status TINYINT NOT NULL,
-    FOREIGN KEY (FeedID) REFERENCES Feed(id) ON DELETE CASCADE
+    selection_status TINYINT NOT NULL -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
 );
 
 SELECT COUNT(*) AS total_count FROM User;

@@ -20,8 +20,7 @@ CREATE TABLE Comment (
     feed_id INT NOT NULL,               -- Feed 테이블의 고유번호 (FK)
     author VARCHAR(100) NOT NULL,       -- 작성자
     content TEXT NOT NULL,              -- 댓글 내용
-    created_at DATETIME DEFAULT NOW(),  -- 작성시간
-    FOREIGN KEY (feed_id) REFERENCES Feed(id) ON DELETE CASCADE
+    created_at DATETIME DEFAULT NOW()  -- 작성시간
 );
 
 SELECT COUNT(*) AS total_count FROM Feed;
