@@ -236,7 +236,7 @@ const Swipe: React.FC = () => {
         setDragX(0);
         setDragY(0);
         setCurrentIndex(cards.length - 1);
-    }, 300); // 🔥 500ms → 300ms로 변경하여 빠르게 반응
+    }, 100); // 🔥 500ms → 300ms로 변경하여 빠르게 반응
   };
 
 
