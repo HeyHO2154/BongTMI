@@ -6,6 +6,26 @@ import axios from "axios";
 import { ThumbsUp, MessageCircle } from "lucide-react";
 import config from "../../config";
 
+// ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
+const timeAgo = (dateString: string) => {
+  const postDate = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - postDate.getTime();
+
+  const minutes = Math.floor(diffMs / 60000);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (years > 0) return `${years}년 전`;
+  if (months > 0) return `${months}개월 전`;
+  if (days > 0) return `${days}일 전`;
+  if (hours > 0) return `${hours}시간 전`;
+  if (minutes > 0) return `${minutes}분 전`;
+  return "방금 전";
+};
+
 interface FeedDetailData {
   feedID: string;
   title: string;
@@ -49,20 +69,24 @@ const FeedDetail: React.FC = () => {
 
   return (
     <Wrapper>
-      <FeedCard>
+      {/* 피드 이미지 (전체 화면) */}
+      {feed.imageUrls[0] && <FeedImage src={feed.imageUrls[0]} alt="게시물 이미지" />}
+
+      <FeedContent>
+        {/* 작성자 및 날짜 */}
         <FeedHeader>
           <ProfileImage src="/assets/BongTMI1.png" alt="프로필 이미지" />
           <ProfileInfo>
             <Author>{feed.author}</Author>
-            <TimeAgo>{new Date(feed.createdAt).toLocaleDateString()}</TimeAgo>
+            <TimeAgoText>{timeAgo(feed.createdAt)}</TimeAgoText>
           </ProfileInfo>
         </FeedHeader>
 
-        {/* ✅ 1번 이미지만 표시 */}
-        {feed.imageUrls[0] && <FeedImage src={feed.imageUrls[0]} alt="게시물 이미지" />}
-
+        {/* 제목 및 내용 */}
+        <Title>{feed.title}</Title>
         <Content>{feed.content}</Content>
 
+        {/* 좋아요 & 댓글 버튼 */}
         <Actions>
           <ActionButton>
             <ThumbsUp />
@@ -74,7 +98,7 @@ const FeedDetail: React.FC = () => {
           </ActionButton>
         </Actions>
 
-        {/* ✅ 댓글 UI 추가 (SNS 스타일) */}
+        {/* 댓글 UI */}
         <CommentSection>
           <CommentTitle>댓글</CommentTitle>
           <CommentInput placeholder="댓글을 입력하세요..." />
@@ -89,7 +113,7 @@ const FeedDetail: React.FC = () => {
             </CommentItem>
           </CommentList>
         </CommentSection>
-      </FeedCard>
+      </FeedContent>
     </Wrapper>
   );
 };
@@ -100,30 +124,28 @@ export default FeedDetail;
 // 스타일 정의
 // --------------------
 
-// 전체 페이지 감싸는 컨테이너
+/* ✅ 전체 화면 적용 */
 const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* ✅ 전체 화면 높이 */
-  padding: 16px;
-  overflow-y: auto; /* ✅ 스크롤 가능하도록 설정 */
-`;
-
-// SNS 스타일의 피드 카드
-const FeedCard = styled.div`
-  width: 100%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  display: flex;
   flex-direction: column;
-  padding: 16px;
+  height: 100vh;
+  overflow-y: auto;
 `;
 
-// 피드 헤더 (프로필 정보)
+/* ✅ 전체 화면을 차지하는 피드 이미지 */
+const FeedImage = styled.img`
+  width: 100%;
+  max-height: 50vh;
+  object-fit: cover;
+`;
+
+/* ✅ 본문 컨텐츠 */
+const FeedContent = styled.div`
+  padding: 16px;
+  flex: 1;
+`;
+
+/* ✅ 피드 작성자 정보 */
 const FeedHeader = styled.div`
   display: flex;
   align-items: center;
@@ -147,25 +169,26 @@ const Author = styled.span`
   font-size: 16px;
 `;
 
-const TimeAgo = styled.span`
+const TimeAgoText = styled.span`
   font-size: 12px;
   color: gray;
 `;
 
-// 이미지 (한 장만 표시)
-const FeedImage = styled.img`
-  width: 100%;
-  border-radius: 8px;
-  margin-top: 8px;
+/* ✅ 제목 */
+const Title = styled.h1`
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 10px;
 `;
 
-// 본문 내용
+/* ✅ 본문 내용 */
 const Content = styled.p`
   font-size: 16px;
   margin-top: 12px;
+  line-height: 1.6;
 `;
 
-// 좋아요 & 댓글 버튼
+/* ✅ 좋아요 & 댓글 버튼 */
 const Actions = styled.div`
   display: flex;
   gap: 20px;
@@ -182,7 +205,7 @@ const ActionButton = styled.button`
   font-size: 16px;
 `;
 
-// 댓글 섹션
+/* ✅ 댓글 섹션 */
 const CommentSection = styled.div`
   margin-top: 20px;
 `;
