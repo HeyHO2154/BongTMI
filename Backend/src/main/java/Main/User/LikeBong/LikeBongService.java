@@ -14,7 +14,7 @@ public class LikeBongService {
     // ✅ 공고에 대한 사용자 액션 추가 (좋아요, 싫어요, 신청하기)
     public LikeBong updateSelection(String userId, String bongId, int action) {
         Optional<LikeBong> existingLike = likeBongRepository.findByUserIdAndBongId(userId, bongId);
-         LikeBong likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
+        LikeBong likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
 
         if (existingLike.isPresent()) {
             likeBong = existingLike.get();

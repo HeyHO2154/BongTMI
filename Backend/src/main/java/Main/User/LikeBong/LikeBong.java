@@ -15,6 +15,10 @@ public class LikeBong {
     @Column(nullable = false)
     private int selectionStatus; // ✅ 기본값 0 설정
 
+    public LikeBong() {
+        this.selectionStatus = 0; // ✅ 기본값 0
+    }
+
     // ✅ 모든 필드를 포함하는 생성자 추가
     public LikeBong(String userId, String bongId, int selectionStatus) {
         this.userId = userId;
