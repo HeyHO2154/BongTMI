@@ -220,23 +220,20 @@ const Swipe: React.FC = () => {
     (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
-    // ✅ 애니메이션 지속 시간을 300ms로 줄여서 더 빠르게 진행
-    setTimeout(async () => {
-        const newCard = await newCardPromise; // 미리 가져온 데이터 사용
-        if (!newCard) return;
+    const newCard = await newCardPromise; // 미리 가져온 데이터 사용
+    if (!newCard) return;
 
-        setCards((prevCards) => {
-            const updatedCards = [...prevCards];
-            updatedCards.pop();
-            updatedCards.unshift(newCard);
-            return updatedCards;
-        });
+    setCards((prevCards) => {
+        const updatedCards = [...prevCards];
+        updatedCards.pop();
+        updatedCards.unshift(newCard);
+        return updatedCards;
+    });
 
-        // ✅ 초기화 작업 즉시 실행 (setTimeout 없음)
-        setDragX(0);
-        setDragY(0);
-        setCurrentIndex(cards.length - 1);
-    }, 100); // 🔥 500ms → 300ms로 변경하여 빠르게 반응
+    // ✅ 초기화 작업 즉시 실행 (setTimeout 없음)
+    setDragX(0);
+    setDragY(0);
+    setCurrentIndex(cards.length - 1);
   };
 
 
