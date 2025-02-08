@@ -16,8 +16,8 @@ interface CardData {
   from: String;
 }
 
-const SWIPE_THRESHOLD_X = 100; // 스와이프 판정 기준 (px)
-const SWIPE_THRESHOLD_Y = 100; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_X = 10; // 스와이프 판정 기준 (px)
+const SWIPE_THRESHOLD_Y = 10; // 스와이프 판정 기준 (px)
 
 const Swipe: React.FC = () => {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -188,22 +188,19 @@ const Swipe: React.FC = () => {
         // ✅ 모든 카드에 같은 애니메이션 적용
         const allCards = document.querySelectorAll(`[data-index]`);
         allCards.forEach((card) => {
-            (card as HTMLElement).style.transition = "transform 0.3s ease-out, opacity 0.3s ease-out";
+            (card as HTMLElement).style.transition = "transform 0.3s ease-out";
             (card as HTMLElement).style.transform = "translateY(-150%)"; // 화면 위로 밀기
-            (card as HTMLElement).style.opacity = "0"; // 서서히 사라지는 효과
         });
 
-        // ✅ 애니메이션이 끝나면 페이지 이동
         setTimeout(() => {
-            navigate(`/detail/${progrmRegistNo}`, { replace: true }); // 🔥 `replace: true` 사용
+            navigate(`/detail/${progrmRegistNo}`);
         }, 300); // 0.3초 후 이동
     } else if (dragX > SWIPE_THRESHOLD_X) {
         swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
         swipe("left");
     }
-};
-
+  };
 
   const swipe = async (direction: "left" | "right") => {
     console.log("Swiping...", direction);
