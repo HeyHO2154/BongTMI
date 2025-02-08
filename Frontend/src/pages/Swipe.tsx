@@ -211,41 +211,44 @@ const Swipe: React.FC = () => {
   
   
   const swipe = async (direction: "left" | "right") => {
-    if (currentIndex < 0) return;
-  
+    console.log(direction);
+
+    // 카드 마저 넘어가게 애니메이션
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
-  
+    console.log(currentIndex);
     if (topCard) {
       (topCard as HTMLElement).style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out";
       (topCard as HTMLElement).style.transform = direction === "left"
         ? "translateX(-150%) rotate(-20deg)"  // 왼쪽으로 기울어지며 사라짐
         : "translateX(150%) rotate(20deg)";  // 오른쪽으로 기울어지며 사라짐
       (topCard as HTMLElement).style.opacity = "0"; // 점점 사라지도록 설정
-  
+
+      // 애니메이션이 끝난 후 실행
       topCard.addEventListener("transitionend", async () => {
-        // 새 카드 가져오기
+        // 새 카드 데이터를 가져옴
         const newCard = await fetchCardData();
-        if (!newCard) return;
-  
+        if (!newCard) return; // API 호출 실패 시 중단
+      
         setCards((prevCards) => {
-          const updatedCards = [...prevCards];
-          
-          // 기존 카드 배열을 한 칸씩 위로 이동
+          const updatedCards = [...prevCards]; // 기존 배열 복사
+
+          // 배열을 위로 한 칸씩 이동
           for (let i = updatedCards.length - 1; i > 0; i--) {
-            updatedCards[i] = updatedCards[i - 1];
+            updatedCards[i] = updatedCards[i - 1]; // 이전 카드의 정보를 현재 위치에 복사
           }
-          
-          // 새 카드를 배열의 0번째에 추가
+      
+          // 새 카드를 0번 인덱스에 추가
           updatedCards[0] = newCard;
           return updatedCards;
         });
-  
+      
+        // 위치 초기화
         setDragX(0);
         setDragY(0);
-        setCurrentIndex(cards.length - 1); // 최상단 인덱스 유지
-      }, { once: true }); // 이벤트 한 번만 실행
+        setCurrentIndex(cards.length - 1); // 항상 최상단 인덱스를 맨 마지막으로 설정
+      }, { once: true }); // transitionend 이벤트 한 번만 실행
     }
-  };  
+  };
   
   return (
     <Wrapper>
