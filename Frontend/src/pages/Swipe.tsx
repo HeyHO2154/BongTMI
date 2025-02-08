@@ -183,61 +183,67 @@ const Swipe: React.FC = () => {
   // --------------------
   const checkSwipe = () => {
     if (dragY < -SWIPE_THRESHOLD_Y && currentIndex >= 0) {
-        const progrmRegistNo = cards[currentIndex].id;
-        const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
-
-        if (topCard) {
-            (topCard as HTMLElement).style.transition = "transform 0.5s ease-out";
-            (topCard as HTMLElement).style.transform = "translateY(-100%)";
-
-            topCard.addEventListener(
-                "transitionend",
-                () => {
-                    navigate(`/detail/${progrmRegistNo}`);
-                },
-                { once: true }
-            );
-        }
+      const progrmRegistNo = cards[currentIndex].id;
+  
+      // 최상단 카드에 애니메이션 적용
+      const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
+      if (topCard) {
+        (topCard as HTMLElement).style.transition = "transform 0s ease, opacity 0s ease"; // 애니메이션 더 느리게
+        (topCard as HTMLElement).style.transform = "translateY(-100%)"; // 위로 이동
+  
+        // 애니메이션이 끝나자마자 페이지 전환
+        topCard.addEventListener(
+          "transitionend",
+          () => {
+            navigate(`/detail/${progrmRegistNo}`); // 페이지 전환
+          },
+          { once: true } // 이벤트를 한 번만 실행
+        );
+      }
     } else if (dragX > SWIPE_THRESHOLD_X) {
-        swipe("right");
+      swipe("right");
     } else if (dragX < -SWIPE_THRESHOLD_X) {
-        swipe("left");
-    } else {
-        // ❌ 원래 자리로 돌아가지 않도록 dragX, dragY 초기화 주석 처리
-        // setDragX(0);
-        // setDragY(0);
-    }
-};
+      swipe("left");
+    } 
+    setDragX(0);
+    setDragY(0);
+  };
+  
+  
+  const swipe = async (direction: "left" | "right") => {
+    console.log(direction);
 
-const swipe = async (direction: "left" | "right") => {
-    console.log("Swiping...", direction);
-
+    // 최상단 카드 선택
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
     if (!topCard) return;
 
-    const finalX = dragX > 0 ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
-    const finalRotate = dragX > 0 ? 30 : -30;
+    // 현재 드래그 위치 기반으로 최종 이동 거리 계산
+    const finalX = dragX * 3; // 현재 드래그된 위치를 기준으로 더 멀리 이동 (3배)
+    const finalRotate = dragX > 0 ? 30 : -30; // 방향에 따라 회전 조정
 
+    // 애니메이션 적용
     (topCard as HTMLElement).style.transition = "transform 0.5s ease-out";
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
+    // 애니메이션이 끝나면 실행
     setTimeout(async () => {
+        // 새 카드 데이터 가져오기
         const newCard = await fetchCardData();
         if (!newCard) return;
 
         setCards((prevCards) => {
             const updatedCards = [...prevCards];
-            updatedCards.pop();
-            updatedCards.unshift(newCard);
+            updatedCards.pop(); // 기존 최상단 카드 제거
+            updatedCards.unshift(newCard); // 새 카드 추가
             return updatedCards;
         });
 
-        // ✅ 애니메이션이 끝난 후 dragX, dragY 초기화
+        // 위치 초기화
         setDragX(0);
         setDragY(0);
-        setCurrentIndex(cards.length - 1);
-    }, 500); // 애니메이션 지속 시간과 맞춤
-};
+        setCurrentIndex(cards.length - 1); // 최상단 인덱스 유지
+    }, 500); // 0.5초 후에 실행 (애니메이션 지속 시간과 맞춤)
+  };
 
   
   return (
