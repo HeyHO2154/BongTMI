@@ -220,8 +220,8 @@ const Swipe: React.FC = () => {
     // 애니메이션 적용
     (topCard as HTMLElement).style.transition = "transform 5s ease-out";
     (topCard as HTMLElement).style.transform = direction === "left"
-      ? "translateX(-200%) rotate(-30deg)" // 더 크게 이동하여 확실하게 보이게 함
-      : "translateX(200%) rotate(30deg)";
+      ? "translateX(200%) rotate(30deg)" // 더 크게 이동하여 확실하게 보이게 함
+      : "translateX(-200%) rotate(-30deg)";
   
     // 애니메이션이 끝나면 실행
     setTimeout(async () => {
