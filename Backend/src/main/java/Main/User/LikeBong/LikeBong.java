@@ -13,7 +13,7 @@ public class LikeBong {
     private String bongId; // ✅ VARCHAR(100) → String 타입 변경
 
     @Column(nullable = false)
-    private int selectionStatus; // ✅ 기본값 0 설정
+    private int selectionStatus = 0; // ✅ 기본값 0 설정
 
     public LikeBong() {
         this.selectionStatus = 0; // ✅ 기본값 0
