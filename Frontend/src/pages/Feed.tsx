@@ -4,6 +4,7 @@ import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Lodaing";
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -41,6 +42,12 @@ const Feed: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const lastFeedElementRef = useRef<HTMLDivElement | null>(null);
 
+  
+  // ✅ 무한 스크롤 이벤트 감지
+  const [visibleFeeds, setVisibleFeeds] = useState<FeedData[]>([]);
+  const [offset, setOffset] = useState(10);
+  const limit = 10; // 한 번에 표시할 개수
+
   // ✅ API 데이터 불러오기
   const fetchFeeds = useCallback(async () => {
     if (isLoading) return;
@@ -57,37 +64,42 @@ const Feed: React.FC = () => {
       }));
 
       setFeeds(feedsWithImages); // ✅ 전체 데이터 저장
-      setVisibleFeeds((prev) => feedsWithImages.slice(0, prev.length + 10)); // ✅ 이전 상태 + 10개 추가
+
+      // ✅ visibleFeeds가 비어 있으면 처음 10개 채우기
+      if (visibleFeeds.length === 0) {
+        setVisibleFeeds(feedsWithImages.slice(0, offset));
+      }
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading]); // ✅ offset을 의존성 배열에서 제거
-
+  }, [isLoading, visibleFeeds.length]); // ✅ visibleFeeds.length 의존성 추가
 
   // ✅ 최초 1회 실행
   useEffect(() => {
     fetchFeeds();
   }, []);
 
-  // ✅ 무한 스크롤 이벤트 감지
-  const [visibleFeeds, setVisibleFeeds] = useState<FeedData[]>([]);
-  const [offset, setOffset] = useState(10);
-  const limit = 10; // 한 번에 표시할 개수
-  
+  // ✅ visibleFeeds 업데이트 (스크롤 시 추가 로드)
   useEffect(() => {
     setVisibleFeeds(feeds.slice(0, offset));
-  }, [feeds, offset]);  
-  
-  // ✅ 스크롤 감지해서 추가 로드
-  const handleScroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-      if (offset < feeds.length) { // ✅ 남은 데이터가 있을 때만 추가 로드
-        setOffset((prevOffset) => prevOffset + limit);
-      }
+  }, [feeds, offset]);
+
+// ✅ 스크롤 감지해서 추가 로드
+const handleScroll = () => {
+  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+    if (offset < feeds.length) {
+      setOffset((prevOffset) => prevOffset + limit);
     }
-  };
+  }
+};
+
+// ✅ useEffect에서 handleScroll 실행
+useEffect(() => {
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [visibleFeeds.length]); // ✅ visibleFeeds.length 변경 감지
 
   const handleFeedClick = (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
     e.stopPropagation(); // ✅ 좋아요 & 댓글 클릭 시 이동 방지
@@ -145,7 +157,7 @@ const Feed: React.FC = () => {
           </FeedCard>
         ))}
 
-        {isLoading && <LoadingText>로딩 중...</LoadingText>}
+        {isLoading && <LoadingText><Loading/></LoadingText>}
       </FeedContainer>
 
         {/* 글 작성하기 버튼 */}
