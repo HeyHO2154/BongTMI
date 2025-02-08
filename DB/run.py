@@ -59,4 +59,4 @@ def run_all_tasks():
 while True:
     run_all_tasks()
     print("[INFO] 모든 작업 완료, 즉시 다음 반복 실행")
-    time.sleep(300)  # 5분 대기 후 반복 실행
+    time.sleep(600)  # 10분 대기 후 반복 실행
