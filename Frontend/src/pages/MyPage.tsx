@@ -113,6 +113,7 @@ const MyPage: React.FC = () => {
           )}
         />
       </Content>
+      
     </Container>
   );
 };

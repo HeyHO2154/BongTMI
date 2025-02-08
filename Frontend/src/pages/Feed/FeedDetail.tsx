@@ -5,6 +5,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { ThumbsUp, MessageCircle } from "lucide-react";
 import config from "../../config";
+import Loading from "../../components/Lodaing";
 
 // ✅ 날짜 변환 함수 (몇 분 전, 몇 시간 전)
 const timeAgo = (dateString: string) => {
@@ -63,7 +64,7 @@ const FeedDetail: React.FC = () => {
     if (feedID) fetchFeedDetail();
   }, [feedID]);
 
-  if (isLoading) return <LoadingText>로딩 중...</LoadingText>;
+  if (isLoading) return <LoadingText><Loading/></LoadingText>;
   if (error) return <ErrorText>{error}</ErrorText>;
   if (!feed) return <ErrorText>feedID: {feedID}, 데이터가 없습니다.</ErrorText>;
 
@@ -126,10 +127,11 @@ export default FeedDetail;
 
 /* ✅ 전체 화면 적용 */
 const Wrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  position: relative;
 `;
 
 /* ✅ 전체 화면을 차지하는 피드 이미지 */
