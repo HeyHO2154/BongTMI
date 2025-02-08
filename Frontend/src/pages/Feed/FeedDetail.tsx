@@ -223,8 +223,7 @@ const CommentInput = styled.input`
 `;
 
 const CommentList = styled.div`
-  margin-top: 14px;
-  border-top: 2px solid #ddd;
+  margin-top: 12px;
 `;
 
 const CommentItem = styled.div`
