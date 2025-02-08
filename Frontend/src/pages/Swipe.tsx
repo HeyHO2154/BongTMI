@@ -217,6 +217,34 @@ const Swipe: React.FC = () => {
     (topCard as HTMLElement).style.transition = "transform 3s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
+
+    // ✅ 로그인된 사용자 정보 가져오기
+    const storedUser = localStorage.getItem("user");
+    const userData = storedUser ? JSON.parse(storedUser) : null;
+    if (!userData) {
+        console.warn("User not logged in. Skipping API request.");
+    } else {
+        // ✅ 공고 ID 가져오기
+        const progrmRegistNo = cards[currentIndex]?.id;
+        // ✅ 좋아요(1) 또는 싫어요(2) API 호출
+        const action = direction === "right" ? 1 : 2;
+        try {
+            await fetch(`${config.API_DEV}/api/user/like`, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    userId: userData.id,
+                    bongId: progrmRegistNo.toString(),
+                    action: action.toString(),
+                }),
+            });
+            console.log(`✅ ${direction === "right" ? "좋아요" : "싫어요"} 기록됨`);
+        } catch (error) {
+            console.error("API 요청 실패:", error);
+        }
+    }
+
+
     const newCard = await newCardPromise; // 미리 가져온 데이터 사용
     if (!newCard) return;
 
