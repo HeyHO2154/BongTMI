@@ -87,7 +87,8 @@ const Feed: React.FC = () => {
     }
   };
 
-  const handleFeedClick = (feedID: string) => {
+  const handleFeedClick = (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
+    e.stopPropagation(); // ✅ 좋아요 & 댓글 클릭 시 이동 방지
     navigate(`/feed/${feedID}`);
   };
   
@@ -102,7 +103,7 @@ const Feed: React.FC = () => {
     <FeedWrapper>
       <FeedContainer>
         {visibleFeeds.map((feed, index) => (
-          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null} onClick={() => handleFeedClick(feed.feedID)}>
+          <FeedCard key={feed.feedID} ref={index === feeds.length - 1 ? lastFeedElementRef : null} onClick={(e) => handleFeedClick(e, feed.feedID)}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
@@ -122,11 +123,12 @@ const Feed: React.FC = () => {
             {/* 버튼 */}
             <FeedFooter>
               <Actions>
-                <LikeButton>
+                {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
+                <LikeButton onClick={(e) => e.stopPropagation()}>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
-                <CommentButton>
+                <CommentButton onClick={(e) => e.stopPropagation()}>
                   <MessageCircle />
                   <CommentCount>{feed.comments}</CommentCount>
                 </CommentButton>
@@ -184,6 +186,12 @@ const FeedCard = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
+  cursor: pointer; /* ✅ 마우스 올릴 때 손가락 표시 */
+  transition: transform 0.1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02); /* 약간 확대 효과 */
+  }
 `;
 
 // ✅ 사용자 정보

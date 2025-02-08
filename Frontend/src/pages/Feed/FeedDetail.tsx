@@ -14,35 +14,44 @@ interface FeedDetailData {
   content: string;
   likes: number;
   comments: number;
-  imageUrl: string;
+  imageUrls: string[]; // ✅ 여러 개의 이미지 URL 저장
 }
 
 const FeedDetail: React.FC = () => {
   const { feedID } = useParams<{ feedID: string }>();
   const [feed, setFeed] = useState<FeedDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
-        const response = await axios.get(`${config.API_DEV}/api/feed/${feedID}`);
+        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info`, {
+          params: { feedID }, // ✅ params로 API 요청
+        });
+
         setFeed({
           ...response.data,
-          imageUrl: `${config.API_DEV}/api/bong/image/${response.data.feedID}/1`,
+          imageUrls: [
+            `${config.API_DEV}/api/bong/image/${response.data.feedID}/1`,
+            `${config.API_DEV}/api/bong/image/${response.data.feedID}/2`,
+            `${config.API_DEV}/api/bong/image/${response.data.feedID}/3`,
+          ],
         });
       } catch (error) {
         console.error("피드 로드 실패:", error);
+        setError("게시글을 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchFeedDetail();
+    if (feedID) fetchFeedDetail();
   }, [feedID]);
 
   if (isLoading) return <LoadingText>로딩 중...</LoadingText>;
-
-  if (!feed) return <ErrorText>게시글을 찾을 수 없습니다.</ErrorText>;
+  if (error) return <ErrorText>{error}</ErrorText>;
+  if (!feed) return <ErrorText>feedID: {feedID}, 데이터가 없습니다.</ErrorText>;
 
   return (
     <Container>
@@ -51,7 +60,14 @@ const FeedDetail: React.FC = () => {
         <span>{feed.author}</span>
         <span>{new Date(feed.createdAt).toLocaleDateString()}</span>
       </AuthorInfo>
-      <FeedImage src={feed.imageUrl} alt="피드 이미지" />
+
+      {/* ✅ 여러 개의 이미지 지원 */}
+      <ImageGallery>
+        {feed.imageUrls.map((imageUrl, index) => (
+          <FeedImage key={index} src={imageUrl} alt={`이미지 ${index + 1}`} />
+        ))}
+      </ImageGallery>
+
       <Content>{feed.content}</Content>
 
       {/* 좋아요 & 댓글 버튼 (UI만) */}
@@ -108,10 +124,17 @@ const AuthorInfo = styled.div`
   margin-top: 8px;
 `;
 
+// ✅ 여러 개의 이미지가 표시될 갤러리
+const ImageGallery = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+`;
+
 const FeedImage = styled.img`
   width: 100%;
   border-radius: 8px;
-  margin-top: 16px;
 `;
 
 const Content = styled.p`
