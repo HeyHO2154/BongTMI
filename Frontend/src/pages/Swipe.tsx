@@ -211,27 +211,28 @@ const Swipe: React.FC = () => {
     const finalX = dragX > 0 ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
     const finalRotate = dragX > 0 ? 30 : -30;
 
-    // ✅ 좌우 스와이프도 부드럽게 적용
-    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out"; // ✅ 0.3초 적용
+    // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
+    const newCardPromise = fetchCardData();
+
+    (topCard as HTMLElement).style.transition = "transform 0s ease-out"; // ✅ 0.3초로 줄이기
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
 
-    setTimeout(async () => {
-        const newCard = await fetchCardData();
-        if (!newCard) return;
+    const newCard = await newCardPromise; // 미리 가져온 데이터 사용
+    if (!newCard) return;
 
-        setCards((prevCards) => {
-            const updatedCards = [...prevCards];
-            updatedCards.pop();
-            updatedCards.unshift(newCard);
-            return updatedCards;
-        });
+    setCards((prevCards) => {
+        const updatedCards = [...prevCards];
+        updatedCards.pop();
+        updatedCards.unshift(newCard);
+        return updatedCards;
+    });
 
-        setDragX(0);
-        setDragY(0);
-        setCurrentIndex(cards.length - 1);
-    }, 300); // ✅ 0.3초 후 변경 (애니메이션 시간과 맞춤)
+    // ✅ 초기화 작업 즉시 실행 (setTimeout 없음)
+    setDragX(0);
+    setDragY(0);
+    setCurrentIndex(cards.length - 1);
   };
-
+  
   return (
     <Wrapper>
       {cards.map((card, index) => {
