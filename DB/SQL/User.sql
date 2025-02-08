@@ -19,7 +19,8 @@ CREATE TABLE User (
 
 -- 공고 히스토리 (1+4=5, 좋아요+신청하기기)
 CREATE TABLE LikeBong (
-    UserID VARCHAR(100) PRIMARY KEY,
+	LikeBongID BIGINT AUTO_INCREMENT PRIMARY KEY, -- ✅ 새로운 PK (자동 증가)
+    UserID VARCHAR(100) NOT NULL,
     BongID VARCHAR(100) NOT NULL,
     selection_status TINYINT NOT NULL DEFAULT 0 -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
 );

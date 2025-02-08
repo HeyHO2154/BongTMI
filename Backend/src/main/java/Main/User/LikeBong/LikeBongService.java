@@ -11,39 +11,19 @@ public class LikeBongService {
 	@Autowired
     private LikeBongRepository likeBongRepository;
 
-    // ✅ 공고에 대한 사용자 액션 추가 (좋아요, 싫어요, 신청하기)
+	// ✅ 단순히 새로운 값으로 덮어씌우거나, 새로 생성
     public LikeBong updateSelection(String userId, String bongId, int action) {
         Optional<LikeBong> existingLike = likeBongRepository.findByUserIdAndBongId(userId, bongId);
-        LikeBong likeBong = new LikeBong(userId, bongId, action); // ✅ null 제거
-        
+        LikeBong likeBong;
+
         if (existingLike.isPresent()) {
             likeBong = existingLike.get();
-            likeBong.addSelection(action); // 비트마스크로 상태 추가
+            likeBong.setSelectionStatus(action); // ✅ 덮어쓰기
+        } else {
+            likeBong = new LikeBong(userId, bongId, action); // ✅ 새로 생성
         }
 
-        System.out.println("디버깅");
-        System.out.println("userId "+userId);
-        System.out.println("bongId "+bongId);
-        System.out.println("action "+action);
-        System.out.println("selection_status "+likeBong.getSelectionStatus());
         return likeBongRepository.save(likeBong);
     }
 
-    // ✅ 공고에 대한 사용자 액션 제거
-    public LikeBong removeSelection(String userId, String bongId, int action) {
-        Optional<LikeBong> existingLike = likeBongRepository.findByUserIdAndBongId(userId, bongId);
-        if (existingLike.isPresent()) {
-            LikeBong likeBong = existingLike.get();
-            likeBong.removeSelection(action);
-            return likeBongRepository.save(likeBong);
-        }
-        return null;
-    }
-
-    // ✅ 특정 공고에 대한 사용자의 선택 상태 조회
-    public Integer getSelectionStatus(String userId, String bongId) {
-        return likeBongRepository.findByUserIdAndBongId(userId, bongId)
-                .map(LikeBong::getSelectionStatus)
-                .orElse(0);
-    }
 }
