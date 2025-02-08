@@ -91,7 +91,7 @@ const DetailBong: React.FC = () => {
   // ✅ 로그인된 사용자 정보 가져오기
   const storedUser = localStorage.getItem("user");
   const userData = storedUser ? JSON.parse(storedUser) : null;
-  
+
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
   if (!bongData) return <div>progrmRegistNo: {progrmRegistNo}, 데이터가 없습니다.</div>;
@@ -153,7 +153,7 @@ const DetailBong: React.FC = () => {
               }),
             });
 
-            console.log("✅ 신청하기 기록됨");
+            console.log("✅ 신청하기 기록됨"+bongData.progrmRegistNo.toString()+","+userData.id);
 
             // ✅ 저장 완료 후 해당 공고의 신청 페이지로 이동
             const baseUrl =
