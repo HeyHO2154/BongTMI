@@ -238,8 +238,8 @@ const Swipe: React.FC = () => {
         });
 
         // ✅ 위치 초기화 (setCards 후에 실행)
-        setDragX(0);
-        setDragY(0);
+        // setDragX(0);
+        // setDragY(0);
         setCurrentIndex(cards.length - 1); // 최상단 인덱스 유지
     }, 500); // 0.5초 후에 실행 (애니메이션 지속 시간과 맞춤)
   };
