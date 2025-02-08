@@ -1,6 +1,7 @@
 USE hsj;
 
 DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS LikeBong;
 
 CREATE TABLE User (
     id VARCHAR(100) PRIMARY KEY,      -- OAuth에서 제공하는 고유 ID
@@ -20,7 +21,7 @@ CREATE TABLE User (
 CREATE TABLE LikeBong (
     UserID VARCHAR(100) PRIMARY KEY,
     BongID VARCHAR(100) NOT NULL,
-    selection_status TINYINT NOT NULL -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
+    selection_status TINYINT NOT NULL DEFAULT 0 -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
 );
 
 SELECT COUNT(*) AS total_count FROM User;
