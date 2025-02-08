@@ -216,6 +216,7 @@ const Swipe: React.FC = () => {
     // 카드 마저 넘어가게 애니메이션
     const topCard = document.querySelector(`[data-index="${currentIndex}"]`);
     console.log(currentIndex);
+    console.log(topCard);
     if (topCard) {
       (topCard as HTMLElement).style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out";
       (topCard as HTMLElement).style.transform = direction === "left"
