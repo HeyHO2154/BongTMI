@@ -75,7 +75,7 @@ const FeedDetail: React.FC = () => {
       <FeedContent>
         {/* 작성자 및 날짜 */}
         <FeedHeader>
-          <ProfileImage src="/assets/BongTMI1.png" alt="프로필 이미지" />
+          <ProfileImage src="/assets/DC.png" alt="프로필 이미지" />
           <ProfileInfo>
             <Author>{feed.author}</Author>
             <TimeAgoText>{timeAgo(feed.createdAt)}</TimeAgoText>
@@ -224,11 +224,11 @@ const CommentInput = styled.input`
 
 const CommentList = styled.div`
   margin-top: 12px;
+  border-top: 1px solid #ddd;
 `;
 
 const CommentItem = styled.div`
   padding: 8px;
-  border-bottom: 1px solid #ddd;
 `;
 
 const CommentAuthor = styled.span`
