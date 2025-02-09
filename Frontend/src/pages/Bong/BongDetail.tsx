@@ -98,7 +98,7 @@ const DetailBong: React.FC = () => {
 
 export default DetailBong;
 
-/* 🎨 스타일 */
+/* 스타일 */
 const Container = styled.div`
   display: flex;
   flex-direction: column;
