@@ -2,6 +2,7 @@ USE hsj;
 
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS LikeBong;
+DROP TABLE IF EXISTS LikeFeed;
 
 CREATE TABLE User (
     id VARCHAR(100) PRIMARY KEY,      -- OAuth에서 제공하는 고유 ID
