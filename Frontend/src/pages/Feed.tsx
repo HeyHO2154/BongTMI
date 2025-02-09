@@ -70,6 +70,7 @@ const Feed: React.FC = () => {
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
         isLiked: userId ? false : false, // ✅ 비회원이면 무조건 false
+        comments: feed.comments || 0, // ✅ 댓글 개수 추가 (혹시 없을 경우 0)
       }));
   
       if (userId) {
@@ -170,7 +171,7 @@ const Feed: React.FC = () => {
                 </LikeButton>
                 <CommentButton>
                   <MessageCircle />
-                  <span>{feed.comments}</span> {/* ✅ 댓글 개수 표시 */}
+                  <span>{feed?.comments ?? 0}</span> {/* ✅ 댓글 개수 표시 */}
                 </CommentButton>
               </Actions>
             </FeedFooter>
