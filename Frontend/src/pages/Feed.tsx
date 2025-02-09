@@ -143,9 +143,9 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton style={{ color: feed.isLiked ? "blue" : "black" }}>
-                  <ThumbsUp />
-                  <LikeCount>{feed.likes}</LikeCount>
+                <LikeButton>
+                  {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+                  <span>{feed?.likes}</span>
                 </LikeButton>
                 <CommentButton>
                   <MessageCircle />

@@ -82,25 +82,20 @@ const FeedDetail: React.FC = () => {
       const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
   
       // ✅ 백엔드 API 요청
-      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+      await axios.post(`${config.API_DEV}/api/feed/like`, null, {
         params: { userId: "testUser123", feedId: feed.feedID, action },
       });
   
-      if (response.status === 200) {
-        const updatedLikes = response.data.likes; // ✅ 최신 좋아요 개수 가져오기
-  
-        // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
-        setFeed(prevFeed => {
-          if (!prevFeed) return prevFeed; // ✅ 기존 상태가 없으면 변경하지 않음
-        
-          return {
-            ...prevFeed,
-            isLiked: newLikeStatus, // ✅ 좋아요 상태 업데이트
-            likes: prevFeed.likes + (newLikeStatus ? 1 : -1) // ✅ 좋아요 개수 직접 증가/감소
-          };
-        });
-        
-      }
+      // ✅ 상태 업데이트 (isLiked + 좋아요 개수 직접 증가/감소)
+      setFeed(prevFeed => {
+        if (!prevFeed) return prevFeed;
+
+        return {
+          ...prevFeed,
+          isLiked: newLikeStatus, 
+          likes: prevFeed.likes + (newLikeStatus ? 1 : -1) // ✅ 좋아요 개수 직접 증가/감소
+        };
+      });
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
     }
