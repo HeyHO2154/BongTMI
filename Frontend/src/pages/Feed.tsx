@@ -53,11 +53,10 @@ const Feed: React.FC = () => {
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
       }));
-
+      console.log("Fetched Data:", allFeeds); // ✅ API 응답 확인
       setAllCards(allFeeds);
       setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
       setOffset(limit);
-      console.log(response.data.imageUrl);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
