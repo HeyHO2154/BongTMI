@@ -36,6 +36,7 @@ interface FeedDetailData {
   likes: number;
   comments: number;
   imageUrls: string[];
+  isLiked: boolean; // ✅ 사용자별 좋아요 상태 추가
 }
 
 const FeedDetail: React.FC = () => {
@@ -48,33 +49,35 @@ const FeedDetail: React.FC = () => {
     if (!feed) return;
   
     try {
-      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
-        params: {
-          userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경 필요
-          feedId: feed.feedID,
-          action: 1, // ✅ 좋아요 (비트마스크)
-        },
-      });      
+      const newLikeStatus = !feed.isLiked;
+      const action = newLikeStatus ? 1 : 0;
   
-      // 상태 업데이트
-      setFeed((prevFeed) =>
-        prevFeed ? { ...prevFeed, likes: response.data.selectionStatus } : prevFeed
+      await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: { userId: "testUser", feedId: feed.feedID, action },
+      });
+  
+      setFeed(prevFeed =>
+        prevFeed ? { ...prevFeed, isLiked: newLikeStatus, likes: prevFeed.likes + (newLikeStatus ? 1 : -1) } : prevFeed
       );
     } catch (error) {
       console.error("좋아요 실패:", error);
     }
-  };
+  };  
   
-
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
         const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
-
-        setFeed({
-          ...response.data,
-          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`], // ✅ 1번 이미지만 사용
+        
+        // ✅ 현재 로그인한 사용자 (실제 로그인 값으로 변경 필요)
+        const userId = "testUser";
+  
+        // ✅ 좋아요 상태 가져오기
+        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
+          params: { userId, feedId: response.data.feedID },
         });
+  
+        setFeed({ ...response.data, isLiked: likeStatusRes.data.isLiked });
       } catch (error) {
         console.error("피드 로드 실패:", error);
         setError("게시글을 불러오는 데 실패했습니다.");
@@ -82,10 +85,12 @@ const FeedDetail: React.FC = () => {
         setIsLoading(false);
       }
     };
-
-    if (feedID) fetchFeedDetail();
+  
+    if (feedID) fetchFeedDetail(); // ✅ useEffect에서 호출
   }, [feedID]);
-
+  
+  
+  
   if (isLoading) return <LoadingText><Loading/></LoadingText>;
   if (error) return <ErrorText>{error}</ErrorText>;
   if (!feed) return <ErrorText>feedID: {feedID}, 데이터가 없습니다.</ErrorText>;
@@ -111,7 +116,7 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-          <ActionButton onClick={handleLike}>
+          <ActionButton onClick={handleLike} style={{ color: feed.isLiked ? "blue" : "black" }}>
             <ThumbsUp />
             <span>{feed.likes}</span>
           </ActionButton>
