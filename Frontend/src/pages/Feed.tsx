@@ -170,7 +170,7 @@ const Feed: React.FC = () => {
                 </LikeButton>
                 <CommentButton>
                   <MessageCircle />
-                  <CommentCount>{feed.comments}</CommentCount>
+                  <span>{feed.comments}</span> {/* ✅ 댓글 개수 표시 */}
                 </CommentButton>
               </Actions>
             </FeedFooter>
@@ -297,11 +297,6 @@ const CommentButton = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-`;
-
-const CommentCount = styled.span`
-  font-size: 16px;
-  margin-left: 5px;
 `;
 
 const LoadingText = styled.div`
