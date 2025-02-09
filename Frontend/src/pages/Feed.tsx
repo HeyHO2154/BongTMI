@@ -107,6 +107,35 @@ const Feed: React.FC = () => {
     }
   };
   
+  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
+    e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
+  
+    try {
+      const targetFeed = allCards.find(feed => feed.feedID === feedID);
+      if (!targetFeed) return;
+  
+      const newLikeStatus = !targetFeed.isLiked; // ✅ 현재 상태 반전
+      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
+  
+      // ✅ 백엔드 API 요청
+      await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: { userId: "testUser123", feedId: feedID, action },
+      });
+  
+      // ✅ 상태 업데이트 (isLiked + 좋아요 개수 직접 증가/감소)
+      setAllCards(prevCards =>
+        prevCards.map(card =>
+          card.feedID === feedID
+            ? { ...card, isLiked: newLikeStatus, likes: card.likes + (newLikeStatus ? 1 : -1) }
+            : card
+        )
+      );
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+    }
+  };
+
+  
   useEffect(() => {
     fetchFeeds();
   }, []);
@@ -143,9 +172,9 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton>
-                  {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
-                  <span>{feed?.likes}</span>
+                <LikeButton onClick={(e) => handleLike(e, feed.feedID)}>
+                  {feed.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+                  <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
                 <CommentButton>
                   <MessageCircle />
@@ -269,8 +298,13 @@ const LikeButton = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  gap: 8px; /* ✅ 아이콘과 숫자 사이의 간격 */
 `;
+
+const LikeCount = styled.span`
+  font-size: 16px;
+  margin-left: 8px; /* ✅ 아이콘과 숫자 간격 */
+`;
+
 
 const CommentButton = styled.div`
   display: flex;
