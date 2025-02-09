@@ -48,11 +48,13 @@ const FeedDetail: React.FC = () => {
     if (!feed) return;
   
     try {
-      const response = await axios.post(`${config.API_DEV}/api/feed/like`, {
-        userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경 필요
-        feedId: feed.feedID,
-        action: 1, // ✅ 좋아요
-      });
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: {
+          userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경 필요
+          feedId: feed.feedID,
+          action: 1, // ✅ 좋아요 (비트마스크)
+        },
+      });      
   
       // 상태 업데이트
       setFeed((prevFeed) =>

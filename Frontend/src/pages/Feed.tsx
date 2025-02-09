@@ -84,11 +84,14 @@ const Feed: React.FC = () => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
   
     try {
-      const response = await axios.post(`${config.API_DEV}/api/feed/like`, {
-        userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경해야 함
-        feedId: feedID,
-        action: 1, // ✅ 1 = 좋아요 (비트마스크)
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: {
+          userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경 필요
+          feedId: feedID,
+          action: 1, // ✅ 좋아요 (비트마스크)
+        },
       });
+      
   
       // 좋아요 수 업데이트
       setAllCards((prevCards) =>
