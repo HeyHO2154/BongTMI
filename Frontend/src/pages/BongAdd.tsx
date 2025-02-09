@@ -368,14 +368,16 @@ const Wrapper = styled.div`
   height: calc(100vh - 160px);
   box-sizing: border-box;
   overflow-y: auto;
-  background-color: #f9f9f9;
-  padding: 16px;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  padding: 20px;
 `;
 
 const Title = styled.h1`
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 `;
 
 const Form = styled.form`
@@ -388,12 +390,17 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  color: #34495e;
 `;
 
 const FormGrid = styled.div`
@@ -409,28 +416,49 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   font-size: 1rem;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  color: #7f8c8d;
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.3s;
+  &:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+  }
 `;
 
 const Select = styled.select`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.3s;
+  &:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+  }
 `;
 
 const Textarea = styled.textarea`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: none;
+  padding: 12px;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
   height: 150px;
-  width: 100%;
+  resize: none;
+  transition: 0.3s;
+  &:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+  }
 `;
 
 const Button = styled.div`
@@ -439,49 +467,63 @@ const Button = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  padding: 12px 16px;
-  background-color: #007bff;
+  background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
   color: white;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 14px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-
+  transition: 0.3s;
+  font-weight: bold;
   &:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #4a69bd 0%, #6a89cc 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
+`;
+
+const NoticeBox = styled.div`
+  background: #fffae3;
+  border-left: 6px solid #ffbe76;
+  padding: 18px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const InfoBox = styled.div`
+  background: #eafaf1;
+  border-left: 6px solid #28a745;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const WeekdayContainer = styled.div`
   display: flex;
-  justify-content: space-between; /* 항목 간격을 균등 배분 */
+  justify-content: space-around;
   flex-wrap: wrap;
-  width: 80%; /* 부모 크기 맞춤 */
-  max-width: 500px; /* 최대 너비 제한 */
-  padding: 0px 0px 0px 10px
+  width: 100%;
+  padding: 10px 0;
 `;
 
 const WeekdayLabel = styled.label`
   display: flex;
   align-items: center;
-  gap: 4px;
   font-size: 1rem;
   cursor: pointer;
+  color: #2c3e50;
 `;
 
 const WeekdayCheckbox = styled.input`
+  margin-right: 8px;
   width: 16px;
   height: 16px;
   cursor: pointer;
-`;
-
-const NoticeBox = styled.div`
-  background-color: #fff3cd;
-  border-left: 5px solid #ffa502;
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 5px;
 `;
 
 const NoticeTitle = styled.h2`
@@ -497,13 +539,6 @@ const NoticeContent = styled.p`
   line-height: 1.5;
 `;
 
-const InfoBox = styled.div`
-  background-color: #d4edda; /* 연한 초록색 */
-  border-left: 5px solid #28a745; /* 진한 초록색 테두리 */
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-`;
 
 const InfoBoxTitle = styled.h2`
   font-size: 1.2rem;
