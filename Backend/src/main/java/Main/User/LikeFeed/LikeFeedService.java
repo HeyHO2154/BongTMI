@@ -34,6 +34,12 @@ public class LikeFeedService {
         return likeFeedRepository.save(likeFeed);
     }
 
+    // ✅ 피드의 총 좋아요 개수를 가져오는 메서드 추가
+    public int getTotalLikes(String feedId) {
+        return likeFeedRepository.countByFeedId(feedId); // ✅ 해당 피드의 총 좋아요 개수 반환
+    }
+
+    
     // ✅ 사용자가 특정 피드에 좋아요를 눌렀는지 확인
     public boolean isUserLikedFeed(String userId, String feedId) {
         return likeFeedRepository.findByUserIdAndFeedId(userId, feedId).isPresent();

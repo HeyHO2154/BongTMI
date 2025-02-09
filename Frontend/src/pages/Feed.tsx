@@ -35,6 +35,7 @@ interface FeedData {
   likes: number;
   comments: number;
   imageUrl: string;
+  isLiked: boolean; // ✅ 추가된 부분
 }
 
 const Feed: React.FC = () => {
@@ -93,6 +94,40 @@ const Feed: React.FC = () => {
     }
   };
 
+  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
+    e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
+  
+    try {
+      // 현재 피드의 상태 확인
+      const targetFeed = allCards.find(feed => feed.feedID === feedID);
+      if (!targetFeed) return;
+  
+      const newLikeStatus = !targetFeed.isLiked; // ✅ 좋아요 상태 반전
+      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 취소
+  
+      // ✅ 백엔드 API 호출
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: { userId: "testUser123", feedId: feedID, action },
+      });
+  
+      if (response.status === 200) {
+        const updatedLikes = response.data.likes; // ✅ 백엔드에서 반환한 최신 좋아요 개수
+  
+        // ✅ UI 업데이트 (좋아요 상태 + 개수 업데이트)
+        setAllCards(prevCards =>
+          prevCards.map(card =>
+            card.feedID === feedID
+              ? { ...card, isLiked: newLikeStatus, likes: updatedLikes }
+              : card
+          )
+        );
+      }
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+    }
+  };
+
+  
   useEffect(() => {
     fetchFeeds();
   }, []);
@@ -129,7 +164,7 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton onClick={(e) => e.stopPropagation()}>
+                <LikeButton onClick={(e) => handleLike(e, feed.feedID)} style={{ color: feed.isLiked ? "blue" : "black" }}>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
