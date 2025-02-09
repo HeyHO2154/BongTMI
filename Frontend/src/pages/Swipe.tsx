@@ -275,7 +275,7 @@ const Swipe: React.FC = () => {
               backgroundImage: `url(${card.imageUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              backgroundBlendMode: "multiply", // 🎨 배경 색상과 혼합
+              backgroundBlendMode: "overlay", // 🎨 배경 색상과 혼합
               transform: isTop
                 ? Math.abs(dragX) > Math.abs(dragY)
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
@@ -284,8 +284,8 @@ const Swipe: React.FC = () => {
               transition: isDragging ? "none" : "transform 0.3s ease",
               backgroundColor: isTop
               ? dragX > 0
-                ? `rgba(255, 0, 0, ${Math.min(Math.abs(dragX) / 200, 0.7)})` // 우측(적색)
-                : `rgba(0, 255, 0, ${Math.min(Math.abs(dragX) / 200, 0.7)})` // 좌측(녹색)
+                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 300, 0.3)})` // 우측(녹색)
+                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 300, 0.3)})` // 좌측(적색)
               : "transparent",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
