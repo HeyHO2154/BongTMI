@@ -57,45 +57,64 @@ const Feed: React.FC = () => {
       return null;
     }
   };
+
+  const fetchCommentCount = async (feedID: string) => {
+    try {
+      const response = await axios.get(`${config.API_DEV}/api/feed/comments`, {
+        params: { feedId: feedID },
+      });
+      return response.data.length ?? 0; // ✅ 댓글 개수 반환
+    } catch (error) {
+      console.error(`댓글 개수 가져오기 실패 (feedID: ${feedID}):`, error);
+      return 0; // 실패하면 0 반환
+    }
+  };
+  
   
 
   // ✅ API 데이터 불러오기
-  const fetchFeeds = async () => {
-    setIsLoading(true);
-    try {
-      const userId = getUserId();
-  
-      const response = await axios.get(`${config.API_DEV}/api/feed/all`);
-      const allFeeds = response.data.map((feed: FeedData) => ({
-        ...feed,
-        imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
-        isLiked: userId ? false : false, // ✅ 비회원이면 무조건 false
-        comments: feed.comments || 0, // ✅ 댓글 개수 추가 (혹시 없을 경우 0)
-      }));
-  
-      if (userId) {
-        const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
-          const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
-            params: { userId, feedId: feed.feedID },
-          });
-          return { ...feed, isLiked: likeStatusRes.data.isLiked };
-        });
-  
-        const updatedFeeds = await Promise.all(likeStatusPromises);
-        setAllCards(updatedFeeds);
-        setVisibleCards(updatedFeeds.slice(0, limit));
-      } else {
-        setAllCards(allFeeds);
-        setVisibleCards(allFeeds.slice(0, limit));
-      }
-  
-      setOffset(limit);
-    } catch (error) {
-      console.error("데이터 로드 실패:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const fetchFeeds = async () => {
+  setIsLoading(true);
+  try {
+    const userId = getUserId();
+
+    const response = await axios.get(`${config.API_DEV}/api/feed/all`);
+    const allFeeds = response.data.map((feed: FeedData) => ({
+      ...feed,
+      imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+      isLiked: userId ? false : false, // ✅ 비회원이면 무조건 false
+    }));
+
+    // ✅ 좋아요 상태와 댓글 개수를 동시에 가져오기
+    const updatedFeeds = await Promise.all(
+      allFeeds.map(async (feed: FeedData) => { // ✅ feed의 타입 명시
+        const [likeStatusRes, commentsCount] = await Promise.all([
+          userId
+            ? axios.get(`${config.API_DEV}/api/feed/like-status`, {
+                params: { userId, feedId: feed.feedID },
+              })
+            : Promise.resolve({ data: { isLiked: false } }), // 비회원은 false 기본값
+          fetchCommentCount(feed.feedID),
+        ]);
+
+        return {
+          ...feed,
+          isLiked: likeStatusRes.data.isLiked,
+          comments: commentsCount,
+        };
+      })
+    );
+
+    setAllCards(updatedFeeds);
+    setVisibleCards(updatedFeeds.slice(0, limit));
+    setOffset(limit);
+  } catch (error) {
+    console.error("데이터 로드 실패:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
   
   
   
