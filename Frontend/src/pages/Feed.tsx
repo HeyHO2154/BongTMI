@@ -98,22 +98,22 @@ const Feed: React.FC = () => {
     e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
   
     try {
-      // 현재 피드의 상태 확인
+      // 현재 피드 데이터 가져오기
       const targetFeed = allCards.find(feed => feed.feedID === feedID);
       if (!targetFeed) return;
   
-      const newLikeStatus = !targetFeed.isLiked; // ✅ 좋아요 상태 반전
-      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 취소
+      const newLikeStatus = !targetFeed.isLiked; // ✅ 현재 상태 반전
+      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
   
-      // ✅ 백엔드 API 호출
+      // ✅ 백엔드 API 요청
       const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
         params: { userId: "testUser123", feedId: feedID, action },
       });
   
       if (response.status === 200) {
-        const updatedLikes = response.data.likes; // ✅ 백엔드에서 반환한 최신 좋아요 개수
+        const updatedLikes = response.data.likes; // ✅ 최신 좋아요 개수 가져오기
   
-        // ✅ UI 업데이트 (좋아요 상태 + 개수 업데이트)
+        // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
         setAllCards(prevCards =>
           prevCards.map(card =>
             card.feedID === feedID

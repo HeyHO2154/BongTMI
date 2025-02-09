@@ -27,7 +27,7 @@ public class LikeFeedService {
                 // ✅ 좋아요 취소 (DB에서 삭제)
                 likeFeedRepository.delete(likeFeed);
                 likesChange = -1; // ✅ 좋아요 감소
-                return null; // ✅ 삭제 후 반환
+                likeFeed = null; // ✅ 좋아요 객체 제거 (하지만 아래 코드 실행 후 반환)
             } else {
                 // ✅ 기존 좋아요 상태 업데이트
                 likeFeed.setSelectionStatus(action);
@@ -40,7 +40,7 @@ public class LikeFeedService {
             likesChange = 1; // ✅ 좋아요 추가
         }
 
-        // ✅ `likesChange`를 미리 계산 후 `ifPresent()` 내부에서 변경 없음
+        // ✅ 좋아요 개수 업데이트 (삭제된 경우에도 실행되도록 `return null;`을 뒤로 미룸)
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         if (optionalFeed.isPresent()) {
             Feed feed = optionalFeed.get();
@@ -49,12 +49,10 @@ public class LikeFeedService {
             feedRepository.save(feed);
         }
 
-        return likeFeed;
+        return likeFeed; // ✅ 좋아요 삭제된 경우에도 `likes`가 업데이트된 후 null 반환
     }
 
 
-
-    
     // ✅ 사용자가 특정 피드에 좋아요를 눌렀는지 확인
     public boolean isUserLikedFeed(String userId, String feedId) {
         return likeFeedRepository.findByUserIdAndFeedId(userId, feedId).isPresent();
