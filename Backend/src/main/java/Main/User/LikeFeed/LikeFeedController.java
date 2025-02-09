@@ -20,9 +20,8 @@ public class LikeFeedController {
     // ✅ 좋아요 추가 또는 취소
     @PostMapping("/like")
     public ResponseEntity<?> likeFeed(@RequestParam String userId, @RequestParam String feedId, @RequestParam int action) {
-        likeFeedService.updateSelection(userId, feedId, action); // ✅ 좋아요 추가/취소 처리
-        int totalLikes = likeFeedService.getTotalLikes(feedId); // ✅ 최신 좋아요 개수 가져오기
-        return ResponseEntity.ok("{\"likes\": " + totalLikes + "}"); // ✅ 좋아요 개수 반환
+        LikeFeed likeFeed = likeFeedService.updateSelection(userId, feedId, action);
+        return ResponseEntity.ok("{\"likeFeed\": " + likeFeed + "}");
     }
 
     // ✅ 특정 사용자가 해당 피드에 좋아요를 눌렀는지 확인
