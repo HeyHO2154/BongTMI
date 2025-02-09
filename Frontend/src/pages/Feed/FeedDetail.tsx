@@ -90,7 +90,16 @@ const FeedDetail: React.FC = () => {
         const updatedLikes = response.data.likes; // ✅ 최신 좋아요 개수 가져오기
   
         // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
-        setFeed(prevFeed => prevFeed ? { ...prevFeed, isLiked: newLikeStatus, likes: updatedLikes } : prevFeed);
+        setFeed(prevFeed => {
+          if (!prevFeed) return prevFeed; // ✅ prevFeed가 없으면 변경하지 않음
+        
+          return {
+            ...prevFeed,
+            isLiked: newLikeStatus, // ✅ 좋아요 상태 업데이트
+            likes: updatedLikes !== undefined ? updatedLikes : prevFeed.likes // ✅ likes 값이 undefined이면 기존 값 유지
+          };
+        });
+        
       }
     } catch (error) {
       console.error("좋아요 처리 실패:", error);
@@ -123,10 +132,11 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-          <ActionButton onClick={handleLike} style={{ color: feed?.isLiked ? "blue" : "black" }}>
-            <ThumbsUp />
+          <ActionButton onClick={(e) => handleLike(e)}>
+            {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
             <span>{feed?.likes}</span>
           </ActionButton>
+
 
 
           <ActionButton>
