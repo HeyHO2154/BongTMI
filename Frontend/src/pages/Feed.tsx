@@ -271,11 +271,6 @@ const LikeButton = styled.div`
   cursor: pointer;
 `;
 
-const LikeCount = styled.span`
-  font-size: 16px;
-  margin-left: 5px;
-`;
-
 const CommentButton = styled.div`
   display: flex;
   align-items: center;
