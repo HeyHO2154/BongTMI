@@ -36,6 +36,7 @@ interface FeedDetailData {
   likes: number;
   comments: number;
   imageUrls: string[];
+  isLiked: boolean;
 }
 
 const FeedDetail: React.FC = () => {
@@ -48,10 +49,16 @@ const FeedDetail: React.FC = () => {
     const fetchFeedDetail = async () => {
       try {
         const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
-
+    
+        // ✅ 사용자의 좋아요 상태 확인
+        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
+          params: { userId: "testUser123", feedId: feedID },
+        });
+    
         setFeed({
           ...response.data,
-          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`], // ✅ 1번 이미지만 사용
+          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`],
+          isLiked: likeStatusRes.data.isLiked, // ✅ isLiked 추가
         });
       } catch (error) {
         console.error("피드 로드 실패:", error);
@@ -60,9 +67,36 @@ const FeedDetail: React.FC = () => {
         setIsLoading(false);
       }
     };
+    
 
     if (feedID) fetchFeedDetail();
   }, [feedID]);
+
+  const handleLike = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
+  
+    if (!feed) return;
+  
+    try {
+      const newLikeStatus = !feed.isLiked; // ✅ 현재 상태 반전
+      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
+  
+      // ✅ 백엔드 API 요청
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
+        params: { userId: "testUser123", feedId: feed.feedID, action },
+      });
+  
+      if (response.status === 200) {
+        const updatedLikes = response.data.likes; // ✅ 최신 좋아요 개수 가져오기
+  
+        // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
+        setFeed(prevFeed => prevFeed ? { ...prevFeed, isLiked: newLikeStatus, likes: updatedLikes } : prevFeed);
+      }
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+    }
+  };
+  
 
   if (isLoading) return <LoadingText><Loading/></LoadingText>;
   if (error) return <ErrorText>{error}</ErrorText>;
@@ -93,6 +127,7 @@ const FeedDetail: React.FC = () => {
             <ThumbsUp />
             <span>{feed.likes}</span>
           </ActionButton>
+
           <ActionButton>
             <MessageCircle />
             <span>{feed.comments}</span>
