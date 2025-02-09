@@ -281,6 +281,11 @@ const Swipe: React.FC = () => {
                   : `translateY(${dragY}px)` // 상하 스와이프
                 : `translateY(${dragY}px)`,
               transition: isDragging ? "none" : "transform 0.3s ease",
+              backgroundColor: isTop
+              ? dragX > 0
+                ? `rgba(255, 0, 0, ${Math.min(Math.abs(dragX) / 200, 0.7)})` // 우측(적색)
+                : `rgba(0, 255, 0, ${Math.min(Math.abs(dragX) / 200, 0.7)})` // 좌측(녹색)
+              : "transparent",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
