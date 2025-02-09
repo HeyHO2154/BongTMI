@@ -116,8 +116,7 @@ const Feed: React.FC = () => {
               <MoreHorizontal />
             </FeedHeader>
 
-            {/* 이미지 */}
-            {!feed.imageUrl.includes("Bong.png") && (
+            {!feed.imageUrl.endsWith("Bong.png") && (
               <FeedImageContainer>
                 <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
               </FeedImageContainer>
