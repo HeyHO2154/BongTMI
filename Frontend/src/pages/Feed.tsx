@@ -80,6 +80,27 @@ const Feed: React.FC = () => {
     navigate(`/feed/${feedID}`);
   };
 
+  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+  
+    try {
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, {
+        userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경해야 함
+        feedId: feedID,
+        action: 1, // ✅ 1 = 좋아요 (비트마스크)
+      });
+  
+      // 좋아요 수 업데이트
+      setAllCards((prevCards) =>
+        prevCards.map((card) =>
+          card.feedID === feedID ? { ...card, likes: response.data.selectionStatus } : card
+        )
+      );
+    } catch (error) {
+      console.error("좋아요 실패:", error);
+    }
+  };  
+
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // 스크롤 감지 이벤트
@@ -131,11 +152,11 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton onClick={(e) => e.stopPropagation()}>
+                <LikeButton onClick={(e) => handleLike(e, feed.feedID)}>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
-                <CommentButton onClick={(e) => e.stopPropagation()}>
+                <CommentButton>
                   <MessageCircle />
                   <CommentCount>{feed.comments}</CommentCount>
                 </CommentButton>

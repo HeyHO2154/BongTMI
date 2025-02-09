@@ -44,6 +44,26 @@ const FeedDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const handleLike = async () => {
+    if (!feed) return;
+  
+    try {
+      const response = await axios.post(`${config.API_DEV}/api/feed/like`, {
+        userId: "testUser", // 🔥 실제 로그인된 사용자 ID로 변경 필요
+        feedId: feed.feedID,
+        action: 1, // ✅ 좋아요
+      });
+  
+      // 상태 업데이트
+      setFeed((prevFeed) =>
+        prevFeed ? { ...prevFeed, likes: response.data.selectionStatus } : prevFeed
+      );
+    } catch (error) {
+      console.error("좋아요 실패:", error);
+    }
+  };
+  
+
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
@@ -89,7 +109,7 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-          <ActionButton>
+          <ActionButton onClick={handleLike}>
             <ThumbsUp />
             <span>{feed.likes}</span>
           </ActionButton>
