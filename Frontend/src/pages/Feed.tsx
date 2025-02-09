@@ -298,6 +298,7 @@ const CommentButton = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  gap: 8px; /* ✅ 아이콘과 숫자 사이의 간격 */
 `;
 
 const LoadingText = styled.div`
