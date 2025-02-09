@@ -101,14 +101,10 @@ export default DetailBong;
 /* 스타일 */
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: flex-start;
+  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  overflow-y: auto;
 `;
 
 const ImageContainer = styled.div`
