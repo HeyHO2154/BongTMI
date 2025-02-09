@@ -117,9 +117,11 @@ const Feed: React.FC = () => {
             </FeedHeader>
 
             {/* 이미지 */}
-            <FeedImageContainer>
-              <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
-            </FeedImageContainer>
+            {feed.imageUrl !== `${config.API_DEV}/api/bong/image/${feed.feedID}/1` && (
+              <FeedImageContainer>
+                <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
+              </FeedImageContainer>
+            )}
 
             {/* 게시글 내용 */}
             <FeedContent>
