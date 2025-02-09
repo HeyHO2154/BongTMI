@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import config from "../../config";
+import { FaCalendarAlt, FaClock, FaUsers, FaMapMarkerAlt } from "react-icons/fa";
+
 
 interface Bong {
   progrmRegistNo: string;
@@ -97,33 +99,23 @@ const DetailBong: React.FC = () => {
             <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
           <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
         </ImageContainer>
-          <h1>{bongData.progrmSj}</h1>
-          <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
-          <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
-          <p><strong>봉사 시작일자:</strong> {bongData.progrmBgnde}</p>
-          <p><strong>봉사 종료일자:</strong> {bongData.progrmEndde}</p>
-          <p><strong>활동 시작 시간:</strong> {bongData.actBeginTm}</p>
-          <p><strong>활동 종료 시간:</strong> {bongData.actEndTm}</p>
-          <p><strong>모집 시작일자:</strong> {bongData.noticeBgnde}</p>
-          <p><strong>모집 종료일자:</strong> {bongData.noticeEndde}</p>
-          <p><strong>모집 인원:</strong> {bongData.rcritNmpr}</p>
-          <p><strong>활동 요일:</strong> {bongData.actWkdy}</p>
-          <p><strong>봉사 분야:</strong> {bongData.srvcClCode}</p>
-          <p><strong>성인 가능 여부:</strong> {bongData.adultPosblAt}</p>
-          <p><strong>청소년 가능 여부:</strong> {bongData.yngbgsPosblAt}</p>
-          <p><strong>단체 가능 여부:</strong> {bongData.grpPosblAt}</p>
-          <p><strong>모집 기관명:</strong> {bongData.mnnstNm}</p>
-          <p><strong>등록 기관명:</strong> {bongData.nanmmbyNm}</p>
-          <p><strong>봉사 장소:</strong> {bongData.actPlace}</p>
-          <p><strong>담당자명:</strong> {bongData.nanmmbyNmAdmn}</p>
-          <p><strong>전화번호:</strong> {bongData.telno}</p>
-          <p><strong>FAX 번호:</strong> {bongData.fxnum}</p>
-          <p><strong>담당자 주소:</strong> {bongData.postAdres}</p>
-          <p><strong>이메일:</strong> {bongData.email}</p>
-          <p><strong>내용:</strong> {bongData.progrmCn}</p>
-          <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
-          <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>` 
       </Content>
+
+      {/* 📌 봉사 상세 정보 */}
+      <InfoContainer>
+        <Title>{bongData.progrmSj}</Title>
+
+        <Details>
+          <DetailItem><FaCalendarAlt /> 시작일: {bongData.progrmBgnde} ~ {bongData.progrmEndde}</DetailItem>
+          <DetailItem><FaClock /> 활동 시간: {bongData.actBeginTm}시 ~ {bongData.actEndTm}시</DetailItem>
+          <DetailItem><FaUsers /> 모집 인원: {bongData.rcritNmpr}명</DetailItem>
+          <DetailItem><FaMapMarkerAlt /> 장소: {bongData.actPlace} ({bongData.postAdres})</DetailItem>
+        </Details>
+
+        <Description>{bongData.progrmCn}</Description>
+
+      </InfoContainer>
+
       <Footer>
       <ApplyButton
         onClick={async () => {
@@ -258,4 +250,37 @@ const SlideButtonRight = styled.button`
   padding: 10px;
   cursor: pointer;
   z-index: 10;
+`;
+
+const InfoContainer = styled.div`
+  padding: 20px;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+`;
+
+const Details = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+`;
+
+const DetailItem = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #555;
+`;
+
+const Description = styled.p`
+  margin-top: 15px;
+  font-size: 16px;
+  color: #444;
+  line-height: 1.5;
 `;
