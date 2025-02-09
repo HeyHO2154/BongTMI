@@ -93,7 +93,9 @@ const DetailBong: React.FC = () => {
       </InfoContainer>
 
 
-      <Footer><ApplyButton>📩 신청하기</ApplyButton></Footer>
+      <Footer>
+        <ApplyButton>📩 신청하기</ApplyButton>
+      </Footer>
 
     </Container>
   );
@@ -187,14 +189,14 @@ const ApplyButton = styled.button`
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #007bff;
+  background-color: #ff6f61;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color:rgba(255, 110, 97, 0.73);
   }
 `;
 
