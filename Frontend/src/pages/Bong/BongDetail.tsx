@@ -266,7 +266,7 @@ const InfoContainer = styled.div`
 const Title = styled.h1`
   font-size: 24px;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const Details = styled.div`
