@@ -187,7 +187,6 @@ const Footer = styled.div`
   display: flex;
   justify-content: center;
   z-index: 100;
-  border-top: 1px solid #ddd; /* 상단 경계선 추가 */
 `;
 
 // 구분선 추가
