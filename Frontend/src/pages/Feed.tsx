@@ -90,7 +90,7 @@ const Feed: React.FC = () => {
     }, 500);
   };
 
-  const handleFeedClick = (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
+  const handleFeedClick = (feedID: string) => {
     navigate(`/feed/${feedID}`);
   };
 
@@ -106,40 +106,6 @@ const Feed: React.FC = () => {
       }
     }
   };
-
-  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
-    e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
-  
-    try {
-      // 현재 피드 데이터 가져오기
-      const targetFeed = allCards.find(feed => feed.feedID === feedID);
-      if (!targetFeed) return;
-  
-      const newLikeStatus = !targetFeed.isLiked; // ✅ 현재 상태 반전
-      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
-  
-      // ✅ 백엔드 API 요청
-      const response = await axios.post(`${config.API_DEV}/api/feed/like`, null, {
-        params: { userId: "testUser123", feedId: feedID, action },
-      });
-  
-      if (response.status === 200) {
-        const updatedLikes = response.data.likes; // ✅ 최신 좋아요 개수 가져오기
-  
-        // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
-        setAllCards(prevCards =>
-          prevCards.map(card =>
-            card.feedID === feedID
-              ? { ...card, isLiked: newLikeStatus, likes: updatedLikes }
-              : card
-          )
-        );
-      }
-    } catch (error) {
-      console.error("좋아요 처리 실패:", error);
-    }
-  };
-
   
   useEffect(() => {
     fetchFeeds();
@@ -151,7 +117,7 @@ const Feed: React.FC = () => {
     <FeedWrapper ref={wrapperRef} onScroll={handleScroll}>
       <FeedContainer>
         {visibleCards.map((feed: FeedData) => (
-          <FeedCard key={feed.feedID} onClick={(e) => handleFeedClick(e, feed.feedID)}>
+          <FeedCard key={feed.feedID} onClick={() => handleFeedClick(feed.feedID)}>
             {/* 사용자 정보 */}
             <FeedHeader>
               <Profile>
@@ -177,11 +143,11 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton onClick={(e) => handleLike(e, feed.feedID)} style={{ color: feed.isLiked ? "blue" : "black" }}>
+                <LikeButton style={{ color: feed.isLiked ? "blue" : "black" }}>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
-                <CommentButton onClick={(e) => e.stopPropagation()}>
+                <CommentButton>
                   <MessageCircle />
                   <CommentCount>{feed.comments}</CommentCount>
                 </CommentButton>

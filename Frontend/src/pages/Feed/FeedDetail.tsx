@@ -72,7 +72,7 @@ const FeedDetail: React.FC = () => {
     if (feedID) fetchFeedDetail();
   }, [feedID]);
 
-  const handleLike = async (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleLike = async (e: React.MouseEvent<HTMLButtonElement >) => {
     e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
   
     if (!feed) return;
@@ -123,10 +123,11 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-          <ActionButton>
+          <ActionButton onClick={handleLike} style={{ color: feed?.isLiked ? "blue" : "black" }}>
             <ThumbsUp />
-            <span>{feed.likes}</span>
+            <span>{feed?.likes}</span>
           </ActionButton>
+
 
           <ActionButton>
             <MessageCircle />
