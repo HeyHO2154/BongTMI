@@ -335,30 +335,27 @@ const Swipe: React.FC = () => {
             >
               {card.from}
             </div>
-
-              {/* 모집 마감일까지 D-XX 표시하는 빨간 박스 */}
-              <div
-                  style={{
-                    position: "absolute",
-                    top: "20px",
-                    right: "20px",
-                    backgroundColor: "rgba(255, 0, 0, 0.9)", // 빨간색 배경
-                    color: "white",
-                    padding: "8px 16px",
-                    borderRadius: "8px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                >
-                  {`D-${card.remainingDays}`}
-                </div>  
-                
             <TextContainer>
               <LabelText>{card.label}</LabelText>
               <ContextText>{card.region}</ContextText>
               <ContextText>{card.type}</ContextText>
-              <ContextText>{card.date}</ContextText>
+              <ContextText style={{ display: "flex", alignItems: "center" }}>
+                {card.date} {/* 모집 마감일 텍스트 */}
+                <span
+                  style={{
+                    marginLeft: "10px", // 모집 마감일과 간격 조정
+                    backgroundColor: "rgba(255, 0, 0, 0.9)", // 빨간색 배경
+                    color: "white",
+                    padding: "4px 10px",
+                    borderRadius: "6px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    display: "inline-block",
+                  }}
+                >
+                  {`D-${card.remainingDays}`}
+                </span>
+              </ContextText>
             </TextContainer>
           </Card>
         );
