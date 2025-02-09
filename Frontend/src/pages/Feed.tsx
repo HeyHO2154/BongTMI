@@ -50,7 +50,10 @@ const Feed: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
-      const allFeeds = response.data;
+      const allFeeds = response.data.map((feed: FeedData) => ({
+        ...feed,
+        imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+      }));
   
       const userId = "testUser123"; // ✅ 현재 로그인된 사용자 ID (실제 값으로 변경)
   
