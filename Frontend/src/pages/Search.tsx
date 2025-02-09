@@ -25,6 +25,7 @@ interface CardData {
   startDate: string;      // ✅ 봉사 시작일 추가
   endDate: string;        // ✅ 봉사 종료일 추가
   days: string; // ✅ 추가된 필드 (1010100 형태)
+  remainingDays: number;
 }
 
 interface FilterState {
@@ -80,6 +81,11 @@ const Search: React.FC = () => {
           fromValue = "VMS사회복지";
           typeValue = "VMS사회복지";
         }
+
+        const endDate = new Date(bong.progrmEndde);
+        const today = new Date();
+        const timeDiff = endDate.getTime() - today.getTime();
+        const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 일수 계산
   
         return {
           id: bong.progrmRegistNo,
@@ -97,6 +103,7 @@ const Search: React.FC = () => {
           startDate: bong.progrmBgnde,
           endDate: bong.progrmEndde,
           days: bong.actWkdy || "0000000",
+          remainingDays: remainingDays > 0 ? remainingDays : 0, // 마감일이 지났다면 0
         };
       });
 
@@ -324,7 +331,21 @@ const Search: React.FC = () => {
             <Card key={card.id} onClick={() => handleCardClick(card.id)}>
               <CardImage style={{ backgroundImage: `url(${card.imageUrl})` }} />
               <CardText>
-                <Badge from={card.from}>{card.from}</Badge> {/* ✅ Badge를 제목과 같은 줄에 배치 */}
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  <Badge from={card.from}>{card.from}</Badge> {/* ✅ 기존 뱃지 */}
+                  <div
+                    style={{
+                      backgroundColor: "rgba(255, 0, 0, 0.9)", // 빨간색 배경
+                      color: "white",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {`D-${card.remainingDays}`}
+                  </div>
+                </div>
                 <Label>{card.label}</Label>
                 <Context>{card.region}</Context>
                 <DateCss>{card.date}</DateCss>
