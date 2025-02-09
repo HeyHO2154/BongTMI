@@ -110,6 +110,8 @@ const DetailBong: React.FC = () => {
           <DetailItem><FaMapMarkerAlt /> 장소: {bongData.actPlace} ({bongData.postAdres})</DetailItem>
         </Details>
 
+        <Divider />
+
         <Description>{bongData.progrmCn}</Description>
 
       </InfoContainer>
@@ -166,14 +168,25 @@ const Container = styled.div`
   overflow-y: auto; /* 스크롤 가능 */
 `;
 
+// Footer: 신청 버튼 고정
 const Footer = styled.div`
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
   display: flex;
   justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-color: #fff;
-  z-index: 10;
-  position: relative;
+  z-index: 100;
+  border-top: 1px solid #ddd; /* 상단 경계선 추가 */
+`;
+
+// 구분선 추가
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  margin: 20px 0; /* 위아래 여백 추가 */
 `;
 
 const ApplyButton = styled.button`
