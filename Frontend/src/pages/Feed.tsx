@@ -125,7 +125,6 @@ const Feed: React.FC = () => {
             {/* 게시글 내용 */}
             <FeedContent>
               <ContentTitle>{feed.title}</ContentTitle>
-              {/* <ContentText>{feed.content}</ContentText> */}
             </FeedContent>
 
             {/* 버튼 */}
