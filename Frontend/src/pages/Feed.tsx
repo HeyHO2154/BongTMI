@@ -117,7 +117,7 @@ const Feed: React.FC = () => {
             </FeedHeader>
 
             {/* 이미지 */}
-            {feed.imageUrl !== `${config.API_DEV}/api/bong/image/${feed.feedID}/1` && (
+            {!feed.imageUrl.includes("Bong.png") && (
               <FeedImageContainer>
                 <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
               </FeedImageContainer>
