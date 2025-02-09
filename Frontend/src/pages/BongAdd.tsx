@@ -350,7 +350,7 @@ const AddBong: React.FC = () => {
         </Section>
 
         <Button>
-          <SubmitButton type="submit">등록</SubmitButton>
+          <SubmitButton type="submit">공고 등록</SubmitButton>
         </Button>
       </Form>
     </Wrapper>
