@@ -110,6 +110,7 @@ const DetailBong: React.FC = () => {
           <DetailItem><FaMapMarkerAlt /> 장소: {bongData.actPlace} ({bongData.postAdres})</DetailItem>
         </Details>
 
+        {/* 구분선 추가 */}
         <Divider />
 
         <Description>{bongData.progrmCn}</Description>
@@ -174,7 +175,7 @@ const Footer = styled.div`
   bottom: 0;
   width: 100%;
   background-color: white;
-  padding: 10px 0;
+  padding: 15px 0;
   display: flex;
   justify-content: center;
   z-index: 100;
