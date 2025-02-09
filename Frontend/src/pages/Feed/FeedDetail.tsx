@@ -90,6 +90,18 @@ const FeedDetail: React.FC = () => {
         nickname: user.nickname, // ✅ 닉네임 추가
         content: newComment,
       });
+
+      // ✅ 프론트에서만 개수 +1
+      setComments(prevComments => [
+        ...prevComments,
+        {
+          commentId: Math.random(), // ✅ 임시 ID (고유 ID는 서버에서 설정됨)
+          userId: user.id,
+          nickname: user.nickname,
+          content: newComment,
+          createdAt: new Date().toISOString(),
+        }
+      ]);
   
       setNewComment("");
       fetchComments();
@@ -213,17 +225,14 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-        <ActionButton onClick={(e) => getUserId() ? handleLike(e) : null} disabled={!getUserId()}>
-          {getUserId() && feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
-          <span>{feed?.likes}</span>
-        </ActionButton>
-
-
-
+          <ActionButton onClick={(e) => getUserId() ? handleLike(e) : null} disabled={!getUserId()}>
+            {getUserId() && feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+            <span>{feed?.likes}</span>
+          </ActionButton>
 
           <ActionButton>
             <MessageCircle />
-            <span>{feed.comments}</span>
+            <span>{comments.length}</span> {/* ✅ 댓글 개수 표시 */}
           </ActionButton>
         </Actions>
 
