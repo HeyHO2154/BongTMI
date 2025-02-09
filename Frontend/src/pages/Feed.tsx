@@ -50,13 +50,10 @@ const Feed: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
-      const allFeeds = response.data.map((feed: FeedData) => ({
-        ...feed,
-        imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
-      }));
-
+      const allFeeds = response.data;
+  
       const userId = "testUser123"; // ✅ 현재 로그인된 사용자 ID (실제 값으로 변경)
-
+  
       // ✅ 각 피드의 좋아요 상태 가져오기 (비동기 병렬 요청)
       const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
         const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
@@ -64,16 +61,19 @@ const Feed: React.FC = () => {
         });
         return { ...feed, isLiked: likeStatusRes.data.isLiked }; // ✅ isLiked 추가
       });
-
-      setAllCards(allFeeds);
-      setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
+  
+      // ✅ 모든 피드에 대해 좋아요 상태를 가져온 후, 상태 업데이트
+      const updatedFeeds = await Promise.all(likeStatusPromises);
+      setAllCards(updatedFeeds);
+      setVisibleCards(updatedFeeds.slice(0, limit)); // ✅ 첫 페이지 로드 후 반영
       setOffset(limit);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  }; 
+  };
+  
 
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
