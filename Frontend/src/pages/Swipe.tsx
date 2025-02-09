@@ -344,11 +344,11 @@ const Swipe: React.FC = () => {
                 <span
                   style={{
                     marginLeft: "10px", // 모집 마감일과 간격 조정
-                    backgroundColor: "rgba(255, 0, 0, 0.81)", // 빨간색 배경
+                    backgroundColor: "rgb(204, 16, 16)", // 빨간색 배경
                     color: "white",
-                    padding: "6px 15px",
+                    padding: "5px 12px",
                     borderRadius: "6px",
-                    fontSize: "18px",
+                    fontSize: "16px",
                     fontWeight: "bold",
                     display: "inline-block",
                   }}
