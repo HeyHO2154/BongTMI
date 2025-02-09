@@ -330,7 +330,7 @@ const AddBong: React.FC = () => {
               <Input type="text" name="email" placeholder="이메일을 입력하세요" value={formData.email} onChange={handleChange}/>
             </FormGroup>
             <FormGroup>
-              <Label>담당자 주소</Label>
+              <Label>기관 주소</Label>
               <Input type="text" name="postAdres" placeholder="담당자 주소를 입력하세요" value={formData.postAdres} onChange={handleChange}/>
             </FormGroup>
             <FormGroup>
