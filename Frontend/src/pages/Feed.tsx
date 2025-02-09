@@ -54,6 +54,17 @@ const Feed: React.FC = () => {
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
       }));
+
+      const userId = "testUser123"; // ✅ 현재 로그인된 사용자 ID (실제 값으로 변경)
+
+      // ✅ 각 피드의 좋아요 상태 가져오기 (비동기 병렬 요청)
+      const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
+        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
+          params: { userId, feedId: feed.feedID },
+        });
+        return { ...feed, isLiked: likeStatusRes.data.isLiked }; // ✅ isLiked 추가
+      });
+
       setAllCards(allFeeds);
       setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
       setOffset(limit);
