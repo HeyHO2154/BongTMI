@@ -335,7 +335,7 @@ const Search: React.FC = () => {
                   <Badge from={card.from}>{card.from}</Badge> {/* ✅ 기존 뱃지 */}
                   <div
                     style={{
-                      backgroundColor: "rgba(255, 0, 0, 0.9)", // 빨간색 배경
+                      backgroundColor: "rgb(204, 16, 16)", // 빨간색 배경
                       color: "white",
                       padding: "4px 10px",
                       borderRadius: "6px",
