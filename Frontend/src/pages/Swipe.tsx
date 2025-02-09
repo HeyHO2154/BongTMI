@@ -284,8 +284,8 @@ const Swipe: React.FC = () => {
               transition: isDragging ? "none" : "transform 0.3s ease",
               backgroundColor: isTop
               ? dragX > 0
-                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 500, 0.5)})` // 우측(녹색)
-                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 500, 0.5)})` // 좌측(적색)
+                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 우측(녹색)
+                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 좌측(적색)
               : "transparent",
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
