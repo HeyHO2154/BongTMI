@@ -91,7 +91,6 @@ const Feed: React.FC = () => {
   };
 
   const handleFeedClick = (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
-    e.stopPropagation(); // ✅ 좋아요 & 댓글 클릭 시 이동 방지
     navigate(`/feed/${feedID}`);
   };
 
