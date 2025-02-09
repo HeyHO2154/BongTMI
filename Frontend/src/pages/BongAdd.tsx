@@ -488,7 +488,7 @@ const NoticeBox = styled.div`
   border-left: 6px solid #ffbe76;
   padding: 18px;
   border-radius: 12px;
-  width: 80%;
+  width: 600px; /* 고정 너비 설정 */
   max-width: 600px;
   margin-bottom: 20px;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
