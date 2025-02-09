@@ -275,6 +275,7 @@ const Swipe: React.FC = () => {
               backgroundImage: `url(${card.imageUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
+              backgroundBlendMode: "multiply", // 🎨 배경 색상과 혼합
               transform: isTop
                 ? Math.abs(dragX) > Math.abs(dragY)
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
