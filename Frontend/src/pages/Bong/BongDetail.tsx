@@ -93,13 +93,11 @@ const DetailBong: React.FC = () => {
   return (
     <Container>
       {/* 이미지 슬라이드 */}
-      <Content>
-        <ImageContainer>
+      <ImageContainer>
           <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
             <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
           <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
-        </ImageContainer>
-      </Content>
+      </ImageContainer>
 
       {/* 📌 봉사 상세 정보 */}
       <InfoContainer>
@@ -166,19 +164,6 @@ const Container = styled.div`
   align-items: center;
   height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
   overflow-y: auto; /* 스크롤 가능 */
-`;
-
-const Content = styled.div`
-  width: 100%;
-  max-width: 800px;
-  height: 90%;
-  overflow-y: auto;
-  padding: 0px 20px 20px 20px;
-  box-sizing: border-box;
-  background-color: #fff;
-  border-radius: 8px;
-  z-index: 1;
-  position: relative;
 `;
 
 const Footer = styled.div`
