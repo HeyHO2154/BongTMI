@@ -66,7 +66,8 @@ const FeedDetail: React.FC = () => {
     } catch (error) {
       console.error("댓글 로드 실패:", error);
     }
-  };  
+  };
+  
 
   const [newComment, setNewComment] = useState("");
 
@@ -143,7 +144,10 @@ const FeedDetail: React.FC = () => {
       }
     };
   
-    if (feedID) fetchFeedDetail();
+    if (feedID) {
+      fetchFeedDetail();
+      fetchComments(); // ✅ 댓글도 같이 불러오기
+    }
   }, [feedID]);
   
 
