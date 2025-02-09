@@ -486,10 +486,9 @@ const SubmitButton = styled.button`
 const NoticeBox = styled.div`
   background: #fffae3;
   border-left: 6px solid #ffbe76;
-  padding: 18px;
-  border-radius: 12px;
-  max-width: 600px;
+  padding: 16px;
   margin-bottom: 20px;
+  border-radius: 10px;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
