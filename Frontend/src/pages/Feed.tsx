@@ -35,7 +35,6 @@ interface FeedData {
   likes: number;
   comments: number;
   imageUrl: string;
-  isLiked: boolean; // ✅ 사용자별 좋아요 상태 추가
 }
 
 const Feed: React.FC = () => {
@@ -50,33 +49,19 @@ const Feed: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
-      const allFeeds = response.data;
-  
-      // ✅ 현재 로그인한 사용자 (실제 로그인 값으로 변경 필요)
-      const userId = "testUser";
-  
-      // ✅ 각 피드의 좋아요 상태 확인 요청 (비동기 병렬 실행)
-      const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
-        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
-          params: { userId, feedId: feed.feedID },
-        });
-        return { ...feed, isLiked: likeStatusRes.data.isLiked };
-      });
-  
-      const updatedFeeds = await Promise.all(likeStatusPromises);
-      setAllCards(updatedFeeds);
-      setVisibleCards(updatedFeeds.slice(0, limit));
+      const allFeeds = response.data.map((feed: FeedData) => ({
+        ...feed,
+        imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+      }));
+      setAllCards(allFeeds);
+      setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
       setOffset(limit);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
       setIsLoading(false);
     }
-  };
-  useEffect(() => {
-    fetchFeeds();
-  }, []); // ✅ 페이지가 처음 로드될 때 실행
-  
+  }; 
 
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
@@ -95,36 +80,6 @@ const Feed: React.FC = () => {
     navigate(`/feed/${feedID}`);
   };
 
-  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
-    e.stopPropagation(); // 클릭 이벤트 전파 방지
-  
-    try {
-      // 현재 피드의 상태 확인
-      const targetFeed = allCards.find(feed => feed.feedID === feedID);
-      if (!targetFeed) return;
-  
-      const newLikeStatus = !targetFeed.isLiked; // ✅ 좋아요 상태 반전
-      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 취소
-  
-      // 백엔드로 좋아요/취소 요청
-      await axios.post(`${config.API_DEV}/api/feed/like`, null, {
-        params: { userId: "testUser", feedId: feedID, action },
-      });
-  
-      // ✅ UI 업데이트
-      setAllCards(prevCards =>
-        prevCards.map(card =>
-          card.feedID === feedID
-            ? { ...card, isLiked: newLikeStatus, likes: card.likes + (newLikeStatus ? 1 : -1) }
-            : card
-        )
-      );
-    } catch (error) {
-      console.error("좋아요 처리 실패:", error);
-    }
-  };
-  
-
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // 스크롤 감지 이벤트
@@ -137,6 +92,10 @@ const Feed: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    fetchFeeds();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -170,11 +129,11 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton onClick={(e) => handleLike(e, feed.feedID)} style={{ color: feed.isLiked ? "blue" : "black" }}>
+                <LikeButton onClick={(e) => e.stopPropagation()}>
                   <ThumbsUp />
                   <LikeCount>{feed.likes}</LikeCount>
                 </LikeButton>
-                <CommentButton>
+                <CommentButton onClick={(e) => e.stopPropagation()}>
                   <MessageCircle />
                   <CommentCount>{feed.comments}</CommentCount>
                 </CommentButton>

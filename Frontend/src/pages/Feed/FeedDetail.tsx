@@ -51,7 +51,7 @@ const FeedDetail: React.FC = () => {
 
         setFeed({
           ...response.data,
-          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/0`], // ✅ 1번 이미지만 사용
+          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`], // ✅ 1번 이미지만 사용
         });
       } catch (error) {
         console.error("피드 로드 실패:", error);
