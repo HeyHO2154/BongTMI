@@ -63,30 +63,34 @@ const Feed: React.FC = () => {
   const fetchFeeds = async () => {
     setIsLoading(true);
     try {
-      const userId = getUserId(); // ✅ 실제 로그인된 사용자 ID 가져오기
-      if (!userId) {
-        console.error("로그인이 필요합니다.");
-        return;
-      }
+      const userId = getUserId(); // ✅ 로그인된 사용자 ID 가져오기 (없을 수도 있음)
   
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
       const allFeeds = response.data.map((feed: FeedData) => ({
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+        isLiked: false, // ✅ 기본적으로 false로 설정 (비회원일 경우)
       }));
   
-      // ✅ 각 피드의 좋아요 상태 가져오기 (비동기 병렬 요청)
-      const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
-        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
-          params: { userId, feedId: feed.feedID },
+      if (userId) {
+        // ✅ 로그인된 경우에만 좋아요 상태 요청
+        const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
+          const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
+            params: { userId, feedId: feed.feedID },
+          });
+          return { ...feed, isLiked: likeStatusRes.data.isLiked };
         });
-        return { ...feed, isLiked: likeStatusRes.data.isLiked }; // ✅ isLiked 추가
-      });
   
-      // ✅ 모든 피드에 대해 좋아요 상태를 가져온 후, 상태 업데이트
-      const updatedFeeds = await Promise.all(likeStatusPromises);
-      setAllCards(updatedFeeds);
-      setVisibleCards(updatedFeeds.slice(0, limit)); // ✅ 첫 페이지 로드 후 반영
+        // ✅ 모든 피드의 좋아요 상태 업데이트
+        const updatedFeeds = await Promise.all(likeStatusPromises);
+        setAllCards(updatedFeeds);
+        setVisibleCards(updatedFeeds.slice(0, limit)); // ✅ 첫 페이지 로드
+      } else {
+        // ✅ 비회원일 경우 그냥 피드 목록만 로드
+        setAllCards(allFeeds);
+        setVisibleCards(allFeeds.slice(0, limit));
+      }
+  
       setOffset(limit);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
@@ -94,6 +98,7 @@ const Feed: React.FC = () => {
       setIsLoading(false);
     }
   };
+  
   
 
   // 스크롤 시 추가 로딩 함수
