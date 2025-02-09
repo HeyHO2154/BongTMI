@@ -45,14 +45,33 @@ const FeedDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const getUserId = (): string | null => {
+    const userData = localStorage.getItem("user");
+    if (!userData) return null; // ✅ 저장된 사용자 정보가 없으면 null 반환
+  
+    try {
+      const user = JSON.parse(userData);
+      return user?.id || null; // ✅ user 객체에서 ID 값 가져오기 (없으면 null)
+    } catch (error) {
+      console.error("사용자 정보 파싱 실패:", error);
+      return null;
+    }
+  };  
+
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
+        const userId = getUserId(); // ✅ 실제 사용자 ID 가져오기
+        if (!userId) {
+          console.error("로그인이 필요합니다.");
+          return;
+        }
+    
         const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
     
         // ✅ 사용자의 좋아요 상태 확인
         const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
-          params: { userId: "testUser123", feedId: feedID },
+          params: { userId, feedId: feedID },
         });
     
         setFeed({
@@ -72,24 +91,30 @@ const FeedDetail: React.FC = () => {
     if (feedID) fetchFeedDetail();
   }, [feedID]);
 
-  const handleLike = async (e: React.MouseEvent<HTMLButtonElement >) => {
-    e.stopPropagation(); // ✅ 클릭 이벤트 전파 방지
+  const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); 
   
     if (!feed) return;
   
     try {
-      const newLikeStatus = !feed.isLiked; // ✅ 현재 상태 반전
-      const action = newLikeStatus ? 1 : 0; // ✅ 1 = 좋아요, 0 = 좋아요 취소
+      const userId = getUserId(); // ✅ 사용자 ID 가져오기
+      if (!userId) {
+        console.error("로그인이 필요합니다.");
+        return;
+      }
+  
+      const newLikeStatus = !feed.isLiked; 
+      const action = newLikeStatus ? 1 : 0; 
   
       // ✅ 백엔드 API 요청
       await axios.post(`${config.API_DEV}/api/feed/like`, null, {
-        params: { userId: "testUser123", feedId: feed.feedID, action },
+        params: { userId, feedId: feed.feedID, action },
       });
   
       // ✅ 상태 업데이트 (isLiked + 좋아요 개수 직접 증가/감소)
       setFeed(prevFeed => {
         if (!prevFeed) return prevFeed;
-
+  
         return {
           ...prevFeed,
           isLiked: newLikeStatus, 
@@ -100,6 +125,7 @@ const FeedDetail: React.FC = () => {
       console.error("좋아요 처리 실패:", error);
     }
   };
+  
   
 
   if (isLoading) return <LoadingText><Loading/></LoadingText>;
