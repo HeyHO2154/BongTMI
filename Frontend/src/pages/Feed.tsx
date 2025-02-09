@@ -95,38 +95,6 @@ const Feed: React.FC = () => {
     }
   };
   
-  const handleLike = async (e: React.MouseEvent<HTMLDivElement>, feedID: string) => {
-    e.stopPropagation(); 
-  
-    try {
-      const userId = getUserId(); // ✅ 사용자 ID 가져오기
-      if (!userId) {
-        console.error("로그인이 필요합니다.");
-        return;
-      }
-  
-      setAllCards(prevCards =>
-        prevCards.map(card => {
-          if (card.feedID === feedID) {
-            const newLikeStatus = !card.isLiked;
-            const updatedLikes = newLikeStatus ? card.likes + 1 : Math.max(0, card.likes - 1);
-  
-            return { ...card, isLiked: newLikeStatus, likes: updatedLikes };
-          }
-          return card;
-        })
-      );
-  
-      // ✅ 백엔드 API 요청
-      await axios.post(`${config.API_DEV}/api/feed/like`, null, {
-        params: { userId, feedId: feedID, action: 1 }, // ✅ 1 = 좋아요, 0 = 취소
-      });
-    } catch (error) {
-      console.error("좋아요 처리 실패:", error);
-    }
-  };
-  
-  
 
   // 스크롤 시 추가 로딩 함수
   const loadMoreCards = () => {
@@ -193,11 +161,10 @@ const Feed: React.FC = () => {
             <FeedFooter>
               <Actions>
                 {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton onClick={(e) => handleLike(e, feed.feedID)}>
-                  {feed.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
-                  <LikeCount>{feed.likes}</LikeCount>
+                <LikeButton>
+                  {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+                  <span>{feed?.likes}</span>
                 </LikeButton>
-
                 <CommentButton>
                   <MessageCircle />
                   <CommentCount>{feed.comments}</CommentCount>
@@ -404,11 +371,4 @@ const FloatingButton = styled.button`
     font-size: 16px;
     white-space: nowrap;
   }
-`;
-
-const LikeCount = styled.span`
-  font-size: 16px;
-  margin-left: 6px; /* ✅ 아이콘과 숫자 사이 간격 */
-  font-weight: bold;
-  color: #333;
 `;
