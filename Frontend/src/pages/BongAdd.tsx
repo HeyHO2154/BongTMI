@@ -334,7 +334,7 @@ const AddBong: React.FC = () => {
               <Input type="text" name="postAdres" placeholder="담당자 주소를 입력하세요" value={formData.postAdres} onChange={handleChange}/>
             </FormGroup>
             <FormGroup>
-              <Label>모집 사이트 입력</Label>
+              <Label>모집 사이트 입력(*신청버튼 연계됨)</Label>
               <Input type="text" name="fxnum" placeholder="예: 모집 사이트 또는 오픈카톡방 등" value={formData.fxnum} onChange={handleChange}/>
             </FormGroup>
           </FormGrid>
