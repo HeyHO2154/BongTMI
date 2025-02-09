@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import { FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaClock } from "react-icons/fa"; // 아이콘 추가
 import config from "../../config";
 
 interface Bong {
@@ -26,10 +25,13 @@ interface Bong {
   actPlace: string;
   nanmmbyNmAdmn: string;
   telno: string;
+  fxnum: string;
   postAdres: string;
   email: string;
   progrmCn: string;
-  imageUrls: string[];
+  sidoCd: string;
+  gugunCd: string;
+  imageUrls: string[]; // 이미지 배열 추가
 }
 
 const DetailBong: React.FC = () => {
@@ -37,15 +39,29 @@ const DetailBong: React.FC = () => {
   const [bongData, setBongData] = useState<Bong | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 보이는 이미지 인덱스
+
+  const handleImageSlide = (direction: "left" | "right") => {
+    if (direction === "left") {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? 2 : prevIndex - 1
+      );
+    } else {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 2 ? 0 : prevIndex + 1
+      );
+    }
+  };
 
   useEffect(() => {
     const fetchBongData = async () => {
       try {
-        const response = await axios.get<Bong>(`${config.API_DEV}/api/bong/info`, {
-          params: { progrmRegistNo },
-        });
-
+        const response = await axios.get<Bong>(
+          `${config.API_DEV}/api/bong/info`,
+          {
+            params: { progrmRegistNo },
+          }
+        );
         setBongData({
           ...response.data,
           imageUrls: [
@@ -64,46 +80,94 @@ const DetailBong: React.FC = () => {
     if (progrmRegistNo) fetchBongData();
   }, [progrmRegistNo]);
 
-  if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
-  if (!bongData) return <ErrorMessage>데이터가 없습니다.</ErrorMessage>;
+  // ✅ 로그인된 사용자 정보 가져오기
+  const storedUser = localStorage.getItem("user");
+  const userData = storedUser ? JSON.parse(storedUser) : null;
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>{error}</div>;
+  if (!bongData) return <div>progrmRegistNo: {progrmRegistNo}, 데이터가 없습니다.</div>;
 
   return (
     <Container>
-      {/* 📸 이미지 슬라이드 */}
-      <ImageContainer>
-        <SlideButton onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? 2 : prev - 1))}>{"<"}</SlideButton>
-        <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }} />
-        <SlideButton onClick={() => setCurrentImageIndex((prev) => (prev === 2 ? 0 : prev + 1))}>{">"}</SlideButton>
-      </ImageContainer>
-
-      {/* 📌 봉사 상세 정보 */}
-      <InfoContainer>
-        <Title>{bongData.progrmSj}</Title>
-
-        <Details>
-          <DetailItem><FaCalendarAlt /> 시작일: {bongData.progrmBgnde} ~ {bongData.progrmEndde}</DetailItem>
-          <DetailItem><FaClock /> 활동 시간: {bongData.actBeginTm}시 ~ {bongData.actEndTm}시</DetailItem>
-          <DetailItem><FaUsers /> 모집 인원: {bongData.rcritNmpr}명</DetailItem>
-          <DetailItem><FaMapMarkerAlt /> 장소: {bongData.actPlace} ({bongData.postAdres})</DetailItem>
-        </Details>
-
-        <Description>{bongData.progrmCn}</Description>
-
-      </InfoContainer>
-
-
+      {/* 이미지 슬라이드 */}
+      <Content>
+        <ImageContainer>
+          <SlideButtonLeft onClick={() => handleImageSlide("left")}>{"<"}</SlideButtonLeft>
+            <Image style={{ backgroundImage: `url(${bongData.imageUrls[currentImageIndex]})` }}/>
+          <SlideButtonRight onClick={() => handleImageSlide("right")}>{">"}</SlideButtonRight>
+        </ImageContainer>
+          <h1>{bongData.progrmSj}</h1>
+          <p><strong>프로그램 등록번호:</strong> {bongData.progrmRegistNo}</p>
+          <p><strong>봉사 상태:</strong> {bongData.progrmSttusSe}</p>
+          <p><strong>봉사 시작일자:</strong> {bongData.progrmBgnde}</p>
+          <p><strong>봉사 종료일자:</strong> {bongData.progrmEndde}</p>
+          <p><strong>활동 시작 시간:</strong> {bongData.actBeginTm}</p>
+          <p><strong>활동 종료 시간:</strong> {bongData.actEndTm}</p>
+          <p><strong>모집 시작일자:</strong> {bongData.noticeBgnde}</p>
+          <p><strong>모집 종료일자:</strong> {bongData.noticeEndde}</p>
+          <p><strong>모집 인원:</strong> {bongData.rcritNmpr}</p>
+          <p><strong>활동 요일:</strong> {bongData.actWkdy}</p>
+          <p><strong>봉사 분야:</strong> {bongData.srvcClCode}</p>
+          <p><strong>성인 가능 여부:</strong> {bongData.adultPosblAt}</p>
+          <p><strong>청소년 가능 여부:</strong> {bongData.yngbgsPosblAt}</p>
+          <p><strong>단체 가능 여부:</strong> {bongData.grpPosblAt}</p>
+          <p><strong>모집 기관명:</strong> {bongData.mnnstNm}</p>
+          <p><strong>등록 기관명:</strong> {bongData.nanmmbyNm}</p>
+          <p><strong>봉사 장소:</strong> {bongData.actPlace}</p>
+          <p><strong>담당자명:</strong> {bongData.nanmmbyNmAdmn}</p>
+          <p><strong>전화번호:</strong> {bongData.telno}</p>
+          <p><strong>FAX 번호:</strong> {bongData.fxnum}</p>
+          <p><strong>담당자 주소:</strong> {bongData.postAdres}</p>
+          <p><strong>이메일:</strong> {bongData.email}</p>
+          <p><strong>내용:</strong> {bongData.progrmCn}</p>
+          <p><strong>시도 코드:</strong> {bongData.sidoCd}</p>
+          <p><strong>시군구 코드:</strong> {bongData.gugunCd}</p>` 
+      </Content>
       <Footer>
-        <ApplyButton>📩 신청하기</ApplyButton>
-      </Footer>
+      <ApplyButton
+        onClick={async () => {
+          try {
+            // ✅ 신청하기(4) 저장 API 호출
+            await fetch(`${config.API_DEV}/api/user/like`, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                userId: userData.id,
+                bongId: bongData.progrmRegistNo.toString(),
+                action: "4", // ✅ 신청하기(4) 기록
+              }),
+            });
 
+            // ✅ 저장 완료 후 해당 공고의 신청 페이지로 이동
+            const baseUrl =
+              bongData.progrmRegistNo.startsWith("SYO")
+                ? `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=`
+                : bongData.progrmRegistNo.startsWith("VMS")
+                ? `https://www.vms.or.kr/partspace/recruitView.do?seq=`
+                : null;
+
+            if (baseUrl) {
+              window.location.href = `${baseUrl}${bongData.progrmRegistNo.slice(3)}`;
+            } else {
+              window.location.href = `${bongData.fxnum}`;
+            }
+          } catch (error) {
+            console.error("❌ API 요청 실패:", error);
+          }
+        }}
+      >
+        신청하기
+      </ApplyButton>
+
+      </Footer>
     </Container>
   );
 };
 
 export default DetailBong;
 
-/* 스타일 */
+// 스타일 정의
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -112,92 +176,17 @@ const Container = styled.div`
   overflow-y: auto; /* 스크롤 가능 */
 `;
 
-const ImageContainer = styled.div`
-  position: relative;
+const Content = styled.div`
   width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  overflow: hidden;
-`;
-
-const Image = styled.div`
-  width: 100%;
-  height: 300px;
-  background-size: cover;
-  background-position: center;
-`;
-
-const SlideButton = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.3);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-`;
-
-const InfoContainer = styled.div`
-  padding: 20px;
-  text-align: center;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 10px;
-`;
-
-const Details = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-`;
-
-const DetailItem = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  color: #555;
-`;
-
-const Description = styled.p`
-  margin-top: 15px;
-  font-size: 16px;
-  color: #444;
-  line-height: 1.5;
-`;
-
-const LoadingMessage = styled.div`
-  text-align: center;
-  font-size: 18px;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  text-align: center;
-`;
-
-const ApplyButton = styled.button`
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #ff6f61;
-  border: none;
+  max-width: 800px;
+  height: 90%;
+  overflow-y: auto;
+  padding: 0px 20px 20px 20px;
+  box-sizing: border-box;
+  background-color: #fff;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color:rgba(255, 110, 97, 0.73);
-  }
+  z-index: 1;
+  position: relative;
 `;
 
 const Footer = styled.div`
@@ -208,4 +197,65 @@ const Footer = styled.div`
   background-color: #fff;
   z-index: 10;
   position: relative;
+`;
+
+const ApplyButton = styled.button`
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+// 슬라이드 관련 스타일
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px; /* 하단 패딩 추가 */
+`;
+
+const Image = styled.div`
+  width: 100%;
+  height: 300px; /* 원하는 높이 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
+const SlideButtonLeft = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+`;
+
+const SlideButtonRight = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
 `;
