@@ -61,24 +61,25 @@ const FeedDetail: React.FC = () => {
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
-        const userId = getUserId(); // ✅ 실제 사용자 ID 가져오기
-        if (!userId) {
-          console.error("로그인이 필요합니다.");
-          return;
-        }
-    
+        const userId = getUserId(); // ✅ 실제 사용자 ID 가져오기 (없을 수도 있음)
+        
         const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
-    
-        // ✅ 사용자의 좋아요 상태 확인
-        const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
-          params: { userId, feedId: feedID },
-        });
-    
+  
+        let isLiked = false;
+        if (userId) {
+          // ✅ 로그인된 경우에만 좋아요 상태 요청
+          const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
+            params: { userId, feedId: feedID },
+          });
+          isLiked = likeStatusRes.data.isLiked;
+        }
+  
         setFeed({
           ...response.data,
           imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`],
-          isLiked: likeStatusRes.data.isLiked, // ✅ isLiked 추가
+          isLiked: isLiked, // ✅ 로그인한 사용자만 좋아요 정보 반영
         });
+  
       } catch (error) {
         console.error("피드 로드 실패:", error);
         setError("게시글을 불러오는 데 실패했습니다.");
@@ -86,10 +87,10 @@ const FeedDetail: React.FC = () => {
         setIsLoading(false);
       }
     };
-    
-
+  
     if (feedID) fetchFeedDetail();
   }, [feedID]);
+  
 
   const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); 
@@ -153,10 +154,11 @@ const FeedDetail: React.FC = () => {
 
         {/* 좋아요 & 댓글 버튼 */}
         <Actions>
-          <ActionButton onClick={(e) => handleLike(e)}>
-            {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
-            <span>{feed?.likes}</span>
-          </ActionButton>
+        <ActionButton onClick={(e) => getUserId() ? handleLike(e) : null} disabled={!getUserId()}>
+          {getUserId() && feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+          <span>{feed?.likes}</span>
+        </ActionButton>
+
 
 
 
@@ -263,15 +265,17 @@ const Actions = styled.div`
   margin-top: 12px;
 `;
 
-const ActionButton = styled.button`
+const ActionButton = styled.button<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)}; /* ✅ 비활성화 시 투명도 낮춤 */
   font-size: 16px;
 `;
+
 
 /* ✅ 댓글 섹션 */
 const CommentSection = styled.div`
