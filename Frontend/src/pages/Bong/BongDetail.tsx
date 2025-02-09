@@ -100,11 +100,13 @@ export default DetailBong;
 
 /* 스타일 */
 const Container = styled.div`
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  min-height: 100vh; /* 최소 높이만 설정 → 내용이 많으면 자동으로 늘어남 */
+  overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
+  position: relative;
   height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
-  overflow-y: auto;
 `;
 
 const ImageContainer = styled.div`
