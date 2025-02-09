@@ -18,6 +18,7 @@ const timeAgo = (dateString: string) => {
   const days = Math.floor(hours / 24);
   const months = Math.floor(days / 30);
   const years = Math.floor(months / 12);
+  
 
   if (years > 0) return `${years}년 전`;
   if (months > 0) return `${months}개월 전`;
@@ -42,6 +43,7 @@ interface FeedDetailData {
 interface CommentData {
   commentId: number;
   userId: string;
+  nickname: string; // ✅ 닉네임 추가
   content: string;
   createdAt: string;
 }
@@ -64,35 +66,37 @@ const FeedDetail: React.FC = () => {
     } catch (error) {
       console.error("댓글 로드 실패:", error);
     }
-  };
+  };  
 
   const [newComment, setNewComment] = useState("");
 
-const handleCommentSubmit = async () => {
-  const userId = getUserId();
-  if (!userId) {
-    alert("로그인이 필요합니다.");
-    return;
-  }
-
-  if (!newComment.trim()) {
-    alert("댓글을 입력하세요.");
-    return;
-  }
-
-  try {
-    await axios.post(`${config.API_DEV}/api/feed/comment`, {
-      feedId: feedID,
-      userId,
-      content: newComment,
-    });
-
-    setNewComment(""); // ✅ 입력 필드 초기화
-    fetchComments(); // ✅ 댓글 다시 불러오기 (새로고침 효과)
-  } catch (error) {
-    console.error("댓글 작성 실패:", error);
-  }
-};
+  const handleCommentSubmit = async () => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+  
+    if (!newComment.trim()) {
+      alert("댓글을 입력하세요.");
+      return;
+    }
+  
+    try {
+      await axios.post(`${config.API_DEV}/api/feed/comment`, {
+        feedId: feedID,
+        userId: user.id,
+        nickname: user.nickname, // ✅ 닉네임 추가
+        content: newComment,
+      });
+  
+      setNewComment("");
+      fetchComments();
+    } catch (error) {
+      console.error("댓글 작성 실패:", error);
+    }
+  };
+  
 
 
 
@@ -241,7 +245,7 @@ const handleCommentSubmit = async () => {
               ) : (
                 comments.map((comment) => (
                   <CommentItem key={comment.commentId}>
-                    <CommentAuthor>{comment.userId}</CommentAuthor>
+                    <CommentAuthor>{comment.nickname}</CommentAuthor>
                     <CommentContent>{comment.content}</CommentContent>
                     <CommentDate>{new Date(comment.createdAt).toLocaleString("ko-KR", {
                       year: "numeric",

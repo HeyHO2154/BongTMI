@@ -19,6 +19,7 @@ CREATE TABLE Comment (
     CommentID BIGINT AUTO_INCREMENT PRIMARY KEY, -- ✅ 새로운 PK (자동 증가)
     FeedID VARCHAR(100) NOT NULL,                -- Feed 테이블의 고유번호 (FK)
     UserID VARCHAR(100) NOT NULL,       -- 작성자
+    nickname VARCHAR(100),           -- 사용자 닉네임
     content TEXT NOT NULL,              -- 댓글 내용
     created_at DATETIME DEFAULT NOW()  -- 작성시간
 );

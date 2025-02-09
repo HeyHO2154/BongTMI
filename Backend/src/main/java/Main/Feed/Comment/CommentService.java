@@ -10,9 +10,9 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    // ✅ 댓글 추가
-    public Comment addComment(String feedId, String userId, String content) {
-        Comment comment = new Comment(feedId, userId, content);
+    // ✅ 댓글 추가 (닉네임 포함)
+    public Comment addComment(String feedId, String userId, String nickname, String content) {
+        Comment comment = new Comment(feedId, userId, nickname, content);
         return commentRepository.save(comment);
     }
 
