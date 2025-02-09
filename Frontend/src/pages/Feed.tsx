@@ -57,6 +57,7 @@ const Feed: React.FC = () => {
       setAllCards(allFeeds);
       setVisibleCards(allFeeds.slice(0, limit)); // 첫 페이지 로드
       setOffset(limit);
+      console.log(response.data.imageUrl);
     } catch (error) {
       console.error("데이터 로드 실패:", error);
     } finally {
