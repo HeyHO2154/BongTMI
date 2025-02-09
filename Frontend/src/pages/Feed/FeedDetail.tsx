@@ -91,12 +91,12 @@ const FeedDetail: React.FC = () => {
   
         // ✅ 상태 업데이트 (isLiked + 좋아요 개수 업데이트)
         setFeed(prevFeed => {
-          if (!prevFeed) return prevFeed; // ✅ prevFeed가 없으면 변경하지 않음
+          if (!prevFeed) return prevFeed; // ✅ 기존 상태가 없으면 변경하지 않음
         
           return {
             ...prevFeed,
             isLiked: newLikeStatus, // ✅ 좋아요 상태 업데이트
-            likes: updatedLikes !== undefined ? updatedLikes : prevFeed.likes // ✅ likes 값이 undefined이면 기존 값 유지
+            likes: prevFeed.likes + (newLikeStatus ? 1 : -1) // ✅ 좋아요 개수 직접 증가/감소
           };
         });
         
