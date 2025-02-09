@@ -63,17 +63,16 @@ const Feed: React.FC = () => {
   const fetchFeeds = async () => {
     setIsLoading(true);
     try {
-      const userId = getUserId(); // ✅ 로그인된 사용자 ID 가져오기 (없을 수도 있음)
+      const userId = getUserId();
   
       const response = await axios.get(`${config.API_DEV}/api/feed/all`);
       const allFeeds = response.data.map((feed: FeedData) => ({
         ...feed,
         imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
-        isLiked: false, // ✅ 기본적으로 false로 설정 (비회원일 경우)
+        isLiked: userId ? false : false, // ✅ 비회원이면 무조건 false
       }));
   
       if (userId) {
-        // ✅ 로그인된 경우에만 좋아요 상태 요청
         const likeStatusPromises = allFeeds.map(async (feed: FeedData) => {
           const likeStatusRes = await axios.get(`${config.API_DEV}/api/feed/like-status`, {
             params: { userId, feedId: feed.feedID },
@@ -81,12 +80,10 @@ const Feed: React.FC = () => {
           return { ...feed, isLiked: likeStatusRes.data.isLiked };
         });
   
-        // ✅ 모든 피드의 좋아요 상태 업데이트
         const updatedFeeds = await Promise.all(likeStatusPromises);
         setAllCards(updatedFeeds);
-        setVisibleCards(updatedFeeds.slice(0, limit)); // ✅ 첫 페이지 로드
+        setVisibleCards(updatedFeeds.slice(0, limit));
       } else {
-        // ✅ 비회원일 경우 그냥 피드 목록만 로드
         setAllCards(allFeeds);
         setVisibleCards(allFeeds.slice(0, limit));
       }
@@ -98,6 +95,7 @@ const Feed: React.FC = () => {
       setIsLoading(false);
     }
   };
+  
   
   
 
