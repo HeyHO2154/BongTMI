@@ -90,8 +90,11 @@ const DetailBong: React.FC = () => {
 
         <Description>{bongData.progrmCn}</Description>
 
-        <ApplyButton>📩 신청하기</ApplyButton>
       </InfoContainer>
+
+
+      <Footer><ApplyButton>📩 신청하기</ApplyButton></Footer>
+
     </Container>
   );
 };
@@ -100,13 +103,11 @@ export default DetailBong;
 
 /* 스타일 */
 const Container = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 최소 높이만 설정 → 내용이 많으면 자동으로 늘어남 */
-  overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
-  position: relative;
+  align-items: center;
   height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  overflow-y: auto; /* 스크롤 가능 */
 `;
 
 const ImageContainer = styled.div`
@@ -171,22 +172,6 @@ const Description = styled.p`
   line-height: 1.5;
 `;
 
-const ApplyButton = styled.button`
-  margin-top: 20px;
-  padding: 12px 24px;
-  font-size: 18px;
-  color: white;
-  background-color: #ff6f61;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: #e55e52;
-  }
-`;
-
 const LoadingMessage = styled.div`
   text-align: center;
   font-size: 18px;
@@ -195,4 +180,30 @@ const LoadingMessage = styled.div`
 const ErrorMessage = styled.div`
   color: red;
   text-align: center;
+`;
+
+const ApplyButton = styled.button`
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  z-index: 10;
+  position: relative;
 `;
