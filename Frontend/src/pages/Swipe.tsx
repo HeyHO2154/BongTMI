@@ -14,6 +14,7 @@ interface CardData {
   date: string;
   imageUrl: string; // 이미지 URL 추가
   from: String;
+  remainingDays: number; // 모집 마감일까지 남은 일수 추가
 }
 
 const SWIPE_THRESHOLD_X = 10; // 스와이프 판정 기준 (px)
@@ -48,6 +49,12 @@ const Swipe: React.FC = () => {
       } else if (source === "VMS") {
         fromValue = "VMS사회복지";
       }
+
+      const endDate = new Date(response.data.progrmEndde); // 모집 마감일
+      const today = new Date();
+      const timeDiff = endDate.getTime() - today.getTime();
+      const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 일 단위로 변환
+
       const newCard: CardData = {
         id: response.data.progrmRegistNo, // 고유 id 추가
         label: response.data.progrmSj || "제목 없음",
@@ -55,7 +62,8 @@ const Swipe: React.FC = () => {
         type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
         imageUrl: `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
-        from: fromValue
+        from: fromValue,
+        remainingDays: remainingDays > 0 ? remainingDays : 0, // 마감일 지났을 경우 0으로 처리
       };
   
       return newCard;
@@ -328,7 +336,24 @@ const Swipe: React.FC = () => {
               {card.from}
             </div>
 
-
+              {/* 모집 마감일까지 D-XX 표시하는 빨간 박스 */}
+              <div
+                  style={{
+                    position: "absolute",
+                    top: "20px",
+                    right: "20px",
+                    backgroundColor: "rgba(255, 0, 0, 0.9)", // 빨간색 배경
+                    color: "white",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  {`D-${card.remainingDays}`}
+                </div>  
+                
             <TextContainer>
               <LabelText>{card.label}</LabelText>
               <ContextText>{card.region}</ContextText>
