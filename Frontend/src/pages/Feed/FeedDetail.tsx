@@ -39,11 +39,62 @@ interface FeedDetailData {
   isLiked: boolean;
 }
 
+interface CommentData {
+  commentId: number;
+  userId: string;
+  content: string;
+  createdAt: string;
+}
+
+
 const FeedDetail: React.FC = () => {
   const { feedID } = useParams<{ feedID: string }>();
   const [feed, setFeed] = useState<FeedDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [comments, setComments] = useState<CommentData[]>([]);
+
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(`${config.API_DEV}/api/feed/comments`, {
+        params: { feedId: feedID },
+      });
+      setComments(response.data);
+    } catch (error) {
+      console.error("댓글 로드 실패:", error);
+    }
+  };
+
+  const [newComment, setNewComment] = useState("");
+
+const handleCommentSubmit = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
+
+  if (!newComment.trim()) {
+    alert("댓글을 입력하세요.");
+    return;
+  }
+
+  try {
+    await axios.post(`${config.API_DEV}/api/feed/comment`, {
+      feedId: feedID,
+      userId,
+      content: newComment,
+    });
+
+    setNewComment(""); // ✅ 입력 필드 초기화
+    fetchComments(); // ✅ 댓글 다시 불러오기 (새로고침 효과)
+  } catch (error) {
+    console.error("댓글 작성 실패:", error);
+  }
+};
+
+
 
   const getUserId = (): string | null => {
     const userData = localStorage.getItem("user");
@@ -171,17 +222,39 @@ const FeedDetail: React.FC = () => {
         {/* 댓글 UI */}
         <CommentSection>
           <CommentTitle>댓글</CommentTitle>
-          <CommentInput placeholder="댓글을 입력하세요..." />
-          <CommentList>
-            <CommentItem>
-              <CommentAuthor>사용자1</CommentAuthor>
-              <CommentText>좋은 글이네요!</CommentText>
-            </CommentItem>
-            <CommentItem>
-              <CommentAuthor>사용자2</CommentAuthor>
-              <CommentText>감사합니다!</CommentText>
-            </CommentItem>
-          </CommentList>
+            <CommentInputContainer>
+              <CommentInput
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="댓글을 입력하세요..."
+                disabled={!getUserId()} // ✅ 비회원이면 입력 불가
+              />
+              <SubmitButton onClick={handleCommentSubmit} disabled={!getUserId()}>
+                등록
+              </SubmitButton>
+            </CommentInputContainer>
+
+            <CommentList>
+              {comments.length === 0 ? (
+                <NoCommentText>아직 댓글이 없습니다.</NoCommentText>
+              ) : (
+                comments.map((comment) => (
+                  <CommentItem key={comment.commentId}>
+                    <CommentAuthor>{comment.userId}</CommentAuthor>
+                    <CommentContent>{comment.content}</CommentContent>
+                    <CommentDate>{new Date(comment.createdAt).toLocaleString("ko-KR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}</CommentDate>
+                  </CommentItem>
+                ))
+              )}
+            </CommentList>
+
         </CommentSection>
       </FeedContent>
     </Wrapper>
@@ -287,11 +360,41 @@ const CommentTitle = styled.h2`
   margin-bottom: 10px;
 `;
 
+
+
+
+const LoadingText = styled.div`
+  text-align: center;
+  margin-top: 20px;
+`;
+
+const ErrorText = styled.div`
+  text-align: center;
+  color: red;
+  margin-top: 20px;
+`;
+
+const CommentInputContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
 const CommentInput = styled.input`
-  width: 100%;
+  flex: 1;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+`;
+
+const SubmitButton = styled.button`
+  background-color: rgb(231, 174, 100);
+  border: none;
+  padding: 8px 12px;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  color: white;
+  border-radius: 4px;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const CommentList = styled.div`
@@ -308,18 +411,18 @@ const CommentAuthor = styled.span`
   font-size: 14px;
 `;
 
-const CommentText = styled.p`
+const CommentContent = styled.p`
   font-size: 14px;
   margin-top: 4px;
 `;
 
-const LoadingText = styled.div`
-  text-align: center;
-  margin-top: 20px;
+const CommentDate = styled.span`
+  font-size: 12px;
+  color: gray;
+  margin-left: 8px;
 `;
 
-const ErrorText = styled.div`
+const NoCommentText = styled.p`
   text-align: center;
-  color: red;
-  margin-top: 20px;
+  color: gray;
 `;
