@@ -111,7 +111,8 @@ const DetailBong: React.FC = () => {
         <Title>{bongData.progrmSj}</Title>
 
         <Details>
-          <DetailItem><FaCalendarAlt /> 시작일: {formatDate(bongData.progrmBgnde)} ~ {formatDate(bongData.progrmEndde)}</DetailItem>
+          <DetailItem><FaCalendarAlt /> 모집 기간: {formatDate(bongData.noticeBgnde)} ~ {formatDate(bongData.noticeEndde)}</DetailItem>
+          <DetailItem><FaCalendarAlt /> 봉사 기간: {formatDate(bongData.progrmBgnde)} ~ {formatDate(bongData.progrmEndde)}</DetailItem>
           <DetailItem><FaClock /> 활동 시간: {bongData.actBeginTm}시 ~ {bongData.actEndTm}시</DetailItem>
           <DetailItem><FaUsers /> 모집 인원: {bongData.rcritNmpr}명</DetailItem>
           <DetailItem><FaMapMarkerAlt /> 장소: {bongData.actPlace} ({bongData.postAdres})</DetailItem>
