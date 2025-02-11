@@ -18,7 +18,7 @@ if not os.path.exists(IMAGE_SAVE_PATH):
 def download_image(image_url, feed_id):
     try:
         headers = {
-            "Referer": "https://gall.dcinside.com/"  # ✅ 디시인사이드 Referer 추가
+            "Referer": "https://gall.dcinside.com/"  # ✅ 디시인사이드 Referer추가
         }
         response = requests.get(image_url, headers=headers, stream=True)
 
