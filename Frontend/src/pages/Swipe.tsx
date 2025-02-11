@@ -293,33 +293,35 @@ const Swipe: React.FC = () => {
 
   return (
     <Wrapper>
-      {cards.map((card, index) => {
-        const isTop = index === currentIndex;
+      {[...cards].reverse().map((card, reversedIndex) => {
+        // 실제 인덱스 계산 (역순이므로 원래 인덱스로 변환)
+        const actualIndex = cards.length - 1 - reversedIndex;
+        const isTop = actualIndex === currentIndex;
 
         return (
           <Card
-            key={`${card.id}-${index}`}
-            data-index={index}
+            key={`${card.id}-${actualIndex}`}
+            data-index={actualIndex}
             style={{
-              zIndex: index,
+              zIndex: actualIndex, // zIndex도 그대로 유지
               backgroundImage: `url(${card.imageUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              backgroundBlendMode: "overlay", // 🎨 배경 색상과 혼합
+              backgroundBlendMode: "overlay",
               transform: isTop
                 ? Math.abs(dragX) > Math.abs(dragY)
-                  ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
-                  : `translateY(${dragY}px)` // 상하 스와이프
+                  ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)`
+                  : `translateY(${dragY}px)`
                 : `translateY(${dragY}px)`,
               transition: isDragging 
                 ? "none" 
-                : "transform 0.3s ease, opacity 0.2s ease", // opacity 트랜지션 시간 단축
+                : "transform 0.3s ease, opacity 0.2s ease",
               backgroundColor: isTop
-              ? dragX > 0
-                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})` // 우측(녹색)
-                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})` // 좌측(적색)
-              : "transparent",
-              opacity: card.imageLoaded ? 1 : 0.3, // 완전히 투명하지 않게 수정
+                ? dragX > 0
+                  ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
+                  : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
+                : "transparent",
+              opacity: card.imageLoaded ? 1 : 0.3,
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
@@ -332,7 +334,7 @@ const Swipe: React.FC = () => {
             {/* 이미지 프리로딩을 위한 수정된 방식 */}
             <img 
               src={card.imageUrl} 
-              onLoad={() => handleImageLoad(index)}
+              onLoad={() => handleImageLoad(actualIndex)}
               style={{ 
                 display: 'none',
                 width: 0,
