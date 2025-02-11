@@ -340,15 +340,15 @@ const TimeAgoText = styled.span`
 
 /* ✅ 제목 */
 const Title = styled.h1`
-  font-size: 22px;
+  font-size: 26px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 12px;
 `;
 
 /* ✅ 본문 내용 */
 const Content = styled.p`
-  font-size: 16px;
-  margin-top: 12px;
+  font-size: 18px;
+  margin-top: 16px;
   line-height: 1.6;
 `;
 
@@ -377,8 +377,9 @@ const CommentSection = styled.div`
 `;
 
 const CommentTitle = styled.h2`
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 22px;
+  margin-bottom: 12px;
+  font-weight: bold;
 `;
 
 
@@ -403,9 +404,10 @@ const CommentInputContainer = styled.div`
 
 const CommentInput = styled.input`
   flex: 1;
-  padding: 8px;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 `;
 
 const SubmitButton = styled.button`
@@ -423,44 +425,47 @@ const CommentList = styled.div`
 `;
 
 const CommentItem = styled.div`
-  padding: 12px;
+  padding: 16px;
   border-bottom: 1px solid #eee;
 `;
 
 const CommentHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 10px;
+  margin-bottom: 6px;
 `;
 
 const CommentAuthor = styled.span`
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 const CommentDate = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
 `;
 
 const CommentContent = styled.p`
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   margin: 0;
-  padding-left: 8px;
+  padding-left: 12px;
   position: relative;
+  line-height: 1.5;
 
   &::before {
     content: 'ㄴ';
     position: absolute;
     left: -8px;
     color: #999;
-    font-size: 12px;
+    font-size: 14px;
   }
 `;
 
 const NoCommentText = styled.p`
   text-align: center;
   color: gray;
+  font-size: 16px;
+  margin: 20px 0;
 `;
