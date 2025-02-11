@@ -157,18 +157,15 @@ const FeedAdd: React.FC = () => {
 export default FeedAdd;
 
 // ✅ 스타일 정의 (업데이트됨)
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  gap: 20px;
-  max-width: 500px;
-  margin: 0 auto;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  text-align: center;
 `;
+
 
 const Title = styled.h2`
   font-size: 28px;
