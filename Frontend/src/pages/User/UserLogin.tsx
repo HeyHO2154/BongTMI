@@ -59,7 +59,6 @@ const Login: React.FC = () => {
       <Logo src="/assets/BongTMI1.png" alt="봉틈이" />
 
       <InputGroup>
-        <Label>이메일</Label>
         <StyledInput
           type="email"
           placeholder="이메일을 입력하세요"
@@ -69,7 +68,6 @@ const Login: React.FC = () => {
       </InputGroup>
 
       <InputGroup>
-        <Label>비밀번호</Label>
         <StyledInput
           type="password"
           placeholder="비밀번호를 입력하세요"
@@ -117,7 +115,7 @@ const Container = styled.div`
 `;
 
 const Logo = styled.img`
-  height: 250px; /* 로고 높이 */
+  height: 200px; /* 로고 높이 */
   width: auto; /* 비율 유지 */
   padding-bottom: 15px;
 `;
@@ -128,12 +126,6 @@ const InputGroup = styled.div`
   gap: 8px;
   width: 280px;
   margin-bottom: 16px;
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  font-weight: 600;
-  color: #34495e;
 `;
 
 const StyledInput = styled.input`
@@ -158,7 +150,7 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 20px;
+  padding-top: 0px;
 `;
 
 const LoginButton = styled.button`
