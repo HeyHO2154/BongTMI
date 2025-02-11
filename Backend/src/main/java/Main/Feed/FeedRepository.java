@@ -14,4 +14,8 @@ public interface FeedRepository extends JpaRepository<Feed, String> {
 	
 	@Query(value = "SELECT * FROM Feed ORDER BY created_at DESC", nativeQuery = true)
 	List<Feed> findAllFeed();
+
+	// 카테고리별 피드 조회 추가
+	@Query(value = "SELECT * FROM Feed WHERE category = :category ORDER BY created_at DESC", nativeQuery = true)
+	List<Feed> findByCategory(int category);
 }

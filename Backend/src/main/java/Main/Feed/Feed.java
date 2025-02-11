@@ -33,6 +33,9 @@ public class Feed {
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private int views = 0;
 
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int category = 0;  // 기본값을 0(전체)으로 변경
+
 	public String getFeedID() {
 		return feedID;
 	}
@@ -88,6 +91,12 @@ public class Feed {
 	public void setViews(int views) {
 		this.views = views;
 	}
-    
-    
+
+    public int getCategory() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
 }

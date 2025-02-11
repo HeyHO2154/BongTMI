@@ -37,8 +37,13 @@ public class FeedController {
         return feedService.getInfoFeed(feedID);
     }
     
+    @GetMapping("/category")
+    public List<Feed> getFeedsByCategory(@RequestParam int category) {
+        return feedService.getFeedsByCategory(category);
+    }
+    
     @PostMapping("/add")
-    public Feed saveBong(@RequestBody Feed feedDto) {
+    public Feed saveFeed(@RequestBody Feed feedDto) {
         return feedService.saveFeed(feedDto);
     }
 }

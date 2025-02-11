@@ -9,8 +9,17 @@ const FeedAdd: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
+  const [category, setCategory] = useState(4); // 기본값은 자유게시판(4)
 
   const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+
+  // 카테고리 목록
+  const categories = [
+    { id: 1, label: '공지' },
+    { id: 2, label: '건의' },
+    { id: 3, label: '후기' },
+    { id: 4, label: '자유' }
+  ];
 
   useEffect(() => {
       const storedUser = localStorage.getItem("user");
@@ -54,7 +63,7 @@ const FeedAdd: React.FC = () => {
     const feedID = generateFeedID();
 
     if (!title || !content) {
-      alert("제목, 작성자, 내용을 입력해주세요.");
+      alert("제목과 내용을 입력해주세요.");
       return;
     }
 
@@ -66,6 +75,7 @@ const FeedAdd: React.FC = () => {
       content: content,
       likes: 0,
       views: 0,
+      category: category // 카테고리 추가
     };
 
     try {
@@ -97,7 +107,17 @@ const FeedAdd: React.FC = () => {
 
   return (
     <Container onSubmit={handleSubmit}>
-      <Title>후기 작성</Title>
+      <Title>글 작성</Title>
+      <CategorySelect
+        value={category}
+        onChange={(e) => setCategory(Number(e.target.value))}
+      >
+        {categories.map(cat => (
+          <option key={cat.id} value={cat.id}>
+            {cat.label}
+          </option>
+        ))}
+      </CategorySelect>
       <Input
         type="text"
         placeholder="제목을 입력하세요"
@@ -234,5 +254,28 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: #0056b3;
     transform: scale(1.02);
+  }
+`;
+
+// 새로운 스타일 컴포넌트 추가
+const CategorySelect = styled.select`
+  width: 100%;
+  max-width: 800px;
+  padding: 14px 20px;
+  font-size: 18px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  outline: none;
+  transition: border 0.2s;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #007bff;
+  }
+
+  option {
+    padding: 10px;
+    font-size: 16px;
   }
 `;

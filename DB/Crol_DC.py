@@ -62,13 +62,14 @@ def save_to_mysql(data):
         with connection.cursor() as cursor:
             sql = """
             INSERT INTO Feed (
-                FeedID, title, author, content, likes, views
-            ) VALUES (%s, %s, %s, %s, %s, %s)
+                FeedID, title, author, content, likes, views, category
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
                 title=VALUES(title),
                 author=VALUES(author),
                 content=VALUES(content),
-                views=VALUES(views)
+                views=VALUES(views),
+                category=VALUES(category)
             """
             cursor.executemany(sql, data)
         print(f"✅ {len(data)}개의 게시글을 MySQL에 저장 완료!")
@@ -148,8 +149,8 @@ async def scrape_dcinside():
                 views = 0
                 likes = 0  
 
-                # ✅ 데이터 저장
-                records.append((FeedID, title, author, content, likes, views))
+                # ✅ 데이터 저장 (category 4 추가 - 자유게시판)
+                records.append((FeedID, title, author, content, likes, views, 4))
                 print(f"✅ 저장됨: {title}")
 
             except Exception as e:

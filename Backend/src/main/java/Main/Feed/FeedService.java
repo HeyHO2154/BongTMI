@@ -39,12 +39,20 @@ public class FeedService {
         }
 	}
     
+    public List<Feed> getFeedsByCategory(int category) {
+        if (category == 0) {
+            return getAllFeed();
+        }
+        return feedRepository.findByCategory(category);
+    }
+    
     public Feed saveFeed(Feed feedDto) {
     	Feed feed = new Feed();
     	feed.setAuthor(feedDto.getAuthor());
     	feed.setContent(feedDto.getContent());
     	feed.setFeedID(feedDto.getFeedID());
     	feed.setTitle(feedDto.getTitle());
+    	feed.setCategory(feedDto.getCategory());
         return feedRepository.save(feed);
     }
 

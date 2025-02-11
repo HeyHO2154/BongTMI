@@ -47,16 +47,16 @@ const Feed: React.FC = () => {
   const [isSearching, setIsSearching] = useState(true); // 검색 중 상태 추가
   const [noResults, setNoResults] = useState(false); // 결과 없음 상태 추가
 
-  // 카테고리 목록
+  // 카테고리 목록 수정
   const categories = [
-    { id: 'all', label: '전체' },
-    { id: 'notice', label: '공지' },
-    { id: 'suggestion', label: '건의' },
-    { id: 'review', label: '후기' },
-    { id: 'free', label: '자유' }
+    { id: -1, label: '전체' },    // 전체 보기용 카테고리 ID를 -1로 설정
+    { id: 1, label: '공지' },
+    { id: 2, label: '건의' },
+    { id: 3, label: '후기' },
+    { id: 4, label: '자유' }
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(-1); // 기본값을 전체(-1)로 설정
 
   const getUserId = (): string | null => {
     const userData = localStorage.getItem("user");
@@ -86,29 +86,39 @@ const Feed: React.FC = () => {
   
 
   // ✅ API 데이터 불러오기
-const fetchFeeds = async () => {
+const fetchFeedsByCategory = async (categoryId: number) => {
   setIsSearching(true);
   setNoResults(false);
   setIsLoading(true);
   try {
     const userId = getUserId();
+    let response;
+    
+    if (categoryId === -1) {
+      // 전체 카테고리 선택 시
+      response = await axios.get(`${config.API_DEV}/api/feed/all`);
+    } else {
+      // 특정 카테고리 선택 시
+      response = await axios.get(`${config.API_DEV}/api/feed/category`, {
+        params: { category: categoryId }
+      });
+    }
 
-    const response = await axios.get(`${config.API_DEV}/api/feed/all`);
     const allFeeds = response.data.map((feed: FeedData) => ({
       ...feed,
       imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
-      isLiked: userId ? false : false, // ✅ 비회원이면 무조건 false
+      isLiked: userId ? false : false,
     }));
 
-    // ✅ 좋아요 상태와 댓글 개수를 동시에 가져오기
+    // 좋아요 상태와 댓글 개수 가져오기
     const updatedFeeds = await Promise.all(
-      allFeeds.map(async (feed: FeedData) => { // ✅ feed의 타입 명시
+      allFeeds.map(async (feed: FeedData) => {
         const [likeStatusRes, commentsCount] = await Promise.all([
           userId
             ? axios.get(`${config.API_DEV}/api/feed/like-status`, {
                 params: { userId, feedId: feed.feedID },
               })
-            : Promise.resolve({ data: { isLiked: false } }), // 비회원은 false 기본값
+            : Promise.resolve({ data: { isLiked: false } }),
           fetchCommentCount(feed.feedID),
         ]);
 
@@ -169,8 +179,17 @@ const fetchFeeds = async () => {
     }
   };
   
+  // 카테고리 변경 핸들러
+  const handleCategoryChange = (categoryId: number) => {
+    setSelectedCategory(categoryId);
+    setVisibleCards([]); // 기존 게시글 초기화
+    setOffset(0); // 오프셋 초기화
+    fetchFeedsByCategory(categoryId);
+  };
+
+  // 초기 로딩 시 전체 카테고리 데이터 불러오기
   useEffect(() => {
-    fetchFeeds();
+    fetchFeedsByCategory(-1);
   }, []);
 
   const navigate = useNavigate();
@@ -182,7 +201,7 @@ const fetchFeeds = async () => {
           <CategoryButton
             key={category.id}
             isSelected={selectedCategory === category.id}
-            onClick={() => setSelectedCategory(category.id)}
+            onClick={() => handleCategoryChange(category.id)}
           >
             {category.label}
           </CategoryButton>
