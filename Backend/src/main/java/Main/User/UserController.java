@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @CrossOrigin(origins = "${Front_URL}")
 @RequestMapping("/api/auth")
@@ -60,5 +63,21 @@ public class UserController {
             return new ResponseEntity<>("로그인 처리 중 오류가 발생했습니다.", 
                                      HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody FindAccountRequest request) {
+        try {
+            userService.resetPassword(request.getEmail());
+            return new ResponseEntity<>("임시 비밀번호가 이메일로 전송되었습니다.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private static class FindAccountRequest {
+        private String email;
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
     }
 }

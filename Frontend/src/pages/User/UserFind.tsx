@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import config from "../../config";
 
 const FindAccount: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [foundAccount, setFoundAccount] = useState<any>(null);
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleFindAccount = async () => {
+  const handleResetPassword = async () => {
     if (!email) {
       setMessage("이메일을 입력해주세요.");
       return;
@@ -21,18 +23,23 @@ const FindAccount: React.FC = () => {
         return;
       }
 
-      // API 연동은 나중에 구현
-      setMessage("현재 테스트 중입니다.");
-    } catch (error) {
-      setMessage("계정을 찾을 수 없습니다.");
-      setFoundAccount(null);
+      const response = await axios.post(`${config.API_DEV}/api/auth/reset-password`, { email });
+      setMessage(response.data);
+      setIsSuccess(true);
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        setMessage("해당 이메일로 등록된 계정을 찾을 수 없습니다.");
+      } else {
+        setMessage("비밀번호 재설정 중 오류가 발생했습니다.");
+      }
+      setIsSuccess(false);
     }
   };
 
   return (
     <Container>
       <FormWrapper>
-        <Title>계정 찾기</Title>
+        <Title>비밀번호 재설정</Title>
         <Subtitle>가입 시 등록한 이메일을 입력해주세요</Subtitle>
 
         <InputGroup>
@@ -45,13 +52,21 @@ const FindAccount: React.FC = () => {
           />
         </InputGroup>
 
-        {message && <Message isError={!foundAccount}>{message}</Message>}
+        {message && <Message isError={!isSuccess}>{message}</Message>}
 
         <ButtonGroup>
-          <FindButton onClick={handleFindAccount}>계정 찾기</FindButton>
-          <BackButton onClick={() => navigate("/login")}>
-            로그인으로 돌아가기
-          </BackButton>
+          <FindButton onClick={handleResetPassword}>
+            임시 비밀번호 발급
+          </FindButton>
+          {isSuccess ? (
+            <LoginButton onClick={() => navigate("/login")}>
+              로그인하기
+            </LoginButton>
+          ) : (
+            <BackButton onClick={() => navigate("/login")}>
+              로그인으로 돌아가기
+            </BackButton>
+          )}
         </ButtonGroup>
       </FormWrapper>
     </Container>
@@ -178,5 +193,13 @@ const BackButton = styled.button`
   &:hover {
     background: #f8f9fa;
     border-color: #bdc3c7;
+  }
+`;
+
+const LoginButton = styled(FindButton)`
+  background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+
+  &:hover {
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2);
   }
 `;
