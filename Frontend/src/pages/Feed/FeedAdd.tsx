@@ -159,13 +159,13 @@ export default FeedAdd;
 // ✅ 스타일 정의 (업데이트됨)
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  padding: 40px 20px;
+  overflow-y: auto;
   height: calc(100vh - 160px); /* TopBar 높이 제외 */
-  text-align: center;
 `;
-
 
 const Title = styled.h2`
   font-size: 28px;
