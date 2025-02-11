@@ -95,14 +95,15 @@ const DetailBong: React.FC = () => {
   // 신청하기 버튼 클릭 핸들러 추가
   const handleApplyClick = () => {
     const source = bongData?.progrmRegistNo.substring(0, 3);
+    const registNo = bongData?.progrmRegistNo.slice(3); // 앞의 3글자(SYO/VMS)를 제외한 번호
     let url = '';
     
     if (source === 'SYO') {
       // 1365 자원봉사 포털
-      url = `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?progrmRegistNo=${bongData?.progrmRegistNo}`;
+      url = `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=${registNo}`;
     } else if (source === 'VMS') {
       // VMS 사회복지 자원봉사
-      url = `https://www.vms.or.kr/openapi/participation/partReqList.do?progrmRegistNo=${bongData?.progrmRegistNo}`;
+      url = `https://www.vms.or.kr/partspace/recruitView.do?seq=${registNo}`;
     }
     
     if (url) {
