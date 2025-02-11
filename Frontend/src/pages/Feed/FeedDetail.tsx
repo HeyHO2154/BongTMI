@@ -258,15 +258,19 @@ const FeedDetail: React.FC = () => {
               ) : (
                 comments.map((comment) => (
                   <CommentItem key={comment.commentId}>
-                    <CommentAuthor>{comment.nickname}</CommentAuthor>
+                    <CommentHeader>
+                      <CommentAuthor>{comment.nickname}</CommentAuthor>
+                      <CommentDate>
+                        {new Date(comment.createdAt).toLocaleString("ko-KR", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </CommentDate>
+                    </CommentHeader>
                     <CommentContent>{comment.content}</CommentContent>
-                    <CommentDate>{new Date(comment.createdAt).toLocaleString("ko-KR", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}</CommentDate>
                   </CommentItem>
                 ))
               )}
@@ -419,8 +423,15 @@ const CommentList = styled.div`
 `;
 
 const CommentItem = styled.div`
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+`;
+
+const CommentHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 `;
 
 const CommentAuthor = styled.span`
@@ -428,15 +439,15 @@ const CommentAuthor = styled.span`
   font-size: 14px;
 `;
 
-const CommentContent = styled.p`
-  font-size: 14px;
-  margin-top: 4px;
+const CommentDate = styled.span`
+  font-size: 13px;
+  color: #666;
 `;
 
-const CommentDate = styled.span`
-  font-size: 12px;
-  color: gray;
-  margin-left: 8px;
+const CommentContent = styled.p`
+  font-size: 14px;
+  color: #333;
+  margin: 0;
 `;
 
 const NoCommentText = styled.p`
