@@ -30,6 +30,8 @@ const Swipe: React.FC = () => {
   const startX = useRef(0); // 드래그 시작점 X
   const startY = useRef(0); // 드래그 시작점 Y
   const [isFirstCardLoaded, setIsFirstCardLoaded] = useState(false); // 첫 카드 로딩 상태 추가
+  const [isSearching, setIsSearching] = useState(true); // 검색 중 상태 추가
+  const [noResults, setNoResults] = useState(false); // 결과 없음 상태 추가
 
   const navigate = useNavigate(); // navigate 함수 생성
   const location = useLocation(); // location 객체 가져오기
@@ -50,6 +52,7 @@ const Swipe: React.FC = () => {
   // API 호출 로직
   // --------------------
   const fetchCardData = async (progrmRegistNo?: string) => {
+    setIsSearching(true);
     try {
       const url = progrmRegistNo
         ? `${config.API_DEV}/api/bong/info?progrmRegistNo=${progrmRegistNo}` // 특정 카드 요청
@@ -81,14 +84,20 @@ const Swipe: React.FC = () => {
         imageLoaded: false,
       };
   
+      setIsSearching(false);
       return newCard;
     } catch (error) {
       console.error("Failed to fetch card data:", error);
+      setIsSearching(false);
+      setNoResults(true);
       return null;
     }
   };
   
   const initializeCards = async () => {
+    setIsSearching(true);
+    setNoResults(false);
+    
     const queryParams = new URLSearchParams(location.search); // 쿼리 파라미터 가져오기
     const progrmRegistNo = queryParams.get("progrmRegistNo");
 
@@ -105,8 +114,14 @@ const Swipe: React.FC = () => {
         if (card) newCards.push(card);
       }
     }
+
+    if (newCards.length === 0) {
+      setNoResults(true);
+    }
+    
     setCards(newCards);
     setCurrentIndex(newCards.length - 1); // 마지막 카드가 최상단으로 보이게 설정
+    setIsSearching(false);
   };
 
   // --------------------
@@ -299,118 +314,131 @@ const Swipe: React.FC = () => {
 
   return (
     <Wrapper>
-      {[...cards].reverse().map((card, reversedIndex) => {
-        const actualIndex = cards.length - 1 - reversedIndex;
-        const isTop = actualIndex === currentIndex;
+      {currentIndex >= 0 ? (
+        [...cards].reverse().map((card, reversedIndex) => {
+          const actualIndex = cards.length - 1 - reversedIndex;
+          const isTop = actualIndex === currentIndex;
 
-        // 첫 번째 카드가 로드되기 전에는 최상단 카드만 렌더링
-        if (!isFirstCardLoaded && actualIndex !== currentIndex) {
-          return null;
-        }
+          // 첫 번째 카드가 로드되기 전에는 최상단 카드만 렌더링
+          if (!isFirstCardLoaded && actualIndex !== currentIndex) {
+            return null;
+          }
 
-        return (
-          <Card
-            key={`${card.id}-${actualIndex}`}
-            data-index={actualIndex}
-            style={{
-              zIndex: actualIndex, // zIndex도 그대로 유지
-              backgroundImage: `url(${card.imageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundBlendMode: "overlay",
-              transform: isTop
-                ? Math.abs(dragX) > Math.abs(dragY)
-                  ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)`
-                  : `translateY(${dragY}px)`
-                : `translateY(${dragY}px)`,
-              transition: isDragging 
-                ? "none" 
-                : "transform 0.3s ease, opacity 0.5s ease", // opacity 트랜지션 시간 늘림
-              backgroundColor: isTop
-                ? dragX > 0
-                  ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
-                  : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
-                : "transparent",
-              opacity: card.imageLoaded ? 1 : 0, // 완전히 투명하게 시작
-            }}
-            onTouchStart={isTop ? handleTouchStart : undefined}
-            onTouchMove={isTop ? handleTouchMove : undefined}
-            onTouchEnd={isTop ? handleTouchEnd : undefined}
-            onMouseDown={isTop ? handleMouseDown : undefined}
-            onMouseMove={isTop ? handleMouseMove : undefined}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={isTop ? handleMouseLeave : undefined}
-          >
-            {/* 이미지 프리로딩을 위한 수정된 방식 */}
-            <img 
-              src={card.imageUrl} 
-              onLoad={() => handleImageLoad(actualIndex)}
-              style={{ 
-                display: 'none',
-                width: 0,
-                height: 0
-              }}
-              alt=""
-              loading="eager" // 이미지 즉시 로딩
-            />
-
-            <div
+          return (
+            <Card
+              key={`${card.id}-${actualIndex}`}
+              data-index={actualIndex}
               style={{
-                position: "absolute",
-                top: "20px", // 상단 간격
-                left: "20px", // 좌측 간격
-                backgroundColor:
-                  card.from === "1365자원봉사"
-                    ? "rgba(255, 215, 0, 1)" // 노란색 (1365)
-                    : card.from === "VMS사회복지"
-                    ? "rgba(138, 43, 226, 1)" // 보라색 (VMS)
-                    : card.from === "미등록 사용자"
-                    ? "rgb(218, 40, 40)" // 적색 (비 로그인)
-                    : "rgb(36, 177, 36)", // 녹색 (사용자 정의)
-                color:
-                  card.from === "1365자원봉사"
-                    ? "black" // 글자를 흰색으로 설정 (VMS)
-                    : "white", // 기본값은 검정색
-                padding: "12px 24px", // 패딩 키워서 크기 조정
-                borderRadius: "12px", // 둥글기 유지
-                fontSize: "18px", // 폰트 크기 키우기
-                fontWeight: "bold",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // 그림자 효과
-                height: "auto", // 높이를 자동으로 맞춤
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                zIndex: actualIndex, // zIndex도 그대로 유지
+                backgroundImage: `url(${card.imageUrl})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundBlendMode: "overlay",
+                transform: isTop
+                  ? Math.abs(dragX) > Math.abs(dragY)
+                    ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)`
+                    : `translateY(${dragY}px)`
+                  : `translateY(${dragY}px)`,
+                transition: isDragging 
+                  ? "none" 
+                  : "transform 0.3s ease, opacity 0.5s ease", // opacity 트랜지션 시간 늘림
+                backgroundColor: isTop
+                  ? dragX > 0
+                    ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
+                    : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
+                  : "transparent",
+                opacity: card.imageLoaded ? 1 : 0, // 완전히 투명하게 시작
               }}
+              onTouchStart={isTop ? handleTouchStart : undefined}
+              onTouchMove={isTop ? handleTouchMove : undefined}
+              onTouchEnd={isTop ? handleTouchEnd : undefined}
+              onMouseDown={isTop ? handleMouseDown : undefined}
+              onMouseMove={isTop ? handleMouseMove : undefined}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={isTop ? handleMouseLeave : undefined}
             >
-              {card.from}
-            </div>
-            <TextContainer>
-              <LabelText>{card.label}</LabelText>
-              <ContextText>{card.region}</ContextText>
-              
-              <ContextText style={{ display: "flex", alignItems: "center" }}>
-                {card.date} {/* 모집 마감일 텍스트 */}
-                <span
-                  style={{
-                    marginLeft: "10px", // 모집 마감일과 간격 조정
-                    backgroundColor: "rgb(204, 16, 16)", // 빨간색 배경
-                    color: "white",
-                    padding: "5px 12px",
-                    borderRadius: "6px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    display: "inline-block",
-                  }}
-                >
-                  {`D-${card.remainingDays}`}
-                </span>
-              </ContextText>
-            </TextContainer>
-          </Card>
-        );
-      })}
+              {/* 이미지 프리로딩을 위한 수정된 방식 */}
+              <img 
+                src={card.imageUrl} 
+                onLoad={() => handleImageLoad(actualIndex)}
+                style={{ 
+                  display: 'none',
+                  width: 0,
+                  height: 0
+                }}
+                alt=""
+                loading="eager" // 이미지 즉시 로딩
+              />
 
-      {currentIndex < 0 && <NoMoreCards><Loading/></NoMoreCards>}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "20px", // 상단 간격
+                  left: "20px", // 좌측 간격
+                  backgroundColor:
+                    card.from === "1365자원봉사"
+                      ? "rgba(255, 215, 0, 1)" // 노란색 (1365)
+                      : card.from === "VMS사회복지"
+                      ? "rgba(138, 43, 226, 1)" // 보라색 (VMS)
+                      : card.from === "미등록 사용자"
+                      ? "rgb(218, 40, 40)" // 적색 (비 로그인)
+                      : "rgb(36, 177, 36)", // 녹색 (사용자 정의)
+                  color:
+                    card.from === "1365자원봉사"
+                      ? "black" // 글자를 흰색으로 설정 (VMS)
+                      : "white", // 기본값은 검정색
+                  padding: "12px 24px", // 패딩 키워서 크기 조정
+                  borderRadius: "12px", // 둥글기 유지
+                  fontSize: "18px", // 폰트 크기 키우기
+                  fontWeight: "bold",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // 그림자 효과
+                  height: "auto", // 높이를 자동으로 맞춤
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {card.from}
+              </div>
+              <TextContainer>
+                <LabelText>{card.label}</LabelText>
+                <ContextText>{card.region}</ContextText>
+                
+                <ContextText style={{ display: "flex", alignItems: "center" }}>
+                  {card.date} {/* 모집 마감일 텍스트 */}
+                  <span
+                    style={{
+                      marginLeft: "10px", // 모집 마감일과 간격 조정
+                      backgroundColor: "rgb(204, 16, 16)", // 빨간색 배경
+                      color: "white",
+                      padding: "5px 12px",
+                      borderRadius: "6px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      display: "inline-block",
+                    }}
+                  >
+                    {`D-${card.remainingDays}`}
+                  </span>
+                </ContextText>
+              </TextContainer>
+            </Card>
+          );
+        })
+      ) : (
+        <NoMoreCards>
+          {isSearching ? (
+            <Loading />
+          ) : noResults ? (
+            <NoResultsMessage>
+              <span>더 이상 표시할 봉사가 없습니다 😢</span>
+              <span>나중에 다시 확인해주세요!</span>
+            </NoResultsMessage>
+          ) : (
+            <Loading />
+          )}
+        </NoMoreCards>
+      )}
     </Wrapper>
   );
 
@@ -471,4 +499,23 @@ const NoMoreCards = styled.div`
   margin-top: 50%;
   text-align: center;
   color: #888;
+`;
+
+const NoResultsMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-align: center;
+
+  span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  span:last-child {
+    font-size: 1rem;
+    color: #888;
+  }
 `;

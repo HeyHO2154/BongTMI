@@ -44,6 +44,8 @@ const Feed: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const limit = 5; // 한 번에 로드할 개수
+  const [isSearching, setIsSearching] = useState(true); // 검색 중 상태 추가
+  const [noResults, setNoResults] = useState(false); // 결과 없음 상태 추가
 
   const getUserId = (): string | null => {
     const userData = localStorage.getItem("user");
@@ -74,6 +76,8 @@ const Feed: React.FC = () => {
 
   // ✅ API 데이터 불러오기
 const fetchFeeds = async () => {
+  setIsSearching(true);
+  setNoResults(false);
   setIsLoading(true);
   try {
     const userId = getUserId();
@@ -105,13 +109,19 @@ const fetchFeeds = async () => {
       })
     );
 
+    if (updatedFeeds.length === 0) {
+      setNoResults(true);
+    }
+
     setAllCards(updatedFeeds);
     setVisibleCards(updatedFeeds.slice(0, limit));
     setOffset(limit);
   } catch (error) {
     console.error("데이터 로드 실패:", error);
+    setNoResults(true);
   } finally {
     setIsLoading(false);
+    setIsSearching(false);
   }
 };
 
@@ -157,53 +167,65 @@ const fetchFeeds = async () => {
   return (
     <FeedWrapper ref={wrapperRef} onScroll={handleScroll}>
       <FeedContainer>
-        {visibleCards.map((feed: FeedData) => (
-          <FeedCard key={feed.feedID} onClick={() => handleFeedClick(feed.feedID)}>
-            {/* 사용자 정보 */}
-            <FeedHeader>
-              <Profile>
-                <ProfileImage src="/assets/DC.png" alt="디시인사이드" />
-                <Author>
-                  {feed.author} <TimeAgo>{timeAgo(feed.createdAt)}</TimeAgo>
-                </Author>
-              </Profile>
-              <MoreHorizontal />
-            </FeedHeader>
+        {visibleCards.length > 0 ? (
+          visibleCards.map((feed: FeedData) => (
+            <FeedCard key={feed.feedID} onClick={() => handleFeedClick(feed.feedID)}>
+              {/* 사용자 정보 */}
+              <FeedHeader>
+                <Profile>
+                  <ProfileImage src="/assets/DC.png" alt="디시인사이드" />
+                  <Author>
+                    {feed.author} <TimeAgo>{timeAgo(feed.createdAt)}</TimeAgo>
+                  </Author>
+                </Profile>
+                <MoreHorizontal />
+              </FeedHeader>
 
-            <FeedImageContainer>
-                <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
-            </FeedImageContainer>
+              <FeedImageContainer>
+                  <FeedImage style={{ backgroundImage: `url(${feed.imageUrl})` }} />
+              </FeedImageContainer>
 
-            {/* 게시글 내용 */}
-            <FeedContent>
-              <ContentTitle>{feed.title}</ContentTitle>
-              {/* <ContentText>{feed.content}</ContentText> */}
-            </FeedContent>
+              {/* 게시글 내용 */}
+              <FeedContent>
+                <ContentTitle>{feed.title}</ContentTitle>
+                {/* <ContentText>{feed.content}</ContentText> */}
+              </FeedContent>
 
-            {/* 버튼 */}
-            <FeedFooter>
-              <Actions>
-                {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
-                <LikeButton>
-                  {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
-                  <span>{feed?.likes}</span>
-                </LikeButton>
-                <CommentButton>
-                  <MessageCircle />
-                  <span>{feed?.comments ?? 0}</span> {/* ✅ 댓글 개수 표시 */}
-                </CommentButton>
-              </Actions>
-            </FeedFooter>
+              {/* 버튼 */}
+              <FeedFooter>
+                <Actions>
+                  {/* 좋아요 & 댓글 버튼 (이벤트 전파 방지) */}
+                  <LikeButton>
+                    {feed?.isLiked ? <ThumbsUp fill="blue" /> : <ThumbsUp />}
+                    <span>{feed?.likes}</span>
+                  </LikeButton>
+                  <CommentButton>
+                    <MessageCircle />
+                    <span>{feed?.comments ?? 0}</span> {/* ✅ 댓글 개수 표시 */}
+                  </CommentButton>
+                </Actions>
+              </FeedFooter>
 
-          </FeedCard>
-        ))}
-
-        {isLoading && <LoadingText><Loading/></LoadingText>}
+            </FeedCard>
+          ))
+        ) : (
+          <NoResultsWrapper>
+            {isSearching ? (
+              <Loading />
+            ) : noResults ? (
+              <NoResultsMessage>
+                <span>표시할 피드가 없습니다 😢</span>
+                <span>첫 게시글의 주인공이 되어보세요!</span>
+              </NoResultsMessage>
+            ) : (
+              <Loading />
+            )}
+          </NoResultsWrapper>
+        )}
       </FeedContainer>
 
-        {/* 글 작성하기 버튼 */}
+      {isLoading && !noResults && <LoadingText><Loading/></LoadingText>}
       <FloatingButton onClick={() => navigate("/feed-write")}>+</FloatingButton>
-
     </FeedWrapper>
   );
 };
@@ -389,5 +411,32 @@ const FloatingButton = styled.button`
     border-radius: 5px;
     font-size: 16px;
     white-space: nowrap;
+  }
+`;
+
+const NoResultsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+`;
+
+const NoResultsMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-align: center;
+
+  span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  span:last-child {
+    font-size: 1rem;
+    color: #888;
   }
 `;
