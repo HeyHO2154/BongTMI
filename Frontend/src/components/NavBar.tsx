@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPlus, faEye, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPlus, faComments, faUser, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const NavBarContainer = styled.nav`
   position: sticky;
@@ -49,7 +49,7 @@ const NavBar: React.FC = () => {
         봉사 등록
       </NavButton>
       <NavButton to="/feed" $isActive={activeButton === "/feed"} onClick={() => setActiveButton("/feed")}>
-        <FontAwesomeIcon icon={faEye} size="2x" />
+        <FontAwesomeIcon icon={faComments} size="2x" />
         봉사 소식
       </NavButton>
       <NavButton to="/my-page" $isActive={activeButton === "/my-page"} onClick={() => setActiveButton("/my-page")}>
