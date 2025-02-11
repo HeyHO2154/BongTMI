@@ -158,69 +158,60 @@ export default FeedAdd;
 
 // ✅ 스타일 정의 (업데이트됨)
 const Container = styled.form`
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100vh - 160px);
-  padding: 24px 20px;
-  gap: 20px;
-  overflow-y: auto;
-  background-color: #fafafa;
+  padding: 40px 20px;
+  gap: 16px;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 const Title = styled.h2`
   font-size: 24px;
-  font-weight: 600;
-  text-align: center;
-  color: #333;
+  font-weight: bold;
   margin-bottom: 20px;
+  color: #1a1a1a;
 `;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  max-width: 600px;
-  background: #fff;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #eee;
 `;
 
 const Label = styled.label`
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #555;
+  color: #1a1a1a;
 `;
 
 const CategorySelect = styled.select`
-  width: 160px;
-  padding: 8px 12px;
+  width: 100%;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
+  border-radius: 4px;
   outline: none;
-  cursor: pointer;
+  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #666;
+    border-color: #1a1a1a;
   }
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
+  border-radius: 4px;
   outline: none;
+  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #666;
+    border-color: #1a1a1a;
   }
 
   &::placeholder {
@@ -231,17 +222,16 @@ const Input = styled.input`
 const Textarea = styled.textarea`
   width: 100%;
   height: 200px;
-  padding: 10px 12px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
+  border-radius: 4px;
   resize: none;
   outline: none;
-  line-height: 1.5;
+  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #666;
+    border-color: #1a1a1a;
   }
 
   &::placeholder {
@@ -249,46 +239,44 @@ const Textarea = styled.textarea`
   }
 `;
 
-const FileInputWrapper = styled(FormGroup)`
-  margin-top: -8px;
-`;
+const FileInputWrapper = styled(FormGroup)``;
 
 const FileInputLabel = styled(Label)``;
 
 const FileInput = styled.input`
+  width: 100%;
+  padding: 8px 0;
   font-size: 14px;
-  cursor: pointer;
 `;
 
 const PreviewContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  max-width: 600px;
+  gap: 8px;
+  width: 100%;
 `;
 
 const PreviewImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #eee;
+  border-radius: 4px;
+  border: 1px solid #ddd;
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  max-width: 600px;
-  padding: 12px 0;
-  font-size: 15px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 12px;
+  font-size: 14px;
   font-weight: 600;
+  color: white;
+  background-color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #555;
+    background-color: #333;
   }
 `;
