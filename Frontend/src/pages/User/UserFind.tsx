@@ -45,7 +45,7 @@ const FindAccount: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(`${config.API_DEV}/api/auth/verify-code`, {
+      await axios.post(`${config.API_DEV}/api/auth/verify-code`, {
         email,
         code: verificationCode
       });
