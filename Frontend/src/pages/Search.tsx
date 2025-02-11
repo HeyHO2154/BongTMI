@@ -49,7 +49,8 @@ const Search: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState(""); // ✅ 검색어 상태 추가
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedSigungu, setSelectedSigungu] = useState("");
-  const [noResults, setNoResults] = useState(false); // 검색 결과 없음 상태 추가
+  const [isSearching, setIsSearching] = useState(false); // 검색 중 상태
+  const [noResults, setNoResults] = useState(false);
 
 
   const [filters, setFilters] = useState<FilterState>({
@@ -183,6 +184,9 @@ const Search: React.FC = () => {
   };
 
   const handleSearch = () => {
+    setNoResults(false);
+    setIsSearching(true); // 검색 시작
+
     let filtered = allCards.filter((card) => {
       const cardDaysArray = convertDaysToArray(card.days);
       const selectedDaysArray = filters.days;
@@ -203,14 +207,10 @@ const Search: React.FC = () => {
       );
     });
 
-    // 검색 결과가 없을 때 처리
-    if (filtered.length === 0) {
-      setNoResults(true);
-    } else {
-      setNoResults(false);
-    }
-  
+    // 검색 결과 처리
     setVisibleCards(filtered);
+    setNoResults(filtered.length === 0);
+    setIsSearching(false); // 검색 완료
   };
   
   const handleLocationChange = (type: "sido" | "sigungu", value: string) => {
@@ -361,13 +361,13 @@ const Search: React.FC = () => {
           ))
         ) : (
           <NoResultsWrapper>
-            {noResults ? (
+            {isSearching ? (
+              <Loading />
+            ) : (
               <NoResultsMessage>
                 <span>검색 결과가 없습니다 😢</span>
                 <span>다른 검색어나 필터를 시도해보세요!</span>
               </NoResultsMessage>
-            ) : (
-              <Loading />
             )}
           </NoResultsWrapper>
         )}
