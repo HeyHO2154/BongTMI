@@ -221,12 +221,12 @@ const Swipe: React.FC = () => {
     const finalX = dragX > 0 ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
     const finalRotate = dragX > 0 ? 30 : -30;
 
-    // ✅ 새 카드 데이터를 미리 가져오기 (비동기 실행)
+    // 새 카드 데이터를 미리 가져오기 (비동기 실행)
     const newCardPromise = fetchCardData();
 
-    (topCard as HTMLElement).style.transition = "transform 3s ease-out"; // ✅ 0.3초로 줄이기
+    // 트랜지션 시간을 3초에서 0.3초로 수정
+    (topCard as HTMLElement).style.transition = "transform 0.3s ease-out";
     (topCard as HTMLElement).style.transform = `translateX(${finalX}px) rotate(${finalRotate}deg)`;
-
 
     // ✅ 로그인된 사용자 정보 가져오기
     const storedUser = localStorage.getItem("user");
@@ -253,7 +253,6 @@ const Swipe: React.FC = () => {
             console.error("API 요청 실패:", error);
         }
     }
-
 
     const newCard = await newCardPromise; // 미리 가져온 데이터 사용
     if (!newCard) return;
@@ -288,7 +287,7 @@ const Swipe: React.FC = () => {
         return (
           <Card
             key={`${card.id}-${index}`}
-            data-index={index} // data-index 속성 추가
+            data-index={index}
             style={{
               zIndex: index,
               backgroundImage: `url(${card.imageUrl})`,
@@ -300,13 +299,15 @@ const Swipe: React.FC = () => {
                   ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` // 좌우 스와이프
                   : `translateY(${dragY}px)` // 상하 스와이프
                 : `translateY(${dragY}px)`,
-              transition: isDragging ? "none" : "transform 0.3s ease",
+              transition: isDragging 
+                ? "none" 
+                : "transform 0.3s ease, opacity 0.2s ease", // opacity 트랜지션 시간 단축
               backgroundColor: isTop
               ? dragX > 0
-                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 우측(녹색)
-                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 좌측(적색)
+                ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})` // 우측(녹색)
+                : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})` // 좌측(적색)
               : "transparent",
-              opacity: card.imageLoaded ? 1 : 0, // 이미지 로드 전에는 카드를 숨김
+              opacity: card.imageLoaded ? 1 : 0.3, // 완전히 투명하지 않게 수정
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
@@ -316,12 +317,17 @@ const Swipe: React.FC = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={isTop ? handleMouseLeave : undefined}
           >
-            {/* 숨겨진 이미지 추가하여 로딩 상태 감지 */}
+            {/* 이미지 프리로딩을 위한 수정된 방식 */}
             <img 
               src={card.imageUrl} 
               onLoad={() => handleImageLoad(index)}
-              style={{ display: 'none' }}
+              style={{ 
+                display: 'none',
+                width: 0,
+                height: 0
+              }}
               alt=""
+              loading="eager" // 이미지 즉시 로딩
             />
 
             <div
