@@ -49,6 +49,7 @@ const Search: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState(""); // ✅ 검색어 상태 추가
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedSigungu, setSelectedSigungu] = useState("");
+  const [noResults, setNoResults] = useState(false); // 검색 결과 없음 상태 추가
 
 
   const [filters, setFilters] = useState<FilterState>({
@@ -187,9 +188,8 @@ const Search: React.FC = () => {
       const selectedDaysArray = filters.days;
   
       const matchesDay =
-        selectedDaysArray.length === 0 || // 선택한 요일이 없으면 필터 X
-        selectedDaysArray.some((day) => cardDaysArray.includes(day)); // 선택한 요일 중 하나라도 포함되면 통과
-  
+        selectedDaysArray.length === 0 || 
+        selectedDaysArray.some((day) => cardDaysArray.includes(day));
   
       return (
         (card.label.includes(searchTerm) || card.postAdress.includes(searchTerm)) &&
@@ -202,6 +202,13 @@ const Search: React.FC = () => {
         (filters.gugunCd ? card.postAdress.includes(filters.gugunCd) : true)
       );
     });
+
+    // 검색 결과가 없을 때 처리
+    if (filtered.length === 0) {
+      setNoResults(true);
+    } else {
+      setNoResults(false);
+    }
   
     setVisibleCards(filtered);
   };
@@ -353,11 +360,20 @@ const Search: React.FC = () => {
             </Card>
           ))
         ) : (
-          <Loading/>
+          <NoResultsWrapper>
+            {noResults ? (
+              <NoResultsMessage>
+                <span>검색 결과가 없습니다 😢</span>
+                <span>다른 검색어나 필터를 시도해보세요!</span>
+              </NoResultsMessage>
+            ) : (
+              <Loading />
+            )}
+          </NoResultsWrapper>
         )}
       </CardList>
 
-      {isLoading && <LoadingText><Loading/></LoadingText>}
+      {isLoading && !noResults && <LoadingText><Loading/></LoadingText>}
     </Wrapper>
   );
 };
@@ -562,4 +578,31 @@ const CheckboxWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+`;
+
+const NoResultsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+`;
+
+const NoResultsMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-align: center;
+
+  span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  span:last-child {
+    font-size: 1rem;
+    color: #888;
+  }
 `;
