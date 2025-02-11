@@ -50,50 +50,110 @@ const Register: React.FC = () => {
 
   return (
     <Container>
-        <Title>회원가입</Title>
+      <FormWrapper>
+        <Title>함께하는 첫걸음</Title>
+        <Subtitle>봉사와 나눔의 여정을 시작해보세요</Subtitle>
+        
         <Form>
+          <InputGroup>
             <Label>이름 *</Label>
-            <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
+            <StyledInput 
+              type="text" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange} 
+              placeholder="실명을 입력해주세요"
+              required 
+            />
+          </InputGroup>
 
+          <InputGroup>
             <Label>닉네임 *</Label>
-            <Input type="text" name="nickname" value={formData.nickname} onChange={handleChange} required />
+            <StyledInput 
+              type="text" 
+              name="nickname" 
+              value={formData.nickname} 
+              onChange={handleChange} 
+              placeholder="다른 사람에게 보여질 이름"
+              required 
+            />
+          </InputGroup>
 
+          <InputGroup>
             <Label>이메일 *</Label>
-            <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <StyledInput 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              placeholder="example@email.com"
+              required 
+            />
+          </InputGroup>
 
+          <InputGroup>
             <Label>비밀번호 *</Label>
-            <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
+            <StyledInput 
+              type="password" 
+              name="password" 
+              value={formData.password} 
+              onChange={handleChange} 
+              placeholder="안전한 비밀번호를 입력해주세요"
+              required 
+            />
+          </InputGroup>
 
-            <Label>프로필 이미지 URL</Label>
-            <Input type="text" name="profile_image" value={formData.profile_image} onChange={handleChange} />
-
+          <InputGroup>
             <Label>생년월일</Label>
-            <DateContainer>
-            <Input type="text" name="birthyear" placeholder="YYYY" value={formData.birthyear} onChange={handleChange} />
-            <Input type="text" name="birthday" placeholder="MM-DD" value={formData.birthday} onChange={handleChange} />
-            </DateContainer>
+            <DateInputContainer>
+              <StyledInput 
+                type="text" 
+                name="birthyear" 
+                placeholder="YYYY" 
+                value={formData.birthyear} 
+                onChange={handleChange}
+                style={{ flex: 1 }}
+              />
+              <Separator>-</Separator>
+              <StyledInput 
+                type="text" 
+                name="birthday" 
+                placeholder="MM-DD" 
+                value={formData.birthday} 
+                onChange={handleChange}
+                style={{ flex: 1.2 }}
+              />
+            </DateInputContainer>
+          </InputGroup>
 
+          <InputGroup>
             <Label>성별</Label>
-            <Select name="gender" value={formData.gender} onChange={handleChange}>
-            <option value="">선택</option>
-            <option value="M">남성</option>
-            <option value="F">여성</option>
-            <option value="U">기타</option>
-            </Select>
+            <StyledSelect name="gender" value={formData.gender} onChange={handleChange}>
+              <option value="">선택해주세요</option>
+              <option value="M">남성</option>
+              <option value="F">여성</option>
+              <option value="U">기타</option>
+            </StyledSelect>
+          </InputGroup>
 
-            <Label>연령대</Label>
-            <Input type="text" name="age_range" value={formData.age_range} onChange={handleChange} />
-
+          <InputGroup>
             <Label>휴대폰 번호</Label>
-            <Input type="text" name="mobile" placeholder="010-1234-5678" value={formData.mobile} onChange={handleChange} />
+            <StyledInput 
+              type="text" 
+              name="mobile" 
+              placeholder="010-1234-5678" 
+              value={formData.mobile} 
+              onChange={handleChange} 
+            />
+          </InputGroup>
 
-            <Label>국제표준화된 휴대폰 번호</Label>
-            <Input type="text" name="mobile_e164" placeholder="+82 10-1234-5678" value={formData.mobile_e164} onChange={handleChange} />
+          {message && <Message isError={message.includes('실패')}>{message}</Message>}
 
-            {message && <Message>{message}</Message>}
-
-            <Button onClick={handleRegister}>회원가입</Button>
+          <RegisterButton onClick={handleRegister}>
+            회원가입 완료
+          </RegisterButton>
         </Form>
+      </FormWrapper>
     </Container>
   );
 };
@@ -106,73 +166,130 @@ export default Register;
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
-  background-color: #f8f9fa;
-  overflow-y: auto; /* ✅ 스크롤 가능하게 */
+  min-height: calc(100vh - 120px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  padding: 40px 20px;
 `;
 
-const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  margin-top: 15vh;
+const FormWrapper = styled.div`
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+`;
+
+const Title = styled.h1`
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 8px;
+`;
+
+const Subtitle = styled.p`
+  font-size: 16px;
+  color: #7f8c8d;
+  text-align: center;
+  margin-bottom: 40px;
 `;
 
 const Form = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  gap: 24px;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const Label = styled.label`
   font-size: 14px;
-  margin-top: 12px;
+  font-weight: 600;
+  color: #34495e;
 `;
 
-const Input = styled.input`
+const StyledInput = styled.input`
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-`;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.2s ease;
 
-const Select = styled.select`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-`;
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
 
-const DateContainer = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 12px;
-  margin-top: 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-
-  &:hover {
-    background-color: #0056b3;
+  &::placeholder {
+    color: #bdc3c7;
   }
 `;
 
-const Message = styled.p`
-  margin-top: 15px;
-  font-size: 14px;
-  color: red;
+const StyledSelect = styled.select`
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 15px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+`;
+
+const DateInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const Separator = styled.span`
+  color: #7f8c8d;
+  font-weight: 600;
+`;
+
+const RegisterButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const Message = styled.p<{ isError: boolean }>`
   text-align: center;
+  font-size: 14px;
+  color: ${props => props.isError ? '#e74c3c' : '#27ae60'};
+  margin: 0;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: ${props => props.isError ? '#ffebee' : '#e8f5e9'};
 `;
