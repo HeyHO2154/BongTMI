@@ -228,8 +228,11 @@ const fetchFeedsByCategory = async (categoryId: number) => {
               {/* 사용자 정보 */}
               <FeedHeader>
                 <UserInfo>
-                  <UserName>{feed.author}</UserName>
-                  <PostDate>{timeAgo(feed.createdAt)}</PostDate>
+                  <ProfileImage src="/assets/DC.png" alt="프로필" />
+                  <UserInfoText>
+                    <UserName>{feed.author}</UserName>
+                    <PostDate>{timeAgo(feed.createdAt)}</PostDate>
+                  </UserInfoText>
                 </UserInfo>
                 <CategoryBadge category={feed.category}>
                   {getCategoryLabel(feed.category)}
@@ -331,16 +334,29 @@ const FeedHeader = styled.div`
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
+  gap: 12px;
+`;
+
+const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const UserInfoText = styled.div`
+  display: flex;
+  align-items: center;
   gap: 8px;
 `;
 
 const UserName = styled.span`
   font-weight: bold;
-  font-size: 15px;
+  font-size: 16px;
 `;
 
 const PostDate = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
 `;
 
@@ -531,9 +547,9 @@ const CategoryButton = styled.button<{ isSelected: boolean }>`
 
 // 새로운 스타일 컴포넌트 추가
 const CategoryBadge = styled.span<{ category: number }>`
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 15px;
   font-weight: 600;
   
   ${props => {
