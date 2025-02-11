@@ -94,6 +94,24 @@ const DetailBong: React.FC = () => {
   const storedUser = localStorage.getItem("user");
   const userData = storedUser ? JSON.parse(storedUser) : null;
 
+  // 신청하기 버튼 클릭 핸들러 추가
+  const handleApplyClick = () => {
+    const source = bongData?.progrmRegistNo.substring(0, 3);
+    let url = '';
+    
+    if (source === 'SYO') {
+      // 1365 자원봉사 포털
+      url = `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?progrmRegistNo=${bongData?.progrmRegistNo}`;
+    } else if (source === 'VMS') {
+      // VMS 사회복지 자원봉사
+      url = `https://www.vms.or.kr/openapi/participation/partReqList.do?progrmRegistNo=${bongData?.progrmRegistNo}`;
+    }
+    
+    if (url) {
+      window.open(url, '_blank');
+    }
+  };
+
   // 로딩 중일 때 Loading 컴포넌트 표시
   if (loading) return <Loading />;
   if (error) return <div>{error}</div>;
@@ -128,39 +146,8 @@ const DetailBong: React.FC = () => {
       </InfoContainer>
 
       <Footer>
-      <ApplyButton
-        onClick={async () => {
-          try {
-            // ✅ 신청하기(4) 저장 API 호출
-            await fetch(`${config.API_DEV}/api/user/like`, {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: new URLSearchParams({
-                userId: userData.id,
-                bongId: bongData.progrmRegistNo.toString(),
-                action: "4", // ✅ 신청하기(4) 기록
-              }),
-            });
-
-            // ✅ 저장 완료 후 해당 공고의 신청 페이지로 이동
-            const baseUrl =
-              bongData.progrmRegistNo.startsWith("SYO")
-                ? `https://www.1365.go.kr/vols/P9210/partcptn/timeCptn.do?type=show&progrmRegistNo=`
-                : bongData.progrmRegistNo.startsWith("VMS")
-                ? `https://www.vms.or.kr/partspace/recruitView.do?seq=`
-                : null;
-
-            if (baseUrl) {
-              window.location.href = `${baseUrl}${bongData.progrmRegistNo.slice(3)}`;
-            } else {
-              window.location.href = `${bongData.fxnum}`;
-            }
-          } catch (error) {
-            console.error("❌ API 요청 실패:", error);
-          }
-        }}
-      >
-        📩 신청하기
+      <ApplyButton onClick={handleApplyClick}>
+        신청하기
       </ApplyButton>
 
       </Footer>
