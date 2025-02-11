@@ -448,6 +448,16 @@ const CommentContent = styled.p`
   font-size: 14px;
   color: #333;
   margin: 0;
+  padding-left: 4px;
+  position: relative;
+
+  &::before {
+    content: 'ㄴ';
+    position: absolute;
+    left: -12px;
+    color: #999;
+    font-size: 12px;
+  }
 `;
 
 const NoCommentText = styled.p`
