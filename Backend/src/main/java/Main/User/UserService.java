@@ -104,7 +104,7 @@ public class UserService {
         }
     }
 
-    public void verifyAndResetPassword(String email, String code, String newPassword) {
+    public User verifyAndResetPassword(String email, String code, String newPassword) {
         VerificationData data = verificationCodes.get(email);
         if (data == null) {
             throw new RuntimeException("인증번호를 먼저 요청해주세요.");
@@ -127,5 +127,26 @@ public class UserService {
 
         // 인증 정보 삭제
         verificationCodes.remove(email);
+
+        // 로그인 처리를 위해 민감한 정보를 제거한 사용자 정보 반환
+        user.setPassword(null);
+        return user;
+    }
+
+    // 인증번호 확인만 하는 메서드 추가
+    public void verifyCode(String email, String code) {
+        VerificationData data = verificationCodes.get(email);
+        if (data == null) {
+            throw new RuntimeException("인증번호를 먼저 요청해주세요.");
+        }
+
+        if (LocalDateTime.now().isAfter(data.expireTime)) {
+            verificationCodes.remove(email);
+            throw new RuntimeException("인증번호가 만료되었습니다. 다시 요청해주세요.");
+        }
+
+        if (!data.code.equals(code)) {
+            throw new RuntimeException("인증번호가 일치하지 않습니다.");
+        }
     }
 }

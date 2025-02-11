@@ -76,11 +76,21 @@ public class UserController {
         }
     }
 
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody VerifyRequest request) {
+        try {
+            userService.verifyCode(request.getEmail(), request.getCode());
+            return new ResponseEntity<>("인증이 완료되었습니다.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/verify-and-reset")
     public ResponseEntity<?> verifyAndResetPassword(@RequestBody VerifyRequest request) {
         try {
-            userService.verifyAndResetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
-            return new ResponseEntity<>("비밀번호가 성공적으로 변경되었습니다.", HttpStatus.OK);
+            User user = userService.verifyAndResetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

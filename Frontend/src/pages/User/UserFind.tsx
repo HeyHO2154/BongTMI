@@ -11,6 +11,7 @@ const FindAccount: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -37,9 +38,29 @@ const FindAccount: React.FC = () => {
     }
   };
 
+  const handleVerifyCode = async () => {
+    if (!verificationCode) {
+      setMessage("인증번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${config.API_DEV}/api/auth/verify-code`, {
+        email,
+        code: verificationCode
+      });
+      setMessage("인증이 완료되었습니다. 새로운 비밀번호를 설정해주세요.");
+      setIsVerified(true);
+      setIsSuccess(true);
+    } catch (error: any) {
+      setMessage(error.response?.data || "인증번호 확인에 실패했습니다.");
+      setIsSuccess(false);
+    }
+  };
+
   const handleResetPassword = async () => {
-    if (!verificationCode || !newPassword || !confirmPassword) {
-      setMessage("모든 필드를 입력해주세요.");
+    if (!newPassword || !confirmPassword) {
+      setMessage("새 비밀번호를 입력해주세요.");
       return;
     }
 
@@ -59,9 +80,12 @@ const FindAccount: React.FC = () => {
         code: verificationCode,
         newPassword
       });
-      setMessage(response.data);
+      
+      // 로그인 처리
+      localStorage.setItem("user", JSON.stringify(response.data));
+      setMessage("비밀번호가 변경되었습니다. 마이페이지로 이동합니다.");
       setIsSuccess(true);
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/my-page"), 1500);
     } catch (error: any) {
       setMessage(error.response?.data || "비밀번호 재설정에 실패했습니다.");
       setIsSuccess(false);
@@ -72,7 +96,13 @@ const FindAccount: React.FC = () => {
     <Container>
       <FormWrapper>
         <Title>비밀번호 재설정</Title>
-        <Subtitle>가입 시 등록한 이메일을 입력해주세요</Subtitle>
+        <Subtitle>
+          {!isCodeSent 
+            ? "가입 시 등록한 이메일을 입력해주세요" 
+            : !isVerified 
+              ? "이메일로 전송된 인증번호를 입력해주세요"
+              : "새로운 비밀번호를 설정해주세요"}
+        </Subtitle>
 
         <InputGroup>
           <Label>이메일</Label>
@@ -92,10 +122,10 @@ const FindAccount: React.FC = () => {
           </InputWithButton>
         </InputGroup>
 
-        {isCodeSent && (
-          <>
-            <InputGroup>
-              <Label>인증번호</Label>
+        {isCodeSent && !isVerified && (
+          <InputGroup>
+            <Label>인증번호</Label>
+            <InputWithButton>
               <StyledInput
                 type="text"
                 placeholder="6자리 인증번호 입력"
@@ -103,8 +133,15 @@ const FindAccount: React.FC = () => {
                 onChange={(e) => setVerificationCode(e.target.value)}
                 maxLength={6}
               />
-            </InputGroup>
+              <VerifyButton onClick={handleVerifyCode}>
+                인증확인
+              </VerifyButton>
+            </InputWithButton>
+          </InputGroup>
+        )}
 
+        {isVerified && (
+          <>
             <InputGroup>
               <Label>새 비밀번호</Label>
               <StyledInput
@@ -130,7 +167,7 @@ const FindAccount: React.FC = () => {
         {message && <Message isError={!isSuccess}>{message}</Message>}
 
         <ButtonGroup>
-          {isCodeSent ? (
+          {isVerified ? (
             <FindButton onClick={handleResetPassword}>
               비밀번호 변경하기
             </FindButton>
