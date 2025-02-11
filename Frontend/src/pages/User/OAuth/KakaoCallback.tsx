@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../../config";
+import Loading from "../../../components/Lodaing";
 
 const KakaoCallback = () => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const KakaoCallback = () => {
     }
   }, [location, navigate]);
 
-  return <div>카카오 로그인 처리 중...</div>;
+  return <Loading />;
 };
 
 export default KakaoCallback;

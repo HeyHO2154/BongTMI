@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../../config";
+import Loading from "../../../components/Lodaing";
 
 const NaverCallback = () => {
   const location = useLocation();
@@ -28,7 +29,8 @@ const NaverCallback = () => {
     }
   }, [location, navigate]);
 
-  return <div>네이버 로그인 처리 중...</div>;
+  // 로딩 컴포넌트로 변경
+  return <Loading />;
 };
 
 export default NaverCallback;
