@@ -325,25 +325,23 @@ const FeedHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 12px 16px;
 `;
 
 const UserInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
 `;
 
 const UserName = styled.span`
   font-weight: bold;
-  display: flex;
-  align-items: center;
+  font-size: 15px;
 `;
 
 const PostDate = styled.span`
-  font-size: 12px;
-  color: gray;
-  margin-left: 5px;
+  font-size: 13px;
+  color: #666;
 `;
 
 // ✅ 이미지 컨테이너
@@ -533,9 +531,9 @@ const CategoryButton = styled.button<{ isSelected: boolean }>`
 
 // 새로운 스타일 컴포넌트 추가
 const CategoryBadge = styled.span<{ category: number }>`
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 600;
   
   ${props => {
