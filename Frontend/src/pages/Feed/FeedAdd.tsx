@@ -161,81 +161,73 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  gap: 16px;
-  max-width: 400px;
+  padding: 20px;
+  gap: 20px;
+  max-width: 500px;
   margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
+  color: #333;
   margin-bottom: 20px;
-  color: #1a1a1a;
 `;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 `;
 
 const Label = styled.label`
-  font-size: 13px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
 `;
 
 const CategorySelect = styled.select`
   width: 100%;
-  padding: 12px;
-  font-size: 14px;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
-  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #1a1a1a;
+    border-color: #0066ff;
   }
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px;
-  font-size: 14px;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
-  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #1a1a1a;
-  }
-
-  &::placeholder {
-    color: #999;
+    border-color: #0066ff;
   }
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   height: 200px;
-  padding: 12px;
-  font-size: 14px;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: none;
   outline: none;
-  transition: border-color 0.2s;
 
   &:focus {
-    border-color: #1a1a1a;
-  }
-
-  &::placeholder {
-    color: #999;
+    border-color: #0066ff;
   }
 `;
 
@@ -245,20 +237,20 @@ const FileInputLabel = styled(Label)``;
 
 const FileInput = styled.input`
   width: 100%;
-  padding: 8px 0;
-  font-size: 14px;
+  padding: 10px;
+  font-size: 16px;
 `;
 
 const PreviewContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 `;
 
 const PreviewImage = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 4px;
   border: 1px solid #ddd;
@@ -267,16 +259,15 @@ const PreviewImage = styled.img`
 const SubmitButton = styled.button`
   width: 100%;
   padding: 12px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
   color: white;
-  background-color: #1a1a1a;
+  background-color: #0066ff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #333;
+    background-color: #0052cc;
   }
 `;
