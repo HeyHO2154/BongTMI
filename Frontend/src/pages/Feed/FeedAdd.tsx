@@ -106,50 +106,52 @@ const FeedAdd: React.FC = () => {
   };
 
   return (
-    <Container onSubmit={handleSubmit}>
-      <Title>글 작성</Title>
-      <FormGroup>
-        <Label>카테고리</Label>
-        <CategorySelect
-          value={category}
-          onChange={(e) => setCategory(Number(e.target.value))}
-        >
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>
-              {cat.label}
-            </option>
-          ))}
-        </CategorySelect>
-      </FormGroup>
-      <FormGroup>
-        <Label>제목</Label>
-        <Input
-          type="text"
-          placeholder="제목을 입력하세요"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label>내용</Label>
-        <Textarea
-          placeholder="내용을 입력하세요..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-      </FormGroup>
-      <FileInputWrapper>
-        <FileInputLabel htmlFor="file-upload">사진 업로드 (최대 3장)</FileInputLabel>
-        <FileInput type="file" id="file-upload" multiple accept="image/*" onChange={handleFileChange} />
-      </FileInputWrapper>
-      {images.length > 0 && (
-        <PreviewContainer>
-          {images.map((file, index) => (
-            <PreviewImage key={index} src={URL.createObjectURL(file)} alt="preview" />
-          ))}
-        </PreviewContainer>
-      )}
-      <SubmitButton type="submit">등록</SubmitButton>
+    <Container>
+      <FormContainer onSubmit={handleSubmit}>
+        <Title>글 작성</Title>
+        <FormGroup>
+          <Label>카테고리</Label>
+          <CategorySelect
+            value={category}
+            onChange={(e) => setCategory(Number(e.target.value))}
+          >
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.id}>
+                {cat.label}
+              </option>
+            ))}
+          </CategorySelect>
+        </FormGroup>
+        <FormGroup>
+          <Label>제목</Label>
+          <Input
+            type="text"
+            placeholder="제목을 입력하세요"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>내용</Label>
+          <Textarea
+            placeholder="내용을 입력하세요..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </FormGroup>
+        <FileInputWrapper>
+          <FileInputLabel htmlFor="file-upload">사진 업로드 (최대 3장)</FileInputLabel>
+          <FileInput type="file" id="file-upload" multiple accept="image/*" onChange={handleFileChange} />
+        </FileInputWrapper>
+        {images.length > 0 && (
+          <PreviewContainer>
+            {images.map((file, index) => (
+              <PreviewImage key={index} src={URL.createObjectURL(file)} alt="preview" />
+            ))}
+          </PreviewContainer>
+        )}
+        <SubmitButton type="submit">등록</SubmitButton>
+      </FormContainer>
     </Container>
   );
 };
@@ -165,6 +167,18 @@ const Container = styled.div`
   padding: 40px 20px;
   overflow-y: auto;
   height: calc(100vh - 160px); /* TopBar 높이 제외 */
+`;
+
+const FormContainer = styled.form`
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const Title = styled.h2`
