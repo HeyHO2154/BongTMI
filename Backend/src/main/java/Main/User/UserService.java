@@ -21,4 +21,16 @@ public class UserService {
         // 사용자 저장
         return userRepository.save(user);
     }
+
+    public User login(String email, String password) {
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다."));
+
+        // 비밀번호 검증 (실제 운영 시에는 암호화된 비밀번호 비교 필요)
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
+    }
 }

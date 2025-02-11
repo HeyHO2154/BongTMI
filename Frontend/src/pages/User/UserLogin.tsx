@@ -1,52 +1,92 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import styled from "styled-components";
+import axios from "axios";
 import config from "../../config";
 
-const handleKakaoLogin = () => {
-  window.location.href = `${config.API_DEV}/oauth/kakao`;
-};
-const handleNaverLogin = () => {
-  window.location.href = `${config.API_DEV}/oauth/naver`;
-};
-
 const Login: React.FC = () => {
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  const handleLogin = () => {
-    if (!userId || !password) {
-      alert("아이디와 비밀번호를 입력해주세요.");
+  const handleKakaoLogin = () => {
+    window.location.href = `${config.API_DEV}/oauth/kakao`;
+  };
+  
+  const handleNaverLogin = () => {
+    window.location.href = `${config.API_DEV}/oauth/naver`;
+  };
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setMessage("이메일과 비밀번호를 입력해주세요.");
       return;
     }
-    console.log("로그인 시도:", { userId, password });
+
+    try {
+      // 이메일 형식 검증
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setMessage("올바른 이메일 형식이 아닙니다.");
+        return;
+      }
+
+      const response = await axios.post(`${config.API_DEV}/api/auth/login`, {
+        email,
+        password
+      });
+
+      if (response.status === 200) {
+        // 로그인 성공 시 사용자 정보 저장
+        localStorage.setItem("user", JSON.stringify(response.data));
+        navigate("/"); // 메인 페이지로 이동
+      }
+    } catch (error: any) {
+      if (error.response?.data) {
+        setMessage(error.response.data);
+      } else {
+        setMessage("로그인에 실패했습니다.");
+      }
+    }
   };
 
   return (
     <Container>
       <Logo src="/assets/BongTMI1.png" alt="봉틈이" />
 
-      <Input
-        type="text"
-        placeholder="아이디를 입력하세요"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-      />
+      <InputGroup>
+        <Label>이메일</Label>
+        <StyledInput
+          type="email"
+          placeholder="이메일을 입력하세요"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </InputGroup>
 
-      <Input
-        type="password"
-        placeholder="비밀번호를 입력하세요"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <InputGroup>
+        <Label>비밀번호</Label>
+        <StyledInput
+          type="password"
+          placeholder="비밀번호를 입력하세요"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </InputGroup>
+
+      {message && <Message isError={true}>{message}</Message>}
 
       <LoginButton onClick={handleLogin}>로그인</LoginButton>
+
       <LinkContainer>
         <StyledLink onClick={() => navigate("/user/find-account")}>계정찾기</StyledLink>
         |
         <StyledLink onClick={() => navigate("/user/register")}>회원가입</StyledLink>
       </LinkContainer>
+
+      <Divider>또는</Divider>
+
       <ButtonContainer>
         <NaverButton
           src="/assets/Login_Naver.png"
@@ -57,8 +97,6 @@ const Login: React.FC = () => {
           onClick={handleKakaoLogin}
         />
       </ButtonContainer>
-
-      
     </Container>
   );
 };
@@ -81,12 +119,36 @@ const Logo = styled.img`
   padding-bottom: 15px;
 `;
 
-const Input = styled.input`
-  margin-bottom: 10px;
-  padding: 12px;
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 280px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  margin-bottom: 16px;
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+  font-weight: 600;
+  color: #34495e;
+`;
+
+const StyledInput = styled.input`
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  &::placeholder {
+    color: #bdc3c7;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -132,4 +194,35 @@ const StyledLink = styled.span`
   cursor: pointer;
   text-decoration: underline;
   color: #007bff;
+`;
+
+const Message = styled.p<{ isError: boolean }>`
+  text-align: center;
+  font-size: 14px;
+  color: #e74c3c;
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #ffebee;
+  width: 280px;
+`;
+
+const Divider = styled.div`
+  width: 280px;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  color: #7f8c8d;
+  
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #e0e0e0;
+  }
+  
+  &::before { left: 0; }
+  &::after { right: 0; }
 `;

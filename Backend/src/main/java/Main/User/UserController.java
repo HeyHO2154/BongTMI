@@ -32,4 +32,14 @@ public class UserController {
                                      HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User.LoginRequest loginRequest) {
+        try {
+            User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 }
