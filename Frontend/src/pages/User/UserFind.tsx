@@ -1,124 +1,182 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
-import config from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const FindAccount: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [foundId, setFoundId] = useState<string | null>(null);
+  const [foundAccount, setFoundAccount] = useState<any>(null);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  // 아이디 찾기 요청
-  const handleFindId = async () => {
-    try {
-      const response = await axios.post(`${config.API_DEV}/api/auth/find-id`, { email });
-      setFoundId(response.data.id);
-      setMessage(""); // 메시지 초기화
-    } catch (error) {
-      setMessage("등록된 이메일이 없습니다.");
-      setFoundId(null);
+  const handleFindAccount = async () => {
+    if (!email) {
+      setMessage("이메일을 입력해주세요.");
+      return;
     }
-  };
 
-  // 비밀번호 재설정 요청
-  const handleResetPassword = async () => {
     try {
-      await axios.post(`${config.API_DEV}/api/auth/reset-password`, { email });
-      setMessage("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setMessage("올바른 이메일 형식이 아닙니다.");
+        return;
+      }
+
+      // API 연동은 나중에 구현
+      setMessage("현재 테스트 중입니다.");
     } catch (error) {
-      setMessage("비밀번호 재설정 요청 실패.");
+      setMessage("계정을 찾을 수 없습니다.");
+      setFoundAccount(null);
     }
   };
 
   return (
     <Container>
-      <Title>아이디 / 비밀번호 찾기</Title>
+      <FormWrapper>
+        <Title>계정 찾기</Title>
+        <Subtitle>가입 시 등록한 이메일을 입력해주세요</Subtitle>
 
-      <InputContainer>
-        <Label>가입한 이메일을 입력하세요</Label>
-        <Input
-          type="email"
-          placeholder="example@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </InputContainer>
+        <InputGroup>
+          <Label>이메일</Label>
+          <StyledInput
+            type="email"
+            placeholder="example@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputGroup>
 
-      <ButtonContainer>
-        <Button onClick={handleFindId}>아이디 찾기</Button>
-        <Button onClick={handleResetPassword}>비밀번호 재설정</Button>
-      </ButtonContainer>
+        {message && <Message isError={!foundAccount}>{message}</Message>}
 
-      {foundId && <ResultText>아이디: <strong>{foundId}</strong></ResultText>}
-      {message && <ResultText>{message}</ResultText>}
+        <ButtonGroup>
+          <FindButton onClick={handleFindAccount}>계정 찾기</FindButton>
+          <BackButton onClick={() => navigate("/login")}>
+            로그인으로 돌아가기
+          </BackButton>
+        </ButtonGroup>
+      </FormWrapper>
     </Container>
   );
 };
 
 export default FindAccount;
 
-// --------------------
-// 스타일 정의
-// --------------------
-
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
-  background-color: #f8f9fa;
-`;
-
-const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  min-height: calc(100vh - 160px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  padding: 20px;
 `;
 
-const Label = styled.label`
-  font-size: 14px;
+const FormWrapper = styled.div`
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+`;
+
+const Title = styled.h1`
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
   margin-bottom: 8px;
 `;
 
-const Input = styled.input`
-  width: 280px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+const Subtitle = styled.p`
   font-size: 16px;
+  color: #7f8c8d;
+  text-align: center;
+  margin-bottom: 32px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
+const InputGroup = styled.div`
+  margin-bottom: 24px;
 `;
 
-const Button = styled.button`
-  width: 130px;
-  padding: 12px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+const Label = styled.label`
+  display: block;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 8px;
+`;
 
-  &:hover {
-    background-color: #0056b3;
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  &::placeholder {
+    color: #bdc3c7;
   }
 `;
 
-const ResultText = styled.p`
-  margin-top: 15px;
+const Message = styled.p<{ isError: boolean }>`
+  text-align: center;
+  font-size: 14px;
+  color: ${props => props.isError ? '#e74c3c' : '#27ae60'};
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: ${props => props.isError ? '#ffebee' : '#e8f5e9'};
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+`;
+
+const FindButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
   font-size: 16px;
-  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const BackButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  color: #7f8c8d;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f8f9fa;
+    border-color: #bdc3c7;
+  }
 `;
