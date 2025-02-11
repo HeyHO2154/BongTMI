@@ -108,27 +108,36 @@ const FeedAdd: React.FC = () => {
   return (
     <Container onSubmit={handleSubmit}>
       <Title>글 작성</Title>
-      <CategorySelect
-        value={category}
-        onChange={(e) => setCategory(Number(e.target.value))}
-      >
-        {categories.map(cat => (
-          <option key={cat.id} value={cat.id}>
-            {cat.label}
-          </option>
-        ))}
-      </CategorySelect>
-      <Input
-        type="text"
-        placeholder="제목을 입력하세요"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <Textarea
-        placeholder="내용을 입력하세요..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+      <FormGroup>
+        <Label>카테고리</Label>
+        <CategorySelect
+          value={category}
+          onChange={(e) => setCategory(Number(e.target.value))}
+        >
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>
+              {cat.label}
+            </option>
+          ))}
+        </CategorySelect>
+      </FormGroup>
+      <FormGroup>
+        <Label>제목</Label>
+        <Input
+          type="text"
+          placeholder="제목을 입력하세요"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label>내용</Label>
+        <Textarea
+          placeholder="내용을 입력하세요..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </FormGroup>
       <FileInputWrapper>
         <FileInputLabel htmlFor="file-upload">사진 업로드 (최대 3장)</FileInputLabel>
         <FileInput type="file" id="file-upload" multiple accept="image/*" onChange={handleFileChange} />
@@ -167,11 +176,24 @@ const Title = styled.h2`
   color: #333;
 `;
 
-const Input = styled.input`
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
   max-width: 800px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+`;
+
+const Input = styled.input`
+  width: 100%;
   padding: 14px 20px;
-  font-size: 18px;
+  font-size: 16px;
   border: 2px solid #ddd;
   border-radius: 8px;
   background: white;
@@ -185,10 +207,9 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   width: 100%;
-  max-width: 800px;
   height: 220px;
   padding: 14px 20px;
-  font-size: 18px;
+  font-size: 16px;
   border: 2px solid #ddd;
   border-radius: 8px;
   background: white;
@@ -260,9 +281,8 @@ const SubmitButton = styled.button`
 // 새로운 스타일 컴포넌트 추가
 const CategorySelect = styled.select`
   width: 100%;
-  max-width: 800px;
   padding: 14px 20px;
-  font-size: 18px;
+  font-size: 16px;
   border: 2px solid #ddd;
   border-radius: 8px;
   background: white;
@@ -276,6 +296,5 @@ const CategorySelect = styled.select`
 
   option {
     padding: 10px;
-    font-size: 16px;
   }
 `;
