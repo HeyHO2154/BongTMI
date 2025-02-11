@@ -33,6 +33,18 @@ const Swipe: React.FC = () => {
   const navigate = useNavigate(); // navigate 함수 생성
   const location = useLocation(); // location 객체 가져오기
 
+  // 주소를 간단히 표시하는 함수 추가
+  const simplifyAddress = (address: string) => {
+    if (!address) return "지역 없음";
+    
+    // 시/도, 구/군 까지만 추출
+    const parts = address.split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0]} ${parts[1]}`;
+    }
+    return address;
+  };
+
   // --------------------
   // API 호출 로직
   // --------------------
@@ -57,15 +69,15 @@ const Swipe: React.FC = () => {
       const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 일 단위로 변환
 
       const newCard: CardData = {
-        id: response.data.progrmRegistNo, // 고유 id 추가
+        id: response.data.progrmRegistNo,
         label: response.data.progrmSj || "제목 없음",
-        region: response.data.postAdres || "지역 없음",
+        region: simplifyAddress(response.data.postAdres), // 주소 간단화 적용
         type: response.data.srvcClCode || "상세 설명 없음",
         date: `모집마감일: ${new Date(response.data.progrmEndde).toLocaleDateString()}`,
-        imageUrl: `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
+        imageUrl: `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`,
         from: fromValue,
-        remainingDays: remainingDays > 0 ? remainingDays : 0, // 마감일 지났을 경우 0으로 처리
-        imageLoaded: false, // 이미지 로딩 상태 추가
+        remainingDays: remainingDays > 0 ? remainingDays : 0,
+        imageLoaded: false,
       };
   
       return newCard;
