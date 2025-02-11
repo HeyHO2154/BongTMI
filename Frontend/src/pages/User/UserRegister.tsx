@@ -167,9 +167,11 @@ export default Register;
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  min-height: calc(100vh - 120px);
+  align-items: flex-start;
+  min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
   padding: 40px 20px;
+  overflow-y: auto;
 `;
 
 const FormWrapper = styled.div`
@@ -179,6 +181,7 @@ const FormWrapper = styled.div`
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  margin: 20px 0;
 `;
 
 const Title = styled.h1`
