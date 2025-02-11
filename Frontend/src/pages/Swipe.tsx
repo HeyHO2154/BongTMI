@@ -15,6 +15,7 @@ interface CardData {
   imageUrl: string; // 이미지 URL 추가
   from: String;
   remainingDays: number; // 모집 마감일까지 남은 일수 추가
+  imageLoaded?: boolean; // 이미지 로딩 상태 추가
 }
 
 const SWIPE_THRESHOLD_X = 10; // 스와이프 판정 기준 (px)
@@ -64,6 +65,7 @@ const Swipe: React.FC = () => {
         imageUrl: `${config.API_DEV}/api/bong/image/${response.data.progrmRegistNo}/1`, // 이미지 URL 추가
         from: fromValue,
         remainingDays: remainingDays > 0 ? remainingDays : 0, // 마감일 지났을 경우 0으로 처리
+        imageLoaded: false, // 이미지 로딩 상태 추가
       };
   
       return newCard;
@@ -269,6 +271,15 @@ const Swipe: React.FC = () => {
     setCurrentIndex(cards.length - 1);
   };
   
+  // 이미지 로딩 완료 핸들러 추가
+  const handleImageLoad = (index: number) => {
+    setCards(prevCards => {
+      const newCards = [...prevCards];
+      newCards[index] = { ...newCards[index], imageLoaded: true };
+      return newCards;
+    });
+  };
+
   return (
     <Wrapper>
       {cards.map((card, index) => {
@@ -295,6 +306,7 @@ const Swipe: React.FC = () => {
                 ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 우측(녹색)
                 : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 700, 0.7)})` // 좌측(적색)
               : "transparent",
+              opacity: card.imageLoaded ? 1 : 0, // 이미지 로드 전에는 카드를 숨김
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
@@ -304,6 +316,13 @@ const Swipe: React.FC = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={isTop ? handleMouseLeave : undefined}
           >
+            {/* 숨겨진 이미지 추가하여 로딩 상태 감지 */}
+            <img 
+              src={card.imageUrl} 
+              onLoad={() => handleImageLoad(index)}
+              style={{ display: 'none' }}
+              alt=""
+            />
 
             <div
               style={{
