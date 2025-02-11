@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import config from "../../config";
 import { FaCalendarAlt, FaClock, FaUsers, FaMapMarkerAlt } from "react-icons/fa";
+import Loading from "../../components/Lodaing";
 
 
 interface Bong {
@@ -93,7 +94,8 @@ const DetailBong: React.FC = () => {
   const storedUser = localStorage.getItem("user");
   const userData = storedUser ? JSON.parse(storedUser) : null;
 
-  if (loading) return <div>로딩 중...</div>;
+  // 로딩 중일 때 Loading 컴포넌트 표시
+  if (loading) return <Loading />;
   if (error) return <div>{error}</div>;
   if (!bongData) return <div>progrmRegistNo: {progrmRegistNo}, 데이터가 없습니다.</div>;
 
