@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 import config from "../../../config";
 import Loading from "../../../components/Lodaing";
 
@@ -29,7 +30,25 @@ const KakaoCallback = () => {
     }
   }, [location, navigate]);
 
-  return <Loading />;
+  return (
+    <Container>
+      <Loading />
+    </Container>
+  );
 };
 
 export default KakaoCallback;
+
+// --------------------
+// 스타일 정의
+// --------------------
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  padding: 40px 20px;
+  overflow-y: auto;
+  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+`;
