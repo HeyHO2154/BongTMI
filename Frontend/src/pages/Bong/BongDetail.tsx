@@ -90,9 +90,7 @@ const DetailBong: React.FC = () => {
     if (progrmRegistNo) fetchBongData();
   }, [progrmRegistNo]);
 
-  // ✅ 로그인된 사용자 정보 가져오기
-  const storedUser = localStorage.getItem("user");
-  const userData = storedUser ? JSON.parse(storedUser) : null;
+
 
   // 신청하기 버튼 클릭 핸들러 추가
   const handleApplyClick = () => {
