@@ -55,8 +55,18 @@ const Register: React.FC = () => {
       const response = await axios.post(`${config.API_DEV}/api/auth/register`, formData);
       
       if (response.status === 201) {
-        setMessage("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
-        setTimeout(() => navigate("/login"), 2000);
+        // 회원가입 성공 시 바로 로그인 처리
+        const loginResponse = await axios.post(`${config.API_DEV}/api/auth/login`, {
+          email: formData.email,
+          password: formData.password
+        });
+
+        if (loginResponse.status === 200) {
+          // 사용자 정보 저장
+          localStorage.setItem("user", JSON.stringify(loginResponse.data));
+          setMessage("회원가입이 완료되었습니다! 메인 페이지로 이동합니다.");
+          setTimeout(() => navigate("/"), 1500);
+        }
       }
     } catch (error: any) {
       if (error.response?.data) {
