@@ -68,6 +68,7 @@ const Search: React.FC = () => {
 
   // 전체 Bong 리스트를 가져오는 함수
   const fetchAllCards = async () => {
+    setIsSearching(true); // 초기 로딩 시작
     setIsLoading(true);
     try {
       const response = await axios.get(`${config.API_DEV}/api/bong/all`);
@@ -112,10 +113,14 @@ const Search: React.FC = () => {
       setAllCards(formattedCards);
       setVisibleCards(formattedCards.slice(0, limit)); // 첫 페이지 로드
       setOffset(limit);
+      setNoResults(false); // 초기 데이터가 있으므로 noResults는 false
     } catch (error) {
       console.error("Failed to fetch all Bong data:", error);
+      setNoResults(true);
+    } finally {
+      setIsLoading(false);
+      setIsSearching(false); // 초기 로딩 완료
     }
-    setIsLoading(false);
   };
 
   const convertDaysToArray = (daysString: string): string[] => {
@@ -184,8 +189,8 @@ const Search: React.FC = () => {
   };
 
   const handleSearch = () => {
-    setNoResults(false);
     setIsSearching(true); // 검색 시작
+    setNoResults(false);
 
     let filtered = allCards.filter((card) => {
       const cardDaysArray = convertDaysToArray(card.days);
@@ -207,9 +212,16 @@ const Search: React.FC = () => {
       );
     });
 
-    // 검색 결과 처리
+    // 검색 결과가 있을 때만 noResults를 설정
+    if (filtered.length === 0 && (searchTerm || Object.values(filters).some(val => 
+      Array.isArray(val) ? val.length > 0 : val !== ""
+    ))) {
+      setNoResults(true);
+    } else {
+      setNoResults(false);
+    }
+
     setVisibleCards(filtered);
-    setNoResults(filtered.length === 0);
     setIsSearching(false); // 검색 완료
   };
   
@@ -363,11 +375,13 @@ const Search: React.FC = () => {
           <NoResultsWrapper>
             {isSearching ? (
               <Loading />
-            ) : (
+            ) : noResults ? (
               <NoResultsMessage>
                 <span>검색 결과가 없습니다 😢</span>
                 <span>다른 검색어나 필터를 시도해보세요!</span>
               </NoResultsMessage>
+            ) : (
+              <Loading />
             )}
           </NoResultsWrapper>
         )}
