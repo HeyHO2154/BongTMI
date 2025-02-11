@@ -161,85 +161,109 @@ const Container = styled.form`
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar 높이 제외 */
+  align-items: center;
+  height: calc(100vh - 160px);
   padding: 20px;
-  gap: 15px;
+  gap: 20px;
   overflow-y: auto;
   background-color: #f9f9f9;
 `;
 
 const Title = styled.h2`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #333;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background-color: #007bff;
+    border-radius: 2px;
+  }
 `;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
 `;
 
 const Label = styled.label`
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-left: 4px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 20px;
-  font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   background: white;
   outline: none;
-  transition: border 0.2s;
+  transition: all 0.2s ease;
 
   &:focus {
     border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
-  height: 220px;
-  padding: 14px 20px;
-  font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+  height: 200px;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   background: white;
   resize: none;
   outline: none;
-  transition: border 0.2s;
+  transition: all 0.2s ease;
 
   &:focus {
     border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
 const FileInputWrapper = styled.div`
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 18px;
-  padding: 10px 0;
+  gap: 8px;
 `;
 
 const FileInputLabel = styled.label`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-left: 4px;
 `;
 
 const FileInput = styled.input`
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
 `;
 
@@ -247,54 +271,66 @@ const PreviewContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  max-width: 800px;
+  max-width: 600px;
 `;
 
 const PreviewImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #ddd;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  max-width: 800px;
-  padding: 15px 20px;
-  font-size: 20px;
+  max-width: 600px;
+  padding: 14px 20px;
+  font-size: 16px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  font-weight: bold;
+  transition: all 0.2s ease;
+  font-weight: 600;
   text-align: center;
+  margin-top: 10px;
 
   &:hover {
     background-color: #0056b3;
-    transform: scale(1.02);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 // 새로운 스타일 컴포넌트 추가
 const CategorySelect = styled.select`
-  width: 100%;
-  padding: 14px 20px;
-  font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+  width: 200px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   background: white;
   outline: none;
-  transition: border 0.2s;
+  transition: all 0.2s ease;
   cursor: pointer;
 
   &:focus {
     border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
   }
 
   option {
-    padding: 10px;
+    padding: 8px;
   }
 `;
