@@ -3,10 +3,11 @@ package Main.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "${Front_URL}")
@@ -65,13 +66,23 @@ public class UserController {
         }
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody FindAccountRequest request) {
+    @PostMapping("/request-verification")
+    public ResponseEntity<?> requestVerification(@RequestBody FindAccountRequest request) {
         try {
-            userService.resetPassword(request.getEmail());
-            return new ResponseEntity<>("임시 비밀번호가 이메일로 전송되었습니다.", HttpStatus.OK);
+            userService.sendVerificationCode(request.getEmail());
+            return new ResponseEntity<>("인증번호가 이메일로 전송되었습니다.", HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/verify-and-reset")
+    public ResponseEntity<?> verifyAndResetPassword(@RequestBody VerifyRequest request) {
+        try {
+            userService.verifyAndResetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
+            return new ResponseEntity<>("비밀번호가 성공적으로 변경되었습니다.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -79,5 +90,21 @@ public class UserController {
         private String email;
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+    }
+
+    private static class VerifyRequest {
+        private String email;
+        private String code;
+        private String newPassword;
+
+        // Getters and Setters
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
+        
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
     }
 }

@@ -6,11 +6,15 @@ import config from "../../config";
 
 const FindAccount: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isCodeSent, setIsCodeSent] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleResetPassword = async () => {
+  const handleSendVerification = async () => {
     if (!email) {
       setMessage("이메일을 입력해주세요.");
       return;
@@ -23,15 +27,43 @@ const FindAccount: React.FC = () => {
         return;
       }
 
-      const response = await axios.post(`${config.API_DEV}/api/auth/reset-password`, { email });
+      const response = await axios.post(`${config.API_DEV}/api/auth/request-verification`, { email });
       setMessage(response.data);
+      setIsCodeSent(true);
       setIsSuccess(true);
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        setMessage("해당 이메일로 등록된 계정을 찾을 수 없습니다.");
-      } else {
-        setMessage("비밀번호 재설정 중 오류가 발생했습니다.");
-      }
+      setMessage(error.response?.data || "인증번호 전송에 실패했습니다.");
+      setIsSuccess(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!verificationCode || !newPassword || !confirmPassword) {
+      setMessage("모든 필드를 입력해주세요.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setMessage("새 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setMessage("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${config.API_DEV}/api/auth/verify-and-reset`, {
+        email,
+        code: verificationCode,
+        newPassword
+      });
+      setMessage(response.data);
+      setIsSuccess(true);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error: any) {
+      setMessage(error.response?.data || "비밀번호 재설정에 실패했습니다.");
       setIsSuccess(false);
     }
   };
@@ -44,24 +76,64 @@ const FindAccount: React.FC = () => {
 
         <InputGroup>
           <Label>이메일</Label>
-          <StyledInput
-            type="email"
-            placeholder="example@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <InputWithButton>
+            <StyledInput
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isCodeSent}
+            />
+            {!isCodeSent && (
+              <VerifyButton onClick={handleSendVerification}>
+                인증번호 받기
+              </VerifyButton>
+            )}
+          </InputWithButton>
         </InputGroup>
+
+        {isCodeSent && (
+          <>
+            <InputGroup>
+              <Label>인증번호</Label>
+              <StyledInput
+                type="text"
+                placeholder="6자리 인증번호 입력"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                maxLength={6}
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Label>새 비밀번호</Label>
+              <StyledInput
+                type="password"
+                placeholder="새로운 비밀번호 입력 (8자 이상)"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Label>비밀번호 확인</Label>
+              <StyledInput
+                type="password"
+                placeholder="새로운 비밀번호 재입력"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </InputGroup>
+          </>
+        )}
 
         {message && <Message isError={!isSuccess}>{message}</Message>}
 
         <ButtonGroup>
-          <FindButton onClick={handleResetPassword}>
-            임시 비밀번호 발급
-          </FindButton>
-          {isSuccess ? (
-            <LoginButton onClick={() => navigate("/login")}>
-              로그인하기
-            </LoginButton>
+          {isCodeSent ? (
+            <FindButton onClick={handleResetPassword}>
+              비밀번호 변경하기
+            </FindButton>
           ) : (
             <BackButton onClick={() => navigate("/login")}>
               로그인으로 돌아가기
@@ -196,10 +268,23 @@ const BackButton = styled.button`
   }
 `;
 
-const LoginButton = styled(FindButton)`
-  background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+const InputWithButton = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const VerifyButton = styled.button`
+  padding: 0 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2);
+    background: #2980b9;
   }
 `;

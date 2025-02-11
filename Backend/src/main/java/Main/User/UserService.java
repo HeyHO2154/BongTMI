@@ -1,12 +1,14 @@
 package Main.User;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.util.Random;
 
 import jakarta.mail.internet.MimeMessage;
 
@@ -18,6 +20,21 @@ public class UserService {
 
     @Autowired
     private JavaMailSender emailSender;
+
+    // 인증번호 저장을 위한 임시 저장소 (실제로는 Redis 등을 사용하는 것이 좋습니다)
+    private Map<String, VerificationData> verificationCodes = new ConcurrentHashMap<>();
+
+    // 인증 정보를 담는 클래스
+    private static class VerificationData {
+        private String code;
+        private LocalDateTime expireTime;
+        private String newPassword;  // 사용자가 입력한 새 비밀번호
+
+        public VerificationData(String code) {
+            this.code = code;
+            this.expireTime = LocalDateTime.now().plusMinutes(5); // 5분 유효
+        }
+    }
 
     public User registerUser(User user) {
         // 이메일 중복 체크
@@ -48,47 +65,67 @@ public class UserService {
         return user;
     }
 
-    public void resetPassword(String email) {
+    public void sendVerificationCode(String email) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new RuntimeException("해당 이메일로 등록된 계정을 찾을 수 없습니다."));
 
-        // 임시 비밀번호 생성 (8자리)
-        String temporaryPassword = generateTemporaryPassword();
+        // 6자리 인증번호 생성
+        String verificationCode = generateVerificationCode();
         
-        // 비밀번호 업데이트
-        user.setPassword(temporaryPassword); // 실제 운영 시에는 암호화 필요
-        userRepository.save(user);
+        // 인증번호 저장
+        verificationCodes.put(email, new VerificationData(verificationCode));
 
         // 이메일 전송
-        sendTemporaryPassword(email, temporaryPassword);
+        sendVerificationEmail(email, verificationCode);
     }
 
-    private String generateTemporaryPassword() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder();
+    private String generateVerificationCode() {
         Random random = new Random();
-        for (int i = 0; i < 8; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
+        return String.format("%06d", random.nextInt(1000000));
     }
 
-    private void sendTemporaryPassword(String email, String temporaryPassword) {
+    private void sendVerificationEmail(String email, String code) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
-            helper.setFrom("noreply@praven.kro.kr", "봉틈이"); // 표시될 발신자 주소와 이름
+            helper.setFrom("noreply@praven.kro.kr", "봉틈이");
             helper.setTo(email);
-            helper.setSubject("[봉틈이] 임시 비밀번호가 발급되었습니다");
+            helper.setSubject("[봉틈이] 비밀번호 재설정 인증번호");
             helper.setText("안녕하세요.\n\n"
-                + "요청하신 임시 비밀번호입니다: " + temporaryPassword + "\n\n"
-                + "보안을 위해 로그인 후 반드시 비밀번호를 변경해주세요.\n\n"
+                + "요청하신 인증번호입니다: " + code + "\n\n"
+                + "인증번호는 5분간 유효합니다.\n\n"
+                + "본인이 요청하지 않았다면 이 메일을 무시해주세요.\n\n"
                 + "감사합니다.");
             
             emailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("이메일 전송에 실패했습니다: " + e.getMessage());
         }
+    }
+
+    public void verifyAndResetPassword(String email, String code, String newPassword) {
+        VerificationData data = verificationCodes.get(email);
+        if (data == null) {
+            throw new RuntimeException("인증번호를 먼저 요청해주세요.");
+        }
+
+        if (LocalDateTime.now().isAfter(data.expireTime)) {
+            verificationCodes.remove(email);
+            throw new RuntimeException("인증번호가 만료되었습니다. 다시 요청해주세요.");
+        }
+
+        if (!data.code.equals(code)) {
+            throw new RuntimeException("인증번호가 일치하지 않습니다.");
+        }
+
+        // 비밀번호 변경
+        User user = userRepository.findById(email)
+            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        user.setPassword(newPassword);
+        userRepository.save(user);
+
+        // 인증 정보 삭제
+        verificationCodes.remove(email);
     }
 }
