@@ -47,6 +47,17 @@ const Feed: React.FC = () => {
   const [isSearching, setIsSearching] = useState(true); // 검색 중 상태 추가
   const [noResults, setNoResults] = useState(false); // 결과 없음 상태 추가
 
+  // 카테고리 목록
+  const categories = [
+    { id: 'all', label: '전체' },
+    { id: 'notice', label: '공지' },
+    { id: 'suggestion', label: '건의' },
+    { id: 'review', label: '후기' },
+    { id: 'free', label: '자유' }
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
   const getUserId = (): string | null => {
     const userData = localStorage.getItem("user");
     if (!userData) return null; // ✅ 저장된 사용자 정보가 없으면 null 반환
@@ -166,6 +177,18 @@ const fetchFeeds = async () => {
 
   return (
     <FeedWrapper ref={wrapperRef} onScroll={handleScroll}>
+      <CategoryContainer>
+        {categories.map(category => (
+          <CategoryButton
+            key={category.id}
+            isSelected={selectedCategory === category.id}
+            onClick={() => setSelectedCategory(category.id)}
+          >
+            {category.label}
+          </CategoryButton>
+        ))}
+      </CategoryContainer>
+
       <FeedContainer>
         {visibleCards.length > 0 ? (
           visibleCards.map((feed: FeedData) => (
@@ -238,9 +261,8 @@ export default Feed;
 
 const FeedWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  flex-direction: column; // 수직 방향으로 변경
+  height: calc(100vh - 160px);
   overflow-y: auto;
 `;
 
@@ -438,5 +460,40 @@ const NoResultsMessage = styled.div`
   span:last-child {
     font-size: 1rem;
     color: #888;
+  }
+`;
+
+// 새로운 스타일 컴포넌트 추가
+const CategoryContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-scrolling: none;
+  scrollbar-width: none;
+`;
+
+const CategoryButton = styled.button<{ isSelected: boolean }>`
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background-color: ${props => props.isSelected ? '#3498db' : '#f0f0f0'};
+  color: ${props => props.isSelected ? 'white' : '#666'};
+  font-size: 14px;
+  font-weight: ${props => props.isSelected ? '600' : '400'};
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${props => props.isSelected ? '#2980b9' : '#e0e0e0'};
   }
 `;
