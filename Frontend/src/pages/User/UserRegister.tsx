@@ -24,14 +24,71 @@ const Register: React.FC = () => {
 
   const [message, setMessage] = useState("");
 
+  // 새로운 state 추가
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [, setIsSuccess] = useState(false);
+
   // 입력값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // 이메일 인증번호 전송
+  const handleSendVerification = async () => {
+    if (!formData.email) {
+      setMessage("이메일을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setMessage("올바른 이메일 형식이 아닙니다.");
+        return;
+      }
+
+      const response = await axios.post(`${config.API_DEV}/api/auth/request-verification`, { 
+        email: formData.email 
+      });
+      setMessage(response.data);
+      setIsCodeSent(true);
+      setIsSuccess(true);
+    } catch (error: any) {
+      setMessage(error.response?.data || "인증번호 전송에 실패했습니다.");
+      setIsSuccess(false);
+    }
+  };
+
+  // 인증번호 확인
+  const handleVerifyCode = async () => {
+    if (!verificationCode) {
+      setMessage("인증번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      await axios.post(`${config.API_DEV}/api/auth/verify-code`, {
+        email: formData.email,
+        code: verificationCode
+      });
+      setMessage("이메일 인증이 완료되었습니다.");
+      setIsVerified(true);
+      setIsSuccess(true);
+    } catch (error: any) {
+      setMessage(error.response?.data || "인증번호 확인에 실패했습니다.");
+      setIsSuccess(false);
+    }
+  };
+
   // 회원가입 요청
   const handleRegister = async () => {
+    if (!isVerified) {
+      setMessage("이메일 인증을 완료해주세요.");
+      return;
+    }
     if (!formData.email || !formData.password || !formData.name || !formData.nickname) {
       setMessage("필수 정보를 입력해주세요.");
       return;
@@ -112,15 +169,41 @@ const Register: React.FC = () => {
 
           <InputGroup>
             <Label>이메일 *</Label>
-            <StyledInput 
-              type="email" 
-              name="email" 
-              value={formData.email} 
-              onChange={handleChange} 
-              placeholder="example@email.com"
-              required 
-            />
+            <InputWithButton>
+              <StyledInput 
+                type="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleChange} 
+                placeholder="example@email.com"
+                disabled={isCodeSent}
+                required 
+              />
+              {!isCodeSent && (
+                <VerifyButton onClick={handleSendVerification}>
+                  인증번호 받기
+                </VerifyButton>
+              )}
+            </InputWithButton>
           </InputGroup>
+
+          {isCodeSent && !isVerified && (
+            <InputGroup>
+              <Label>인증번호</Label>
+              <InputWithButton>
+                <StyledInput
+                  type="text"
+                  placeholder="6자리 인증번호 입력"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  maxLength={6}
+                />
+                <VerifyButton onClick={handleVerifyCode}>
+                  인증확인
+                </VerifyButton>
+              </InputWithButton>
+            </InputGroup>
+          )}
 
           <InputGroup>
             <Label>비밀번호 *</Label>
@@ -326,4 +409,26 @@ const Message = styled.p<{ isError: boolean }>`
   padding: 8px;
   border-radius: 8px;
   background-color: ${props => props.isError ? '#ffebee' : '#e8f5e9'};
+`;
+
+// 새로운 스타일 컴포넌트 추가
+const InputWithButton = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const VerifyButton = styled.button`
+  padding: 0 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #2980b9;
+  }
 `;
