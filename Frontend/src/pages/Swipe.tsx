@@ -29,6 +29,7 @@ const Swipe: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false); // 드래그 상태 여부
   const startX = useRef(0); // 드래그 시작점 X
   const startY = useRef(0); // 드래그 시작점 Y
+  const [isFirstCardLoaded, setIsFirstCardLoaded] = useState(false); // 첫 카드 로딩 상태 추가
 
   const navigate = useNavigate(); // navigate 함수 생성
   const location = useLocation(); // location 객체 가져오기
@@ -282,21 +283,30 @@ const Swipe: React.FC = () => {
     setCurrentIndex(cards.length - 1);
   };
   
-  // 이미지 로딩 완료 핸들러 추가
+  // 이미지 로딩 완료 핸들러 수정
   const handleImageLoad = (index: number) => {
     setCards(prevCards => {
       const newCards = [...prevCards];
       newCards[index] = { ...newCards[index], imageLoaded: true };
       return newCards;
     });
+
+    // 첫 번째 카드(마지막 인덱스)가 로드되면 상태 업데이트
+    if (index === cards.length - 1) {
+      setIsFirstCardLoaded(true);
+    }
   };
 
   return (
     <Wrapper>
       {[...cards].reverse().map((card, reversedIndex) => {
-        // 실제 인덱스 계산 (역순이므로 원래 인덱스로 변환)
         const actualIndex = cards.length - 1 - reversedIndex;
         const isTop = actualIndex === currentIndex;
+
+        // 첫 번째 카드가 로드되기 전에는 최상단 카드만 렌더링
+        if (!isFirstCardLoaded && actualIndex !== currentIndex) {
+          return null;
+        }
 
         return (
           <Card
@@ -315,13 +325,13 @@ const Swipe: React.FC = () => {
                 : `translateY(${dragY}px)`,
               transition: isDragging 
                 ? "none" 
-                : "transform 0.3s ease, opacity 0.2s ease",
+                : "transform 0.3s ease, opacity 0.5s ease", // opacity 트랜지션 시간 늘림
               backgroundColor: isTop
                 ? dragX > 0
                   ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
                   : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
                 : "transparent",
-              opacity: card.imageLoaded ? 1 : 0.3,
+              opacity: card.imageLoaded ? 1 : 0, // 완전히 투명하게 시작
             }}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onTouchMove={isTop ? handleTouchMove : undefined}
@@ -377,7 +387,7 @@ const Swipe: React.FC = () => {
             <TextContainer>
               <LabelText>{card.label}</LabelText>
               <ContextText>{card.region}</ContextText>
-              <ContextText>{card.type}</ContextText>
+              
               <ContextText style={{ display: "flex", alignItems: "center" }}>
                 {card.date} {/* 모집 마감일 텍스트 */}
                 <span
