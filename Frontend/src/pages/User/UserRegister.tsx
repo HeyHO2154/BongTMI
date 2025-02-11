@@ -38,13 +38,32 @@ const Register: React.FC = () => {
     }
 
     try {
+      // 이메일 형식 검증
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setMessage("올바른 이메일 형식이 아닙니다.");
+        return;
+      }
+
+      // 비밀번호 유효성 검사 (최소 8자, 문자/숫자 포함)
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(formData.password)) {
+        setMessage("비밀번호는 최소 8자 이상, 문자와 숫자를 포함해야 합니다.");
+        return;
+      }
+
       const response = await axios.post(`${config.API_DEV}/api/auth/register`, formData);
+      
       if (response.status === 201) {
         setMessage("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
         setTimeout(() => navigate("/login"), 2000);
       }
-    } catch (error) {
-      setMessage("회원가입에 실패했습니다.");
+    } catch (error: any) {
+      if (error.response?.data) {
+        setMessage(error.response.data);
+      } else {
+        setMessage("회원가입에 실패했습니다.");
+      }
     }
   };
 

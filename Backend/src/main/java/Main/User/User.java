@@ -45,6 +45,9 @@ public class User {
     @Column(length = 4)
     private String birthyear; // 태어난 연도 (예: "1997")
 
+    @Column(length = 255)
+    private String password; // 비밀번호 필드 추가
+
 	public String getId() {
 		return id;
 	}
@@ -139,6 +142,14 @@ public class User {
 
 	public void setToken(String token) {
 		Token = token;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
     
     
