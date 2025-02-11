@@ -47,10 +47,18 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
+            // 입력값 검증
+            if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+                return new ResponseEntity<>("이메일과 비밀번호를 입력해주세요.", HttpStatus.BAD_REQUEST);
+            }
+
             User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("로그인 처리 중 오류가 발생했습니다.", 
+                                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

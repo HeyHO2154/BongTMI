@@ -37,12 +37,15 @@ const Login: React.FC = () => {
         password
       });
 
+      console.log('Login response:', response); // 디버깅용
+
       if (response.status === 200) {
         // 로그인 성공 시 사용자 정보 저장
         localStorage.setItem("user", JSON.stringify(response.data));
         navigate("/"); // 메인 페이지로 이동
       }
     } catch (error: any) {
+      console.error('Login error:', error.response || error); // 디버깅용
       if (error.response?.data) {
         setMessage(error.response.data);
       } else {

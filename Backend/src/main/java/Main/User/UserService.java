@@ -15,22 +15,26 @@ public class UserService {
             throw new RuntimeException("이미 등록된 이메일입니다.");
         }
 
-        // 비밀번호 암호화 (실제 구현 시 추가 필요)
-        // user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // ID를 이메일로 설정
+        user.setId(user.getEmail());
 
         // 사용자 저장
         return userRepository.save(user);
     }
 
     public User login(String email, String password) {
+        // 이메일로 사용자 찾기 (이메일이 ID로 사용됨)
         User user = userRepository.findById(email)
             .orElseThrow(() -> new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다."));
 
-        // 비밀번호 검증 (실제 운영 시에는 암호화된 비밀번호 비교 필요)
+        // 비밀번호 검증
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
+        // 민감한 정보 제거
+        user.setPassword(null);  // 클라이언트에게 비밀번호 정보를 보내지 않음
+        
         return user;
     }
 }
