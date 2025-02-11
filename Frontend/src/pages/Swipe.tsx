@@ -328,8 +328,8 @@ const Swipe: React.FC = () => {
                 : "transform 0.3s ease, opacity 0.5s ease", // opacity 트랜지션 시간 늘림
               backgroundColor: isTop
                 ? dragX > 0
-                  ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
-                  : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 600, 0.9)})`
+                  ? `rgba(100, 255, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
+                  : `rgba(255, 100, 100, ${Math.min(Math.abs(dragX) / 500, 1.0)})`
                 : "transparent",
               opacity: card.imageLoaded ? 1 : 0, // 완전히 투명하게 시작
             }}
