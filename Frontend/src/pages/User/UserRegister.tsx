@@ -52,9 +52,10 @@ const Register: React.FC = () => {
         return;
       }
 
-      const response = await axios.post(`${config.API_DEV}/api/auth/register`, formData);
+      // 회원가입 요청
+      const registerResponse = await axios.post(`${config.API_DEV}/api/auth/register`, formData);
       
-      if (response.status === 201) {
+      if (registerResponse.status === 201) {
         // 회원가입 성공 시 바로 로그인 처리
         const loginResponse = await axios.post(`${config.API_DEV}/api/auth/login`, {
           email: formData.email,
@@ -64,11 +65,12 @@ const Register: React.FC = () => {
         if (loginResponse.status === 200) {
           // 사용자 정보 저장
           localStorage.setItem("user", JSON.stringify(loginResponse.data));
-          setMessage("회원가입이 완료되었습니다! 메인 페이지로 이동합니다.");
-          setTimeout(() => navigate("/"), 1500);
+          setMessage("회원가입이 완료되었습니다! 마이페이지로 이동합니다.");
+          setTimeout(() => navigate("/mypage"), 1500); // 마이페이지로 이동
         }
       }
     } catch (error: any) {
+      console.error('Registration error:', error.response || error); // 디버깅용
       if (error.response?.data) {
         setMessage(error.response.data);
       } else {
