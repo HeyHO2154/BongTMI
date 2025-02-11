@@ -13,6 +13,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // LoginRequest를 내부 클래스로 정의
+    private static class LoginRequest {
+        private String email;
+        private String password;
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
@@ -34,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User.LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
             return new ResponseEntity<>(user, HttpStatus.OK);
