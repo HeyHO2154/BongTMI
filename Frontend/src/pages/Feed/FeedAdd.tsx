@@ -98,7 +98,7 @@ const FeedAdd: React.FC = () => {
         }
 
       alert("후기가 성공적으로 등록되었습니다!");
-      navigate("/"); // 피드 목록으로 이동
+      navigate("/feed"); // 피드 목록으로 이동
     } catch (error) {
       console.error("후기 등록 실패:", error);
       alert("후기 등록 중 오류가 발생했습니다.");

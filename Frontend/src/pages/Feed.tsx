@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ThumbsUp, MessageCircle, MoreHorizontal } from "lucide-react";
+import { ThumbsUp, MessageCircle } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,7 @@ interface FeedData {
   comments: number;
   imageUrl: string;
   isLiked: boolean; // ✅ 추가된 부분
+  category: number;
 }
 
 const Feed: React.FC = () => {
@@ -194,6 +195,18 @@ const fetchFeedsByCategory = async (categoryId: number) => {
 
   const navigate = useNavigate();
 
+  // 카테고리 라벨 가져오는 함수
+  const getCategoryLabel = (categoryId: number) => {
+    switch (categoryId) {
+      case 0: return '미분류';
+      case 1: return '공지';
+      case 2: return '건의';
+      case 3: return '후기';
+      case 4: return '자유';
+      default: return '기타';
+    }
+  };
+
   return (
     <FeedWrapper ref={wrapperRef} onScroll={handleScroll}>
       <CategoryContainer>
@@ -214,13 +227,13 @@ const fetchFeedsByCategory = async (categoryId: number) => {
             <FeedCard key={feed.feedID} onClick={() => handleFeedClick(feed.feedID)}>
               {/* 사용자 정보 */}
               <FeedHeader>
-                <Profile>
-                  <ProfileImage src="/assets/DC.png" alt="디시인사이드" />
-                  <Author>
-                    {feed.author} <TimeAgo>{timeAgo(feed.createdAt)}</TimeAgo>
-                  </Author>
-                </Profile>
-                <MoreHorizontal />
+                <UserInfo>
+                  <UserName>{feed.author}</UserName>
+                  <PostDate>{timeAgo(feed.createdAt)}</PostDate>
+                </UserInfo>
+                <CategoryBadge category={feed.category}>
+                  {getCategoryLabel(feed.category)}
+                </CategoryBadge>
               </FeedHeader>
 
               <FeedImageContainer>
@@ -315,25 +328,19 @@ const FeedHeader = styled.div`
   padding: 10px;
 `;
 
-const Profile = styled.div`
+const UserInfo = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
-
-const Author = styled.span`
+const UserName = styled.span`
   font-weight: bold;
   display: flex;
   align-items: center;
 `;
 
-const TimeAgo = styled.span`
+const PostDate = styled.span`
   font-size: 12px;
   color: gray;
   margin-left: 5px;
@@ -522,4 +529,42 @@ const CategoryButton = styled.button<{ isSelected: boolean }>`
   &:hover {
     background-color: ${props => props.isSelected ? '#2980b9' : '#e0e0e0'};
   }
+`;
+
+// 새로운 스타일 컴포넌트 추가
+const CategoryBadge = styled.span<{ category: number }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  
+  ${props => {
+    switch (props.category) {
+      case 1: // 공지
+        return `
+          background-color: #ff4444;
+          color: white;
+        `;
+      case 2: // 건의
+        return `
+          background-color: #33b5e5;
+          color: white;
+        `;
+      case 3: // 후기
+        return `
+          background-color: #00C851;
+          color: white;
+        `;
+      case 4: // 자유
+        return `
+          background-color: #ffbb33;
+          color: white;
+        `;
+      default: // 미분류
+        return `
+          background-color: #999;
+          color: white;
+        `;
+    }
+  }}
 `;
