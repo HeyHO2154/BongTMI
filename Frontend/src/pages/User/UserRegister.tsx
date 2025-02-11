@@ -66,7 +66,7 @@ const Register: React.FC = () => {
           // 사용자 정보 저장
           localStorage.setItem("user", JSON.stringify(loginResponse.data));
           setMessage("회원가입이 완료되었습니다! 마이페이지로 이동합니다.");
-          setTimeout(() => navigate("/mypage"), 1500); // 마이페이지로 이동
+          setTimeout(() => navigate("/user/mypage"), 1500); // 마이페이지로 이동
         }
       }
     } catch (error: any) {
