@@ -487,10 +487,13 @@ const CategoryContainer = styled.div`
   display: flex;
   gap: 8px;
   padding: 16px;
+  height: 60px; // 고정 높이 추가
+  min-height: 60px; // 최소 높이 설정
   background: white;
   border-bottom: 1px solid #eee;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  align-items: center; // 세로 중앙 정렬
   
   /* 스크롤바 숨기기 */
   &::-webkit-scrollbar {
@@ -501,7 +504,8 @@ const CategoryContainer = styled.div`
 `;
 
 const CategoryButton = styled.button<{ isSelected: boolean }>`
-  padding: 8px 16px;
+  height: 36px; // 버튼 높이 고정
+  padding: 0 16px; // 좌우 패딩만 설정
   border-radius: 20px;
   border: none;
   background-color: ${props => props.isSelected ? '#3498db' : '#f0f0f0'};
@@ -511,6 +515,9 @@ const CategoryButton = styled.button<{ isSelected: boolean }>`
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: ${props => props.isSelected ? '#2980b9' : '#e0e0e0'};
