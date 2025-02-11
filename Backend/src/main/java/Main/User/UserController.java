@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "${Front_URL}")
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
