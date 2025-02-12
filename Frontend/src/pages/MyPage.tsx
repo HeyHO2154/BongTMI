@@ -56,7 +56,7 @@ const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const limit = 5;
   const observerRef = useRef<IntersectionObserver>();
@@ -74,22 +74,21 @@ const MyPage: React.FC = () => {
     try {
       let endpoint = '';
       switch(tab) {
-        case "작성 봉사":
-          endpoint = `/api/auth/my-bongs?userId=${user.id}&offset=${offset}&limit=${limit}`;
+        case 'written':
+          endpoint = `/api/user/written-feeds/${user.id}`;
           break;
-        case "관심 봉사":
-          endpoint = `/api/auth/liked-bongs?userId=${user.id}&offset=${offset}&limit=${limit}`;
+        case 'liked':
+          endpoint = `/api/user/liked-feeds/${user.id}`;
           break;
-        case "작성 후기":
-          endpoint = `/api/auth/my-feeds?userId=${user.id}&offset=${offset}&limit=${limit}`;
-          break;
-        case "관심 후기":
-          endpoint = `/api/auth/liked-feeds?userId=${user.id}&offset=${offset}&limit=${limit}`;
+        case 'bong':
+          endpoint = `/api/user/written-bongs/${user.id}`;
           break;
       }
 
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
-      const newData = response.data.map((item: any) => {
+      
+      // 피드인 경우 추가 정보(댓글 수, 조회수) 가져오기
+      const newData = await Promise.all(response.data.map(async (item: any) => {
         if ('progrmRegistNo' in item) {
           const endDate = new Date(item.progrmEndde);
           const today = new Date();
@@ -100,9 +99,22 @@ const MyPage: React.FC = () => {
             ...item,
             remainingDays: remainingDays > 0 ? remainingDays : 0
           };
+        } else {
+          // 피드인 경우 댓글 수와 조회수 가져오기
+          const [commentsCount, viewCount] = await Promise.all([
+            axios.get(`${config.API_DEV}/api/feed/comments`, {
+              params: { feedId: item.feedID },
+            }),
+            axios.get(`${config.API_DEV}/api/feed/view/${item.feedID}/count`)
+          ]);
+
+          return {
+            ...item,
+            comments: commentsCount.data.length,
+            views: viewCount.data
+          };
         }
-        return item;
-      });
+      }));
 
       setData(prev => isInitial ? newData : [...prev, ...newData]);
       setHasMore(newData.length === limit);
