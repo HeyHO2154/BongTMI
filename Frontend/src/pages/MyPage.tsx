@@ -1,8 +1,9 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { ThumbsUp, MessageCircle } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import Loading from "../components/Lodaing";
@@ -299,11 +300,10 @@ const UserDetails = styled.div`
   flex: 1;
 `;
 
-const UserName = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #343a40;
-  margin: 0 0 4px 0;
+const UserName = styled.div`
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
 `;
 
 const UserEmail = styled.p`
@@ -371,8 +371,9 @@ const Content = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
+  padding: 20px;
 `;
 
 const Card = styled.div`
@@ -503,3 +504,23 @@ const ContentTitle = styled.h3`
   color: #343a40;
   margin: 0 0 8px 0;
 `;
+
+// timeAgo 함수 추가
+const timeAgo = (dateString: string) => {
+  const postDate = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - postDate.getTime();
+
+  const minutes = Math.floor(diffMs / 60000);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (years > 0) return `${years}년 전`;
+  if (months > 0) return `${months}개월 전`;
+  if (days > 0) return `${days}일 전`;
+  if (hours > 0) return `${hours}시간 전`;
+  if (minutes > 0) return `${minutes}분 전`;
+  return "방금 전";
+};
