@@ -39,7 +39,7 @@ const Loading: React.FC<LoadingProps> = ({ size = 80 }) => {
   return (
     <Overlay>
       <LoadingContainer>
-        <BongTMIIcon size={size} src="/assets/BongTMI.png" alt="봉틈이" />
+        <BongTMIIcon size={size} src="/BongTMI.png" alt="봉틈이" />
         <LoadingMessage>{message}</LoadingMessage>
       </LoadingContainer>
     </Overlay>
