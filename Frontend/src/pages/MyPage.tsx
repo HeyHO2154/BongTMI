@@ -140,7 +140,13 @@ const MyPage: React.FC = () => {
   }
 
   const renderContent = () => {
-    if (loading && data.length === 0) return <Loading />;
+    if (loading && data.length === 0) {
+      return (
+        <LoadingWrapper>
+          <Loading />
+        </LoadingWrapper>
+      );
+    }
 
     if (data.length === 0) {
       let message = "";
@@ -227,7 +233,6 @@ const MyPage: React.FC = () => {
             )}
           </Card>
         ))}
-        {loading && <Loading />}
       </CardGrid>
     );
   };
@@ -556,4 +561,12 @@ const NoDataMessage = styled.div`
   border-radius: 16px;
   margin: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+`;
+
+// 스타일 추가
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
