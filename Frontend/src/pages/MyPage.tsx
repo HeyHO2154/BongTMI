@@ -64,30 +64,25 @@ const MyPage: React.FC = () => {
 
   const loadData = async (tab: string, isInitial: boolean = false) => {
     if (!user) return;
-    if (isInitial) {
-      setOffset(0);
-      setHasMore(true);
-    }
-    if (!hasMore && !isInitial) return;
-    
     setLoading(true);
     try {
       let endpoint = '';
       switch(tab) {
-        case 'written':
-          endpoint = `/api/user/written-feeds/${user.id}`;
+        case "작성 봉사":
+          endpoint = `/api/auth/my-bongs?userId=${user.id}`;
           break;
-        case 'liked':
-          endpoint = `/api/user/liked-feeds/${user.id}`;
+        case "관심 봉사":
+          endpoint = `/api/auth/liked-bongs?userId=${user.id}`;
           break;
-        case 'bong':
-          endpoint = `/api/user/written-bongs/${user.id}`;
+        case "작성 후기":
+          endpoint = `/api/auth/my-feeds?userId=${user.id}`;
+          break;
+        case "관심 후기":
+          endpoint = `/api/auth/liked-feeds?userId=${user.id}`;
           break;
       }
 
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
-      
-      // 피드인 경우 추가 정보(댓글 수, 조회수) 가져오기
       const newData = await Promise.all(response.data.map(async (item: any) => {
         if ('progrmRegistNo' in item) {
           const endDate = new Date(item.progrmEndde);
@@ -100,7 +95,7 @@ const MyPage: React.FC = () => {
             remainingDays: remainingDays > 0 ? remainingDays : 0
           };
         } else {
-          // 피드인 경우 댓글 수와 조회수 가져오기
+          // 피드인 경우만 댓글 수와 조회수 가져오기
           const [commentsCount, viewCount] = await Promise.all([
             axios.get(`${config.API_DEV}/api/feed/comments`, {
               params: { feedId: item.feedID },
@@ -116,9 +111,7 @@ const MyPage: React.FC = () => {
         }
       }));
 
-      setData(prev => isInitial ? newData : [...prev, ...newData]);
-      setHasMore(newData.length === limit);
-      setOffset(prev => prev + limit);
+      setData(newData);
     } catch (error) {
       console.error('데이터 로드 실패:', error);
     } finally {
