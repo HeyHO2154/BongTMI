@@ -65,18 +65,22 @@ public class UserService {
         return user;
     }
 
-    public void sendVerificationCode(String email) {
+    // 회원가입용 이메일 인증 메서드
+    public void sendVerificationCodeForRegistration(String email) {
+        // 이메일 중복 체크를 하지 않음
+        String verificationCode = generateVerificationCode();
+        verificationCodes.put(email, new VerificationData(verificationCode));
+        sendVerificationEmail(email, verificationCode, true); // true: 회원가입용
+    }
+
+    // 비밀번호 재설정용 이메일 인증 메서드 (기존 메서드 수정)
+    public void sendVerificationCodeForPasswordReset(String email) {
         User user = userRepository.findById(email)
             .orElseThrow(() -> new RuntimeException("해당 이메일로 등록된 계정을 찾을 수 없습니다."));
 
-        // 6자리 인증번호 생성
         String verificationCode = generateVerificationCode();
-        
-        // 인증번호 저장
         verificationCodes.put(email, new VerificationData(verificationCode));
-
-        // 이메일 전송
-        sendVerificationEmail(email, verificationCode);
+        sendVerificationEmail(email, verificationCode, false); // false: 비밀번호 재설정용
     }
 
     private String generateVerificationCode() {
@@ -84,19 +88,28 @@ public class UserService {
         return String.format("%06d", random.nextInt(1000000));
     }
 
-    private void sendVerificationEmail(String email, String code) {
+    private void sendVerificationEmail(String email, String code, boolean isRegistration) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
             helper.setFrom("noreply@praven.kro.kr", "봉틈이");
             helper.setTo(email);
-            helper.setSubject("[봉틈이] 비밀번호 재설정 인증번호");
-            helper.setText("안녕하세요.\n\n"
-                + "요청하신 인증번호입니다: " + code + "\n\n"
-                + "인증번호는 5분간 유효합니다.\n\n"
-                + "본인이 요청하지 않았다면 이 메일을 무시해주세요.\n\n"
-                + "감사합니다.");
+            
+            if (isRegistration) {
+                helper.setSubject("[봉틈이] 회원가입 인증번호");
+                helper.setText("안녕하세요.\n\n"
+                    + "회원가입을 위한 인증번호입니다: " + code + "\n\n"
+                    + "인증번호는 5분간 유효합니다.\n\n"
+                    + "감사합니다.");
+            } else {
+                helper.setSubject("[봉틈이] 비밀번호 재설정 인증번호");
+                helper.setText("안녕하세요.\n\n"
+                    + "비밀번호 재설정을 위한 인증번호입니다: " + code + "\n\n"
+                    + "인증번호는 5분간 유효합니다.\n\n"
+                    + "본인이 요청하지 않았다면 이 메일을 무시해주세요.\n\n"
+                    + "감사합니다.");
+            }
             
             emailSender.send(message);
         } catch (Exception e) {

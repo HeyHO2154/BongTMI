@@ -50,7 +50,8 @@ const Register: React.FC = () => {
         return;
       }
 
-      const response = await axios.post(`${config.API_DEV}/api/auth/request-verification`, { 
+      // 회원가입용 이메일 인증 엔드포인트 사용
+      const response = await axios.post(`${config.API_DEV}/api/auth/request-verification/register`, { 
         email: formData.email 
       });
       setMessage(response.data);

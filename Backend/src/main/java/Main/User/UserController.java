@@ -69,10 +69,21 @@ public class UserController {
     @PostMapping("/request-verification")
     public ResponseEntity<?> requestVerification(@RequestBody FindAccountRequest request) {
         try {
-            userService.sendVerificationCode(request.getEmail());
+            userService.sendVerificationCodeForPasswordReset(request.getEmail());
             return new ResponseEntity<>("인증번호가 이메일로 전송되었습니다.", HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // 회원가입용 이메일 인증 엔드포인트 추가
+    @PostMapping("/request-verification/register")
+    public ResponseEntity<?> requestVerificationForRegister(@RequestBody FindAccountRequest request) {
+        try {
+            userService.sendVerificationCodeForRegistration(request.getEmail());
+            return new ResponseEntity<>("인증번호가 이메일로 전송되었습니다.", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
