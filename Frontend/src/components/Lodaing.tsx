@@ -86,7 +86,7 @@ const BongTMIIcon = styled.img<{ size: number }>`
 `;
 
 const LoadingMessage = styled.p`
-  margin-top: 20px;
+  margin-top: 0px;
   font-size: 16px;
   font-weight: 500;
   color: #555;
