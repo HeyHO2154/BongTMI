@@ -12,7 +12,7 @@ import Main.Feed.Feed;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    // 사용자가 작성한 봉사 공고 조회
+    // 사용자가 작성한 봉사 공고 조회 (userId -> nanmmbyNmAdmn)
     @Query("SELECT b FROM Bong b WHERE b.nanmmbyNmAdmn = :userId")
     List<Bong> findWrittenBongs(@Param("userId") String userId);
 
@@ -21,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, String> {
            "(SELECT lb.bongId FROM LikeBong lb WHERE lb.userId = :userId)")
     List<Bong> findLikedBongs(@Param("userId") String userId);
 
-    // 사용자가 작성한 피드 조회
-    @Query("SELECT f FROM Feed f WHERE f.author = :userId ORDER BY f.createdAt DESC")
+    // 사용자가 작성한 피드 조회 (userId -> author)
+    @Query("SELECT f FROM Feed f WHERE f.author = :userId")
     List<Feed> findWrittenFeeds(@Param("userId") String userId);
 
     // 사용자가 좋아요한 피드 조회
