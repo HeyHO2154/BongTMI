@@ -59,11 +59,11 @@ const bounce = keyframes`
 `;
 
 const Overlay = styled.div`
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 60px;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 60px;
   background: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
