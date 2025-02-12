@@ -15,20 +15,24 @@ const NaverCallback = () => {
     const state = query.get("state");
 
     if (code) {
+      // 백엔드 요청 전에 콘솔에 로그 추가
+      console.log("Sending request to backend with code:", code);
+      
       axios
         .post(`${config.API_DEV}/api/auth/naver/callback`, { code, state })
         .then((res) => {
-          console.log("User Data:", res.data);
-          localStorage.setItem("user", JSON.stringify(res.data)); // 사용자 정보 저장
-          navigate("/my-page"); // 로그인 완료 후 홈으로 이동
+          console.log("Login success:", res.data);
+          localStorage.setItem("user", JSON.stringify(res.data));
+          // 명시적으로 window.location 사용
+          window.location.href = "/my-page";
         })
         .catch((err) => {
-          console.error(err);
+          console.error("Login failed:", err);
           alert("네이버 로그인 실패");
-          navigate("/user/login");
+          window.location.href = "/user/login";
         });
     }
-  }, [location, navigate]);
+  }, [location]);
 
   // 로딩 컴포넌트로 변경
   return (
