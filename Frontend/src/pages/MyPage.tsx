@@ -56,13 +56,11 @@ const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
-  const [, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const limit = 5;
+  const [hasMore,] = useState(true);
   const observerRef = useRef<IntersectionObserver>();
   const lastCardRef = useRef<HTMLDivElement>(null);
 
-  const loadData = async (tab: string, isInitial: boolean = false) => {
+  const loadData = async (tab: string) => {
     if (!user) return;
     setLoading(true);
     try {
@@ -131,7 +129,7 @@ const MyPage: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    loadData(activeTab, true);
+    loadData(activeTab);
   }, [activeTab, user]);
 
   useEffect(() => {
