@@ -69,6 +69,12 @@ const FeedAdd: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 공지 카테고리 선택 시 관리자 체크
+    if (category === 1 && user?.email !== "junma97@naver.com") {
+      alert("공지사항은 관리자만 작성할 수 있습니다.");
+      return;
+    }
+
     const feedID = generateFeedID();
 
     if (!title || !content) {
@@ -84,7 +90,7 @@ const FeedAdd: React.FC = () => {
       content: content,
       likes: 0,
       views: 0,
-      category: category // 카테고리 추가
+      category: category
     };
 
     try {
@@ -124,7 +130,7 @@ const FeedAdd: React.FC = () => {
             value={category}
             onChange={(e) => setCategory(Number(e.target.value))}
           >
-            {availableCategories.map(cat => (
+            {categories.map(cat => (
               <option key={cat.id} value={cat.id}>
                 {cat.label}
               </option>
