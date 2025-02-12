@@ -112,6 +112,7 @@ const Container = styled.div`
   justify-content: center;
   height: calc(100vh - 160px); /* TopBar 높이 제외 */
   text-align: center;
+  overflow-y: auto;
 `;
 
 const Logo = styled.img`
