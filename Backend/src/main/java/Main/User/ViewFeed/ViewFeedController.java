@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/feed/view")
+@CrossOrigin(origins = "${Front_URL}")
 public class ViewFeedController {
 
     @Autowired
