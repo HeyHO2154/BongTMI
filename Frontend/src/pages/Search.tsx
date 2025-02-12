@@ -408,7 +408,7 @@ const Wrapper = styled.div`
 const StickyBox = styled.div`
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1000;  // 로딩 오버레이(z-index: 900)보다 높게 설정
   background-color: #fff;
   padding: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -547,6 +547,14 @@ const CardText = styled.div`
 const Label = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;  /* 2줄로 제한 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  line-height: 1.4;  /* 줄 간격 조정 */
+  max-height: 3.36em;  /* font-size * line-height * 2줄 = 1.2rem * 1.4 * 2 */
 `;
 
 const Context = styled.div`
