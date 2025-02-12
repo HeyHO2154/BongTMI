@@ -370,12 +370,12 @@ const TabsContainer = styled.div`
 
 const TabButton = styled.button<{ $active: boolean }>`
   flex: 1;
-  padding: 6px;
+  padding: 12px;
   border: none;
   border-radius: 12px;
   background: ${props => props.$active ? '#ff6b6b' : '#f1f3f5'};
   color: ${props => props.$active ? 'white' : '#495057'};
-  font-size: 1.1rem;
+  font-size: 0.6rem;
   font-weight: ${props => props.$active ? '600' : '400'};
   cursor: pointer;
   transition: all 0.2s ease;
