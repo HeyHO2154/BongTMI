@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, String> {
            "(SELECT lb.bongId FROM LikeBong lb WHERE lb.userId = :userId AND lb.selectionStatus IN (1, 4))")
     List<Bong> findLikedBongs(@Param("userId") String userId);
 
-    @Query("SELECT f FROM Feed f WHERE f.userId = :userId")
+    @Query("SELECT f FROM Feed f WHERE f.author = :userId")
     List<Feed> findFeedsByUserId(@Param("userId") String userId);
 
     @Query("SELECT f FROM Feed f WHERE f.feedId IN " +
