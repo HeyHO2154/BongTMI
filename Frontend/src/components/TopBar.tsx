@@ -7,8 +7,8 @@ const TopBar: React.FC = () => {
   const navigate = useNavigate();
 
   const toHome = () => navigate("/"); // 홈으로 이동
-  const toNotifications = () => navigate("/notifications"); // 알람 페이지로 이동
-  const toMessages = () => navigate("/messages"); // 채팅 페이지로 이동
+  const toNotifications = () => navigate("/bong/alarm"); // 알람 페이지로 이동
+  const toMessages = () => navigate("/bong/chat"); // 채팅 페이지로 이동
 
   return (
     <BarWrapper>

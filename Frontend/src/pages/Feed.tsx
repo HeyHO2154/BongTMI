@@ -557,7 +557,7 @@ const CategoryBadge = styled.span<{ category: number }>`
         `;
       case 2: // 건의
         return `
-          background-color: #33b5e5;
+          background-color: #ffbb33;
           color: white;
         `;
       case 3: // 후기
@@ -567,7 +567,7 @@ const CategoryBadge = styled.span<{ category: number }>`
         `;
       case 4: // 자유
         return `
-          background-color: #ffbb33;
+          background-color: #33b5e5;
           color: white;
         `;
       default: // 미분류

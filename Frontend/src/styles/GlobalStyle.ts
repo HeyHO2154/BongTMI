@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     touch-action: manipulation;
+    background-color:rgb(240, 240, 240); /* 원하는 배경색으로 변경 */
   }
 
   #root {
@@ -37,6 +38,7 @@ const GlobalStyle = createGlobalStyle`
     border: 1px solid #ddd;
     position: relative;
     transition: height 0.3s ease-in-out;
+    background-color: white; /* 원하는 배경색으로 변경 */
   }
 
   .navbar {
