@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { ThumbsUp, MessageCircle } from "lucide-react";
+import { ThumbsUp, MessageCircle, Eye } from "lucide-react";
 import config from "../../config";
 import Loading from "../../components/Lodaing";
 
@@ -38,6 +38,7 @@ interface FeedDetailData {
   comments: number;
   imageUrls: string[];
   isLiked: boolean;
+  views: number;
 }
 
 interface CommentData {
@@ -129,9 +130,19 @@ const FeedDetail: React.FC = () => {
   useEffect(() => {
     const fetchFeedDetail = async () => {
       try {
-        const userId = getUserId(); // ✅ 실제 사용자 ID 가져오기 (없을 수도 있음)
+        const userId = getUserId();
         
-        const response = await axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`);
+        // 로그인한 사용자인 경우 조회수 증가
+        if (userId) {
+          await axios.post(`${config.API_DEV}/api/feed/view/${feedID}`, null, {
+            params: { userId }
+          });
+        }
+
+        const [feedResponse, viewResponse] = await Promise.all([
+          axios.get<FeedDetailData>(`${config.API_DEV}/api/feed/info?feedID=${feedID}`),
+          axios.get(`${config.API_DEV}/api/feed/view/${feedID}/count`)
+        ]);
   
         let isLiked = false;
         if (userId) {
@@ -143,8 +154,9 @@ const FeedDetail: React.FC = () => {
         }
   
         setFeed({
-          ...response.data,
-          imageUrls: [`${config.API_DEV}/api/bong/image/${response.data.feedID}/1`],
+          ...feedResponse.data,
+          views: viewResponse.data,
+          imageUrls: [`${config.API_DEV}/api/bong/image/${feedResponse.data.feedID}/1`],
           isLiked: isLiked, // ✅ 로그인한 사용자만 좋아요 정보 반영
         });
   
@@ -233,6 +245,11 @@ const FeedDetail: React.FC = () => {
           <ActionButton>
             <MessageCircle />
             <span>{comments.length}</span> {/* ✅ 댓글 개수 표시 */}
+          </ActionButton>
+
+          <ActionButton>
+            <Eye />
+            <span>{feed?.views}</span>
           </ActionButton>
         </Actions>
 

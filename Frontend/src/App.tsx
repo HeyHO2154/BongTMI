@@ -24,7 +24,8 @@ import Register from "./pages/User/UserRegister";
 import Alarm from "./pages/Bong/Alarm";
 
 import Report from "./pages/User/Report";
-import ChatRoom from "./pages/Bong/ChatRoom";
+import Shop from "./pages/Bong/Shop";
+
 const App: React.FC = () => {
   const [isTouching, setIsTouching] = useState(false);
   isTouching;
@@ -87,7 +88,7 @@ const App: React.FC = () => {
             <Route path="/user/report" element={<Report />} />
 
             <Route path="/bong/alarm" element={<Alarm />} />
-            <Route path="/bong/chat" element={<ChatRoom />} />
+            <Route path="/bong/shop" element={<Shop />} />
           </Routes>
           <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}
         </div>

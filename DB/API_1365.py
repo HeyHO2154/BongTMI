@@ -21,7 +21,7 @@ SERVICE_KEY = "YOUR_API_KEY"  # 공공데이터 포털에서 발급받은 API �
 def get_db_connection():
     return pymysql.connect(**db_config)
 
-# MySQL 데이터 저장 함수
+# MySQL 데이터 저장 함수 수정 (단일 레코드용)
 def save_to_mysql(data):
     try:
         connection = pymysql.connect(**db_config)
@@ -59,8 +59,8 @@ def save_to_mysql(data):
                 sidoCd=VALUES(sidoCd),
                 gugunCd=VALUES(gugunCd)
             """
-            cursor.executemany(sql, data)
-        print(f"Saved {len(data)} records to MySQL.")
+            cursor.execute(sql, data)  # executemany 대신 execute 사용
+        print(f"Saved record to MySQL: {data[0]}")  # progrmRegistNo 출력
     except Exception as e:
         print(f"Error saving to MySQL: {e}")
     finally:
@@ -128,44 +128,50 @@ def parse_xml_to_dict(xml_data):
         })
     return parsed_data
 
-# 데이터 저장 프로세스
+# 데이터 저장 프로세스 수정
 def process_and_store_volunteer_data():
     page_no = 1
-    records = []  # 데이터를 모아두는 리스트
-    #개발용이라 소량 페이지만 가져옴,
-    while page_no <= 3:
-    #while True:
+    while page_no <= 300:  # 개발용 3페이지
         xml_data = fetch_all_volunteer_data(page_no)
         volunteer_list = parse_xml_to_dict(xml_data)
         if not volunteer_list:
             break
 
         for item in volunteer_list:
-            # 상세 데이터 가져오기
             detail_xml = fetch_volunteer_detail(item['progrmRegistNo'])
             detail_data = parse_xml_to_dict(detail_xml)
             if detail_data:
-                # detail_data의 progrmRegistNo 앞에 "SYO" 추가
                 detail_data[0]['progrmRegistNo'] = 'SYO' + detail_data[0]['progrmRegistNo']
-                # records 리스트에 추가
                 record = (
-                    detail_data[0]['progrmRegistNo'], detail_data[0]['progrmSj'], detail_data[0]['progrmSttusSe'],
-                    detail_data[0]['progrmBgnde'], detail_data[0]['progrmEndde'], detail_data[0]['actBeginTm'], 
-                    detail_data[0]['actEndTm'], detail_data[0]['noticeBgnde'], detail_data[0]['noticeEndde'],
-                    detail_data[0]['rcritNmpr'], detail_data[0]['actWkdy'], detail_data[0]['srvcClCode'], 
-                    detail_data[0]['adultPosblAt'], detail_data[0]['yngbgsPosblAt'], detail_data[0]['grpPosblAt'], 
-                    detail_data[0]['mnnstNm'], detail_data[0]['nanmmbyNm'], detail_data[0]['actPlace'], 
-                    detail_data[0]['nanmmbyNmAdmn'], detail_data[0]['telno'], detail_data[0]['fxnum'], 
-                    detail_data[0]['postAdres'], detail_data[0]['email'], detail_data[0]['progrmCn'], 
-                    detail_data[0]['sidoCd'], detail_data[0]['gugunCd']
+                    detail_data[0]['progrmRegistNo'], 
+                    detail_data[0]['progrmSj'],
+                    detail_data[0]['progrmSttusSe'],
+                    detail_data[0]['progrmBgnde'],
+                    detail_data[0]['progrmEndde'],
+                    detail_data[0]['actBeginTm'],
+                    detail_data[0]['actEndTm'],
+                    detail_data[0]['noticeBgnde'],
+                    detail_data[0]['noticeEndde'],
+                    detail_data[0]['rcritNmpr'],
+                    detail_data[0]['actWkdy'],
+                    detail_data[0]['srvcClCode'],
+                    detail_data[0]['adultPosblAt'],
+                    detail_data[0]['yngbgsPosblAt'],
+                    detail_data[0]['grpPosblAt'],
+                    detail_data[0]['mnnstNm'],
+                    detail_data[0]['nanmmbyNm'],
+                    detail_data[0]['actPlace'],
+                    detail_data[0]['nanmmbyNmAdmn'],
+                    detail_data[0]['telno'],
+                    detail_data[0]['fxnum'],
+                    detail_data[0]['postAdres'],
+                    detail_data[0]['email'],
+                    detail_data[0]['progrmCn'],
+                    detail_data[0]['sidoCd'],
+                    detail_data[0]['gugunCd']
                 )
-                records.append(record)  # 리스트에 추가
-                print("저장됨: "+detail_data[0]['progrmRegistNo'])
+                save_to_mysql(record)  # 각 레코드마다 바로 저장
         page_no += 1
-
-    # MySQL에 저장
-    if records:
-        save_to_mysql(records)
 
 # ✅ import 시 자동 실행 방지
 if __name__ == "__main__":

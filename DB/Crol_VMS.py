@@ -14,7 +14,7 @@ db_config = {
     'autocommit': True
 }
 
-# MySQL 데이터 저장 함수
+# MySQL 데이터 저장 함수 수정 (단일 레코드용)
 def save_to_mysql(data):
     try:
         connection = pymysql.connect(**db_config)
@@ -52,8 +52,8 @@ def save_to_mysql(data):
                 sidoCd=VALUES(sidoCd),
                 gugunCd=VALUES(gugunCd)
             """
-            cursor.executemany(sql, data)
-        print(f"Saved {len(data)} records to MySQL.")
+            cursor.execute(sql, data)
+        print(f"Saved record to MySQL: {data[0]}")
     except Exception as e:
         print(f"Error saving to MySQL: {e}")
     finally:
@@ -71,7 +71,7 @@ async def scrape_vms():
         records = []
 
         #개발할떄는 용량 최소화를 위해 1페이지만
-        max_pages = 2
+        max_pages = 200
         #max_pages = int(int(await page.locator("#rightArea > div.con > div.searchForm.searchFormTop.clear > p > span").first.text_content())/15)  # 최대 페이지 설정
 
         for page_num in range(max_pages):
@@ -141,18 +141,17 @@ async def scrape_vms():
                     progrmCn = await page.locator("#rightArea > div.con > table > tbody > tr:nth-child(6) > td > div").text_content() or "N/A"
                     sidoCd, gugunCd = "00", "00"
                     # 데이터 저장
-                    records.append((
-                        progrmRegistNo, progrmSj, progrmSttusSe, progrmBgnde, progrmEndde, actBeginTm, actEndTm,
-                        noticeBgnde, noticeEndde, rcritNmpr, actWkdy, srvcClCode, adultPosblAt, yngbgsPosblAt, grpPosblAt,
-                        mnnstNm, nanmmbyNm, actPlace, nanmmbyNmAdmn, telno, fxnum, postAdres, email, progrmCn, sidoCd, gugunCd
-                    ))
-                    print("저장됨: "+progrmRegistNo)
+                    record = (
+                        progrmRegistNo, progrmSj, progrmSttusSe,
+                        progrmBgnde, progrmEndde, actBeginTm, actEndTm,
+                        noticeBgnde, noticeEndde, rcritNmpr, actWkdy, srvcClCode,
+                        adultPosblAt, yngbgsPosblAt, grpPosblAt,
+                        mnnstNm, nanmmbyNm, actPlace, nanmmbyNmAdmn, telno, fxnum,
+                        postAdres, email, progrmCn, sidoCd, gugunCd
+                    )
+                    save_to_mysql(record)  # 각 레코드마다 바로 저장
                 except Exception as e:
                     print(f"Error processing detail page for seq {seq}: {e}")
-
-        # MySQL에 저장
-        if records:
-            save_to_mysql(records)
 
         await browser.close()
 

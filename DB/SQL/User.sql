@@ -33,5 +33,11 @@ CREATE TABLE LikeFeed (
     selection_status TINYINT NOT NULL DEFAULT 0 -- 비트마스크 사용 (1: 좋아요, 2: 싫어요, 4: 신청하기)
 );
 
+CREATE TABLE ViewFeed (
+	ViewFeedID BIGINT AUTO_INCREMENT PRIMARY KEY, -- ✅ 새로운 PK (자동 증가)
+    UserID VARCHAR(100) NOT NULL,
+    FeedID VARCHAR(100) NOT NULL
+);
+
 SELECT COUNT(*) AS total_count FROM User;
 select * from User;

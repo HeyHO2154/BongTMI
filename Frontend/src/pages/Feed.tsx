@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ThumbsUp, MessageCircle } from "lucide-react";
+import { ThumbsUp, MessageCircle, Eye } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,7 @@ interface FeedData {
   imageUrl: string;
   isLiked: boolean; // ✅ 추가된 부분
   category: number;
+  views: number;
 }
 
 const Feed: React.FC = () => {
@@ -261,6 +262,10 @@ const fetchFeedsByCategory = async (categoryId: number) => {
                     <MessageCircle />
                     <span>{feed?.comments ?? 0}</span> {/* ✅ 댓글 개수 표시 */}
                   </CommentButton>
+                  <EyeButton>
+                    <Eye />
+                    <span>{feed?.views ?? 0}</span>
+                  </EyeButton>
                 </Actions>
               </FeedFooter>
 
@@ -398,6 +403,13 @@ const LikeButton = styled.div`
 `;
 
 const CommentButton = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px; /* ✅ 아이콘과 숫자 사이의 간격 */
+`;
+
+const EyeButton = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
