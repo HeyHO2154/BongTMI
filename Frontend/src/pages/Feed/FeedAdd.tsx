@@ -35,6 +35,14 @@ const FeedAdd: React.FC = () => {
       return null;
     }
 
+  // 관리자 여부 확인
+  const isAdmin = user?.email === "junma97@naver.com";
+
+  // 카테고리 목록 필터링 - 관리자가 아니면 공지 카테고리 제외
+  const availableCategories = categories.filter(category => 
+    isAdmin ? true : category.id !== 1
+  );
+
   // 이미지 업로드 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -121,7 +129,7 @@ const FeedAdd: React.FC = () => {
             value={category}
             onChange={(e) => setCategory(Number(e.target.value))}
           >
-            {categories.map(cat => (
+            {availableCategories.map(cat => (
               <option key={cat.id} value={cat.id}>
                 {cat.label}
               </option>
