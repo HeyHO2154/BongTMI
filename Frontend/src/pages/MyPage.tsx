@@ -1,6 +1,6 @@
 import React, { useEffect, useState,  } from "react";
 import styled from "styled-components";
-import { LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined, BarChartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ThumbsUp, Eye, MessageCircle } from "lucide-react";
 import axios from "axios";
@@ -252,38 +252,49 @@ const MyPage: React.FC = () => {
 
   return (
     <Container>
-      <UserProfile>
-        <ProfileImage 
-          src={user.profileImage || "/assets/BongTMI.png"} 
-          alt={user.nickname}
-          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-            const target = e.currentTarget;
-            target.src = "/assets/BongTMI.png";
-          }}
-        />
-        <UserInfo>
-          <UserName>{user.nickname}</UserName>
-          <UserEmail>{user.email}</UserEmail>
-        </UserInfo>
-        <LogoutButton onClick={handleLogout}>
-          <LogoutOutlined /> 로그아웃
-        </LogoutButton>
-      </UserProfile>
+      <Header>
+        <ProfileSection>
+          <ProfileInfo>
+            <ProfileImage 
+              src={user.profileImage || "/assets/BongTMI.png"} 
+              alt={user.nickname}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.currentTarget;
+                target.src = "/assets/BongTMI.png";
+              }}
+            />
+            <UserDetails>
+              <UserName>{user.nickname}</UserName>
+              <UserEmail>{user.email}</UserEmail>
+              <ActionButtons>
+                <IconButton onClick={() => navigate("/user/report")}>
+                  <BarChartOutlined />
+                  <ButtonLabel>통계</ButtonLabel>
+                </IconButton>
+                <IconButton onClick={handleLogout}>
+                  <LogoutOutlined />
+                  <ButtonLabel>로그아웃</ButtonLabel>
+                </IconButton>
+              </ActionButtons>
+            </UserDetails>
+          </ProfileInfo>
+        </ProfileSection>
 
-      <TabsContainer>
-        <TabButton $active={activeTab === "작성 봉사"} onClick={() => setActiveTab("작성 봉사")}>
-          작성 봉사
-        </TabButton>
-        <TabButton $active={activeTab === "관심 봉사"} onClick={() => setActiveTab("관심 봉사")}>
-          관심 봉사
-        </TabButton>
-        <TabButton $active={activeTab === "작성 후기"} onClick={() => setActiveTab("작성 후기")}>
-          작성 후기
-        </TabButton>
-        <TabButton $active={activeTab === "관심 후기"} onClick={() => setActiveTab("관심 후기")}>
-          관심 후기
-        </TabButton>
-      </TabsContainer>
+        <TabsContainer>
+          <TabButton $active={activeTab === "작성 봉사"} onClick={() => setActiveTab("작성 봉사")}>
+            작성 봉사
+          </TabButton>
+          <TabButton $active={activeTab === "관심 봉사"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
+          </TabButton>
+          <TabButton $active={activeTab === "작성 후기"} onClick={() => setActiveTab("작성 후기")}>
+            작성 후기
+          </TabButton>
+          <TabButton $active={activeTab === "관심 후기"} onClick={() => setActiveTab("관심 후기")}>
+            관심 후기
+          </TabButton>
+        </TabsContainer>
+      </Header>
 
       <Content>
         {renderContent()}
@@ -308,45 +319,42 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const UserProfile = styled.div`
+const Header = styled.div`
+  background: white;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+
+const ProfileSection = styled.div`
+  margin-bottom: 20px;
+`;
+
+const ProfileInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background: white;
-  border-radius: 16px;
-  margin: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  gap: 20px;
 `;
 
-const ProfileImage = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-const UserInfo = styled.div`
+const UserDetails = styled.div`
   flex: 1;
 `;
 
-const UserName = styled.div`
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #333;
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
 `;
 
-const UserEmail = styled.p`
-  font-size: 1.1rem;
-  color: #868e96;
-  margin: 0;
-`;
-
-const LogoutButton = styled.button`
+const IconButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
   color: #495057;
-  font-size: 0.9rem;
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 8px;
@@ -354,8 +362,11 @@ const LogoutButton = styled.button`
 
   &:hover {
     background: #f1f3f5;
-    color: #ff6b6b;
   }
+`;
+
+const ButtonLabel = styled.span`
+  font-size: 1.1rem;
 `;
 
 const TabsContainer = styled.div`
@@ -555,4 +566,24 @@ const LoadingWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+`;
+
+// 누락된 스타일 컴포넌트 추가
+const ProfileImage = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const UserName = styled.div`
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #333;
+`;
+
+const UserEmail = styled.p`
+  font-size: 1.1rem;
+  color: #868e96;
+  margin: 0;
 `;
