@@ -50,7 +50,7 @@ interface FeedData {
 
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ nickname: string; email: string; id: string } | null>(null);
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
@@ -63,16 +63,16 @@ const MyPage: React.FC = () => {
       let endpoint = '';
       switch(tab) {
         case "작성 봉사":
-          endpoint = `/api/auth/my-bongs?userId=${user.email}`;
+          endpoint = `/api/auth/my-bongs?userId=${user.id}`;
           break;
         case "관심 봉사":
-          endpoint = `/api/auth/liked-bongs?userId=${user.email}`;
+          endpoint = `/api/auth/liked-bongs?userId=${user.id}`;
           break;
         case "작성 후기":
-          endpoint = `/api/auth/my-feeds?userId=${user.email}`;
+          endpoint = `/api/auth/my-feeds?userId=${user.id}`;
           break;
         case "관심 후기":
-          endpoint = `/api/auth/liked-feeds?userId=${user.email}`;
+          endpoint = `/api/auth/liked-feeds?userId=${user.id}`;
           break;
       }
       
@@ -110,7 +110,9 @@ const MyPage: React.FC = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      console.log("저장된 사용자 정보:", parsedUser); // 사용자 정보 확인
+      setUser(parsedUser);
     } else {
       navigate("/user/login");
     }
