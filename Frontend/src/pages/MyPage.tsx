@@ -142,6 +142,29 @@ const MyPage: React.FC = () => {
   const renderContent = () => {
     if (loading && data.length === 0) return <Loading />;
 
+    if (data.length === 0) {
+      let message = "";
+      switch (activeTab) {
+        case "작성 봉사":
+          message = "아직 작성한 봉사 게시글이 없습니다.";
+          break;
+        case "관심 봉사":
+          message = "아직 관심 표시한 봉사가 없습니다.";
+          break;
+        case "작성 후기":
+          message = "아직 작성한 후기가 없습니다.";
+          break;
+        case "관심 후기":
+          message = "아직 관심 표시한 후기가 없습니다.";
+          break;
+      }
+      return (
+        <NoDataMessage>
+          <span>😅 {message}</span>
+        </NoDataMessage>
+      );
+    }
+
     return (
       <CardGrid>
         {data.map((item: any, index) => (
@@ -516,4 +539,19 @@ const StatItem = styled.div`
   align-items: center;
   gap: 4px;
   color: #666;
+`;
+
+// 스타일 추가
+const NoDataMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.1rem;
+  color: #868e96;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  margin: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 `;
