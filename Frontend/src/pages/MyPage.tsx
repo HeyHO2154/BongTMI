@@ -548,7 +548,7 @@ const NoDataMessage = styled.div`
   justify-content: center;
   align-items: center;
   height: 200px;
-  font-size: 3rem;
+  font-size: 6rem;
   color: #868e96;
   text-align: center;
   background: white;
