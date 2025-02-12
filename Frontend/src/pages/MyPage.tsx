@@ -1,7 +1,6 @@
 import React, { useEffect, useState,  } from "react";
 import styled from "styled-components";
-import { Avatar } from "antd";
-import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ThumbsUp, Eye, MessageCircle } from "lucide-react";
 import axios from "axios";
@@ -50,9 +49,23 @@ interface FeedData {
   comments: number;
 }
 
+// User 인터페이스 추가
+interface User {
+  id: string;
+  nickname: string;
+  email: string;
+  profileImage?: string;
+  token?: string;
+  gender?: string;
+  ageRange?: string;
+  mobile?: string;
+  name?: string;
+  birthday?: string;
+}
+
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ nickname: string; email: string; id: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
@@ -204,10 +217,10 @@ const MyPage: React.FC = () => {
                 <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/bong/image/${item.feedID}/1)` }} />
                 <CardContent>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                    <UserInfo>
+                    <AuthorInfo>
                       <UserName>{item.author}</UserName>
                       <PostDate>{timeAgo(item.createdAt)}</PostDate>
-                    </UserInfo>
+                    </AuthorInfo>
                     <CategoryBadge category={item.category}>
                       {getCategoryLabel(item.category)}
                     </CategoryBadge>
@@ -239,42 +252,38 @@ const MyPage: React.FC = () => {
 
   return (
     <Container>
-      <Header>
-        <ProfileSection>
-          <ProfileInfo>
-            <Avatar size={86} icon={<UserOutlined />} className="user-avatar" />
-            <UserDetails>
-              <UserName>{user.nickname}</UserName>
-              <UserEmail>{user.email}</UserEmail>
-              <ActionButtons>
-                <IconButton onClick={() => navigate("/user/report")}>
-                  <BarChartOutlined />
-                  <ButtonLabel>통계</ButtonLabel>
-                </IconButton>
-                <IconButton onClick={handleLogout}>
-                  <LogoutOutlined />
-                  <ButtonLabel>로그아웃</ButtonLabel>
-                </IconButton>
-              </ActionButtons>
-            </UserDetails>
-          </ProfileInfo>
-        </ProfileSection>
+      <UserProfile>
+        <ProfileImage 
+          src={user.profileImage || "/assets/BongTMI.png"} 
+          alt={user.nickname}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.currentTarget;
+            target.src = "/assets/BongTMI.png";
+          }}
+        />
+        <UserInfo>
+          <UserName>{user.nickname}</UserName>
+          <UserEmail>{user.email}</UserEmail>
+        </UserInfo>
+        <LogoutButton onClick={handleLogout}>
+          <LogoutOutlined /> 로그아웃
+        </LogoutButton>
+      </UserProfile>
 
-        <TabsContainer>
-          <TabButton $active={activeTab === "작성 봉사"} onClick={() => setActiveTab("작성 봉사")}>
-            작성 봉사
-          </TabButton>
-          <TabButton $active={activeTab === "관심 봉사"} onClick={() => setActiveTab("관심 봉사")}>
-            관심 봉사
-          </TabButton>
-          <TabButton $active={activeTab === "작성 후기"} onClick={() => setActiveTab("작성 후기")}>
-            작성 후기
-          </TabButton>
-          <TabButton $active={activeTab === "관심 후기"} onClick={() => setActiveTab("관심 후기")}>
-            관심 후기
-          </TabButton>
-        </TabsContainer>
-      </Header>
+      <TabsContainer>
+        <TabButton $active={activeTab === "작성 봉사"} onClick={() => setActiveTab("작성 봉사")}>
+          작성 봉사
+        </TabButton>
+        <TabButton $active={activeTab === "관심 봉사"} onClick={() => setActiveTab("관심 봉사")}>
+          관심 봉사
+        </TabButton>
+        <TabButton $active={activeTab === "작성 후기"} onClick={() => setActiveTab("작성 후기")}>
+          작성 후기
+        </TabButton>
+        <TabButton $active={activeTab === "관심 후기"} onClick={() => setActiveTab("관심 후기")}>
+          관심 후기
+        </TabButton>
+      </TabsContainer>
 
       <Content>
         {renderContent()}
@@ -299,31 +308,25 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const Header = styled.div`
-  background: white;
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-`;
-
-const ProfileSection = styled.div`
-  margin-bottom: 20px;
-`;
-
-const ProfileInfo = styled.div`
+const UserProfile = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
-
-  .user-avatar {
-    background: linear-gradient(135deg, #ff6b6b, #ff8787);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
-  }
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  margin: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 `;
 
-const UserDetails = styled.div`
+const ProfileImage = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const UserInfo = styled.div`
   flex: 1;
 `;
 
@@ -339,16 +342,7 @@ const UserEmail = styled.p`
   margin: 0;
 `;
 
-const ActionButtons = styled.div`
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-`;
-
-const IconButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 6px;
+const LogoutButton = styled.button`
   background: none;
   border: none;
   color: #495057;
@@ -362,10 +356,6 @@ const IconButton = styled.button`
     background: #f1f3f5;
     color: #ff6b6b;
   }
-`;
-
-const ButtonLabel = styled.span`
-  font-size: 1.1rem;
 `;
 
 const TabsContainer = styled.div`
@@ -466,11 +456,9 @@ const getCategoryLabel = (categoryId: number) => {
 };
 
 // 피드 스타일 컴포넌트 추가
-const UserInfo = styled.div`
+const AuthorInfo = styled.div`
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  flex-direction: column;
 `;
 
 const PostDate = styled.div`
@@ -494,13 +482,11 @@ const CategoryBadge = styled.span<{ category: number }>`
   }}
 `;
 
-
 const DateText = styled.div`
   font-size: 1.1rem;
   color: #666;
   margin-top: 8px;
 `;
-
 
 // timeAgo 함수 추가
 const timeAgo = (dateString: string) => {

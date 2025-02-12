@@ -38,6 +38,7 @@ interface FeedData {
   isLiked: boolean; // ✅ 추가된 부분
   category: number;
   views: number;
+  authorProfileImage?: string;
 }
 
 const Feed: React.FC = () => {
@@ -231,7 +232,7 @@ const fetchFeedsByCategory = async (categoryId: number) => {
               {/* 사용자 정보 */}
               <FeedHeader>
                 <UserInfo>
-                  <ProfileImage src="/assets/DC.png" alt="프로필" />
+                  <ProfileImage src={feed.authorProfileImage || "/assets/DC.png"} alt="프로필" />
                   <UserInfoText>
                     <UserName>{feed.author}</UserName>
                     <PostDate>{timeAgo(feed.createdAt)}</PostDate>
