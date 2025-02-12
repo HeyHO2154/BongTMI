@@ -375,7 +375,7 @@ const TabButton = styled.button<{ $active: boolean }>`
   border-radius: 12px;
   background: ${props => props.$active ? '#ff6b6b' : '#f1f3f5'};
   color: ${props => props.$active ? 'white' : '#495057'};
-  font-size: 0.6rem;
+  font-size: 1.0rem;
   font-weight: ${props => props.$active ? '600' : '400'};
   cursor: pointer;
   transition: all 0.2s ease;
