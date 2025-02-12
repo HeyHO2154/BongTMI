@@ -282,7 +282,6 @@ const fetchFeedsByCategory = async (categoryId: number) => {
         )}
       </FeedContainer>
 
-      {isLoading && !noResults && <LoadingText><Loading/></LoadingText>}
       <FloatingButton onClick={() => navigate("/feed-write")}>+</FloatingButton>
     </FeedWrapper>
   );
@@ -403,13 +402,6 @@ const CommentButton = styled.div`
   cursor: pointer;
   gap: 8px; /* ✅ 아이콘과 숫자 사이의 간격 */
 `;
-
-const LoadingText = styled.div`
-  text-align: center;
-  color: #888;
-  margin-top: 16px;
-`;
-
 
 const FeedContent = styled.div`
   padding: 10px;

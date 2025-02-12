@@ -386,8 +386,6 @@ const Search: React.FC = () => {
           </NoResultsWrapper>
         )}
       </CardList>
-
-      {isLoading && !noResults && <LoadingText><Loading/></LoadingText>}
     </Wrapper>
   );
 };
@@ -562,12 +560,6 @@ const DateCss = styled.div`
   font-size: 0.9rem;
   color: #999;
   margin-top: 4px;
-`;
-
-const LoadingText = styled.div`
-  text-align: center;
-  color: #888;
-  margin-top: 16px;
 `;
 
 const Badge = styled.div<{ from: string }>`
