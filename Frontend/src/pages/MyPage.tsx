@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ThumbsUp, Eye } from "lucide-react";
+import { ThumbsUp, Eye, MessageCircle } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import Loading from "../components/Lodaing";
@@ -47,6 +47,7 @@ interface FeedData {
   views: number;
   category: number;
   images: string[];
+  comments: number;
 }
 
 const MyPage: React.FC = () => {
@@ -206,6 +207,10 @@ const MyPage: React.FC = () => {
                     <StatItem>
                       <ThumbsUp size={16} />
                       <span>{item.likes}</span>
+                    </StatItem>
+                    <StatItem>
+                      <MessageCircle size={16} />
+                      <span>{item.comments}</span>
                     </StatItem>
                     <StatItem>
                       <Eye size={16} />
