@@ -146,7 +146,7 @@ const DetailBong: React.FC = () => {
 
       <Footer>
       <ApplyButton onClick={handleApplyClick}>
-        신청하기
+        💌신청하기
       </ApplyButton>
 
       </Footer>
