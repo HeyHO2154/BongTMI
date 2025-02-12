@@ -10,40 +10,33 @@ import Loading from "../components/Lodaing";
 interface BongData {
   progrmRegistNo: string;
   progrmSj: string;
+  region: string;
+  type: string;
+  date: string;
+  imageUrl: string;
+  from: string;
+  postAdress: string;
   progrmSttusSe: number;
-  progrmBgnde: string;
-  progrmEndde: string;
-  actBeginTm: number;
-  actEndTm: number;
-  noticeBgnde: string;
-  noticeEndde: string;
-  rcritNmpr: number;
-  actWkdy: string;
-  srvcClCode: string;
   adultPosblAt: string;
   yngbgsPosblAt: string;
   grpPosblAt: string;
-  mnnstNm: string;
-  nanmmbyNm: string;
-  actPlace: string;
-  nanmmbyNmAdmn: string;
-  telno: string;
-  fxnum: string;
-  postAdres: string;
-  email: string;
-  progrmCn: string;
-  sidoCd: string;
-  gugunCd: string;
+  startDate: string;
+  endDate: string;
+  days: string;
+  remainingDays: number;
 }
 
 interface FeedData {
   feedID: string;
   title: string;
-  content: string;
   author: string;
   createdAt: string;
-  category: number;
+  content: string;
   likes: number;
+  comments: number;
+  imageUrl: string;
+  isLiked: boolean;
+  category: number;
   views: number;
 }
 
@@ -77,25 +70,42 @@ const MyPage: React.FC = () => {
       
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
       
-      // 봉사 데이터와 피드 데이터 형식 맞추기
       const formattedData = response.data.map((item: any) => {
         if ('progrmRegistNo' in item) {
-          // 봉사 데이터 포맷팅
+          // Search.tsx 스타일의 봉사 데이터 포맷팅
           const endDate = new Date(item.progrmEndde);
           const today = new Date();
           const timeDiff = endDate.getTime() - today.getTime();
           const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
+          const source = item.progrmRegistNo.substring(0, 3);
+          let fromValue = item.nanmmbyNmAdmn || "봉틈이";
+          let typeValue = "USER";
+          if (source === "SYO") {
+            fromValue = "1365자원봉사";
+            typeValue = "1365자원봉사";
+          } else if (source === "VMS") {
+            fromValue = "VMS사회복지";
+            typeValue = "VMS사회복지";
+          }
+
           return {
             ...item,
+            region: item.postAdres || "지역 없음",
+            type: typeValue,
+            date: `모집마감일: ${new Date(item.progrmEndde).toLocaleDateString()}`,
+            imageUrl: `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`,
+            from: fromValue,
             remainingDays: remainingDays > 0 ? remainingDays : 0,
-            imageUrl: `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`
+            days: item.actWkdy || "0000000"
           };
         } else {
-          // 피드 데이터 포맷팅
+          // Feed.tsx 스타일의 피드 데이터 포맷팅
           return {
             ...item,
-            imageUrl: `${config.API_DEV}/api/bong/image/0/Bong.png`
+            imageUrl: `${config.API_DEV}/api/bong/image/0/Bong.png`,
+            comments: 0, // 댓글 수는 백엔드에서 받아와야 함
+            isLiked: false // 좋아요 상태는 백엔드에서 받아와야 함
           };
         }
       });
@@ -138,17 +148,18 @@ const MyPage: React.FC = () => {
         {data.map((item: any, index) => (
           <Card key={index} onClick={() => {
             if ('progrmRegistNo' in item) {
-              navigate(`/bong/${item.progrmRegistNo}`);
+              navigate(`/detail/${item.progrmRegistNo}`);
             } else if ('feedID' in item) {
               navigate(`/feed/${item.feedID}`);
             }
           }}>
             <CardImage style={{ backgroundImage: `url(${item.imageUrl})` }} />
             <CardContent>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                {'progrmRegistNo' in item && (
-                  <>
-                    <Badge from={item.nanmmbyNm || "봉틈이"}>{item.nanmmbyNm || "봉틈이"}</Badge>
+              {'progrmRegistNo' in item ? (
+                // 봉사 카드 내용 (Search.tsx 스타일)
+                <>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                    <Badge from={item.from}>{item.from}</Badge>
                     <div style={{
                       backgroundColor: "rgb(204, 16, 16)",
                       color: "white",
@@ -159,23 +170,38 @@ const MyPage: React.FC = () => {
                     }}>
                       {`D-${item.remainingDays}`}
                     </div>
-                  </>
-                )}
-              </div>
-              <CardTitle>
-                {'progrmRegistNo' in item ? item.progrmSj : item.title}
-              </CardTitle>
-              <CardDescription>
-                {'progrmRegistNo' in item 
-                  ? item.actPlace 
-                  : `${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}`}
-              </CardDescription>
-              {'feedID' in item && (
-                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
-                  <span>좋아요 {item.likes}</span>
-                  <span style={{ margin: "0 8px" }}>•</span>
-                  <span>조회수 {item.views}</span>
-                </div>
+                  </div>
+                  <CardTitle>{item.progrmSj}</CardTitle>
+                  <CardDescription>
+                    {item.postAdres.split(' ').slice(0, 2).join(' ')}
+                  </CardDescription>
+                  <DateText>{item.date}</DateText>
+                </>
+              ) : (
+                // 피드 카드 내용 (Feed.tsx 스타일)
+                <>
+                  <UserInfo>
+                    <ProfileImage src="/assets/DC.png" alt="프로필" />
+                    <UserInfoText>
+                      <UserName>{item.author}</UserName>
+                      <PostDate>{timeAgo(item.createdAt)}</PostDate>
+                    </UserInfoText>
+                    <CategoryBadge category={item.category}>
+                      {getCategoryLabel(item.category)}
+                    </CategoryBadge>
+                  </UserInfo>
+                  <ContentTitle>{item.title}</ContentTitle>
+                  <Actions>
+                    <ActionItem>
+                      <ThumbsUp />
+                      <span>{item.likes}</span>
+                    </ActionItem>
+                    <ActionItem>
+                      <MessageCircle />
+                      <span>{item.comments}</span>
+                    </ActionItem>
+                  </Actions>
+                </>
               )}
             </CardContent>
           </Card>
@@ -398,4 +424,82 @@ const Badge = styled.div<{ from: string }>`
     props.from === "VMS사회복지" ? "#2196F3" :
     "#FF9800"};
   color: white;
+`;
+
+// 피드 카테고리 라벨 함수
+const getCategoryLabel = (categoryId: number) => {
+  switch (categoryId) {
+    case 0: return '미분류';
+    case 1: return '공지';
+    case 2: return '건의';
+    case 3: return '후기';
+    case 4: return '자유';
+    default: return '기타';
+  }
+};
+
+// 피드 스타일 컴포넌트 추가
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+`;
+
+const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const UserInfoText = styled.div`
+  flex: 1;
+`;
+
+const PostDate = styled.div`
+  font-size: 12px;
+  color: #666;
+`;
+
+const CategoryBadge = styled.span<{ category: number }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  ${props => {
+    switch (props.category) {
+      case 1: return 'background-color: #ff4444; color: white;';
+      case 2: return 'background-color: #ffbb33; color: white;';
+      case 3: return 'background-color: #00C851; color: white;';
+      case 4: return 'background-color: #33b5e5; color: white;';
+      default: return 'background-color: #999; color: white;';
+    }
+  }}
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+`;
+
+const ActionItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+`;
+
+const DateText = styled.div`
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+`;
+
+const ContentTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0 0 8px 0;
 `;
