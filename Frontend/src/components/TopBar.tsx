@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Bell, ShoppingBag } from "lucide-react"; // MessageCircle -> ShoppingBag으로 변경
+import { Bell, Store } from "lucide-react"; // ShoppingBag -> Store로 변경
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ const TopBar: React.FC = () => {
 
   return (
     <BarWrapper>
-      {/* 🛍️ 오른쪽 상점 아이콘 */}
+      {/* 🏪 오른쪽 상점 아이콘 */}
       <IconWrapper onClick={toShop}>
-        <ShoppingBag size={28} />
+        <Store size={28} />
       </IconWrapper>
 
       {/* 🏠 중앙 로고 */}
