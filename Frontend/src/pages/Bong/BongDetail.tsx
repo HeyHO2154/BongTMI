@@ -163,7 +163,7 @@ const Container = styled.div`
   flex-direction: column;
   overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
   position: relative;
-  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  min-height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
 `;
 
 // Footer: 신청 버튼 고정
