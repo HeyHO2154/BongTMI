@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ThumbsUp,  } from "lucide-react";
+import { ThumbsUp, Eye } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import Loading from "../components/Lodaing";
@@ -54,36 +54,41 @@ const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 5;
+  const observerRef = useRef<IntersectionObserver>();
+  const lastCardRef = useRef<HTMLDivElement>(null);
 
-  // 데이터 로드
-  const loadData = async (tab: string) => {
+  const loadData = async (tab: string, isInitial: boolean = false) => {
     if (!user) return;
+    if (isInitial) {
+      setOffset(0);
+      setHasMore(true);
+    }
+    if (!hasMore && !isInitial) return;
+    
     setLoading(true);
     try {
       let endpoint = '';
       switch(tab) {
         case "작성 봉사":
-          endpoint = `/api/auth/my-bongs?userId=${user.id}`;
+          endpoint = `/api/auth/my-bongs?userId=${user.id}&offset=${offset}&limit=${limit}`;
           break;
         case "관심 봉사":
-          endpoint = `/api/auth/liked-bongs?userId=${user.id}`;
+          endpoint = `/api/auth/liked-bongs?userId=${user.id}&offset=${offset}&limit=${limit}`;
           break;
         case "작성 후기":
-          endpoint = `/api/auth/my-feeds?userId=${user.id}`;
+          endpoint = `/api/auth/my-feeds?userId=${user.id}&offset=${offset}&limit=${limit}`;
           break;
         case "관심 후기":
-          endpoint = `/api/auth/liked-feeds?userId=${user.id}`;
+          endpoint = `/api/auth/liked-feeds?userId=${user.id}&offset=${offset}&limit=${limit}`;
           break;
       }
-      
-      console.log("요청 URL:", `${config.API_DEV}${endpoint}`); // URL 확인
 
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
-      console.log("받은 데이터:", response.data); // 받은 데이터 확인
-      
-      const formattedData = response.data.map((item: any) => {
+      const newData = response.data.map((item: any) => {
         if ('progrmRegistNo' in item) {
-          // 봉사 데이터 포맷팅
           const endDate = new Date(item.progrmEndde);
           const today = new Date();
           const timeDiff = endDate.getTime() - today.getTime();
@@ -97,9 +102,9 @@ const MyPage: React.FC = () => {
         return item;
       });
 
-      console.log("가공된 데이터:", formattedData); // 가공된 데이터 확인
-      setData(formattedData);
-
+      setData(prev => isInitial ? newData : [...prev, ...newData]);
+      setHasMore(newData.length === limit);
+      setOffset(prev => prev + limit);
     } catch (error) {
       console.error('데이터 로드 실패:', error);
     } finally {
@@ -119,8 +124,26 @@ const MyPage: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    loadData(activeTab);
+    loadData(activeTab, true);
   }, [activeTab, user]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && !loading && hasMore) {
+          loadData(activeTab);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observerRef.current = observer;
+
+    if (lastCardRef.current) {
+      observer.observe(lastCardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loading, hasMore, activeTab]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -132,20 +155,22 @@ const MyPage: React.FC = () => {
   }
 
   const renderContent = () => {
-    console.log("현재 data 상태:", data); // 렌더링 시점의 데이터 확인
-    
-    if (loading) return <Loading />;
+    if (loading && data.length === 0) return <Loading />;
 
     return (
       <CardGrid>
         {data.map((item: any, index) => (
-          <Card key={index} onClick={() => {
-            if ('progrmRegistNo' in item) {
-              navigate(`/detail/${item.progrmRegistNo}`);
-            } else if ('feedID' in item) {
-              navigate(`/feed/${item.feedID}`);
-            }
-          }}>
+          <Card 
+            key={index} 
+            ref={index === data.length - 1 ? lastCardRef : null}
+            onClick={() => {
+              if ('progrmRegistNo' in item) {
+                navigate(`/detail/${item.progrmRegistNo}`);
+              } else if ('feedID' in item) {
+                navigate(`/feed/${item.feedID}`);
+              }
+            }}
+          >
             {'progrmRegistNo' in item ? (
               // 봉사 카드
               <>
@@ -163,7 +188,7 @@ const MyPage: React.FC = () => {
             ) : (
               // 피드 카드
               <>
-                <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/bong/image/0/Bong.png)` }} />
+                <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/feed/image/${item.feedID}/1)` }} />
                 <CardContent>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
                     <UserInfo>
@@ -182,7 +207,8 @@ const MyPage: React.FC = () => {
                       <span>{item.likes}</span>
                     </StatItem>
                     <StatItem>
-                      <span>조회수 {item.views}</span>
+                      <Eye size={16} />
+                      <span>{item.views}</span>
                     </StatItem>
                   </Stats>
                 </CardContent>
@@ -190,6 +216,7 @@ const MyPage: React.FC = () => {
             )}
           </Card>
         ))}
+        {loading && <Loading />}
       </CardGrid>
     );
   };
@@ -251,8 +278,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 120px);
-  overflow-y: auto;
   background: #f8f9fa;
+  overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -350,6 +377,8 @@ const TabButton = styled.button<{ $active: boolean }>`
 
 const Content = styled.div`
   padding: 20px;
+  flex: 1;
+  overflow-y: auto;
 `;
 
 const CardGrid = styled.div`
