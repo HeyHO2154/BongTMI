@@ -288,7 +288,8 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 120px); // TopBar + NavBar 높이 제외
+  min-height: calc(100vh - 120px); // 최소 높이 추가
   background: #f8f9fa;
   overflow: hidden;
 `;
