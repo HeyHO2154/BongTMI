@@ -54,7 +54,7 @@ const bounce = keyframes`
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-10px);
   }
 `;
 
@@ -81,7 +81,7 @@ const LoadingContainer = styled.div`
 
 const BongTMIIcon = styled.img<{ size: number }>`
   width: ${props => props.size}px;
-  height: ${props => props.size}px;
+  height: auto;
   animation: ${bounce} 1s ease-in-out infinite;
 `;
 
