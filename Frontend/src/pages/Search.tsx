@@ -548,25 +548,25 @@ const Label = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   display: -webkit-box;
-  -webkit-line-clamp: 2;  /* 2줄로 제한 */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
-  line-height: 1.4;  /* 줄 간격 조정 */
-  max-height: 6em;  /* font-size * line-height * 2줄 = 1.2rem * 1.4 * 2 */
+  line-height: 1.4;
+  margin-bottom: 8px;  // 아래 여백 추가
+  min-height: 2.8em;   // 최소 높이 설정 (line-height * 2줄)
 `;
 
 const Context = styled.div`
   font-size: 1rem;
   color: #666;
-  margin-top: 8px;
+  margin-top: 4px;  // 상단 여백 줄임
 `;
 
 const DateCss = styled.div`
   font-size: 0.9rem;
   color: #999;
-  margin-top: 4px;
+  margin-top: auto;  // 남은 공간을 위쪽으로 밀어줌
 `;
 
 const Badge = styled.div<{ from: string }>`
