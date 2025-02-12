@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT f FROM Feed f WHERE f.author = :userId")
     List<Feed> findFeedsByUserId(@Param("userId") String userId);
 
-    @Query("SELECT f FROM Feed f WHERE f.feedId IN " +
-           "(SELECT lf.feedId FROM LikeFeed lf WHERE lf.userId = :userId)")
+    @Query("SELECT f FROM Feed f WHERE f.feedID IN " +
+           "(SELECT lf.feedID FROM LikeFeed lf WHERE lf.userId = :userId)")
     List<Feed> findLikedFeeds(@Param("userId") String userId);
 }
