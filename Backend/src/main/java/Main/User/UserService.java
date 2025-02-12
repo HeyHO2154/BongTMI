@@ -1,6 +1,7 @@
 package Main.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +12,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
+
+import Main.Bong.Bong;
+import Main.Feed.Feed;
 
 @Service
 public class UserService {
@@ -161,5 +165,25 @@ public class UserService {
         if (!data.code.equals(code)) {
             throw new RuntimeException("인증번호가 일치하지 않습니다.");
         }
+    }
+
+    // 작성한 봉사 공고 조회
+    public List<Bong> getWrittenBongs(String userId) {
+        return userRepository.findWrittenBongs(userId);
+    }
+
+    // 좋아요/신청한 봉사 공고 조회
+    public List<Bong> getLikedBongs(String userId) {
+        return userRepository.findLikedBongs(userId);
+    }
+
+    // 작성한 피드 조회
+    public List<Feed> getWrittenFeeds(String userId) {
+        return userRepository.findWrittenFeeds(userId);
+    }
+
+    // 좋아요한 피드 조회
+    public List<Feed> getLikedFeeds(String userId) {
+        return userRepository.findLikedFeeds(userId);
     }
 }

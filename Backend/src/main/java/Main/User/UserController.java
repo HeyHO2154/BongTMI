@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(
@@ -110,6 +112,50 @@ public class UserController {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 작성한 봉사 공고 조회
+    @GetMapping("/my-bongs")
+    public ResponseEntity<?> getMyBongs(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok(userService.getWrittenBongs(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                               .body("작성한 봉사 공고 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    // 좋아요/신청한 봉사 공고 조회
+    @GetMapping("/liked-bongs")
+    public ResponseEntity<?> getLikedBongs(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok(userService.getLikedBongs(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                               .body("좋아요한 봉사 공고 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    // 작성한 피드 조회
+    @GetMapping("/my-feeds")
+    public ResponseEntity<?> getMyFeeds(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok(userService.getWrittenFeeds(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                               .body("작성한 피드 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    // 좋아요한 피드 조회
+    @GetMapping("/liked-feeds")
+    public ResponseEntity<?> getLikedFeeds(@RequestParam String userId) {
+        try {
+            return ResponseEntity.ok(userService.getLikedFeeds(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                               .body("좋아요한 피드 조회 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 

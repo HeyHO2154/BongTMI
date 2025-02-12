@@ -35,22 +35,20 @@ const MyPage: React.FC = () => {
       let endpoint = '';
       switch(tab) {
         case "작성 봉사":
-          endpoint = '/api/auth/my-bongs';
+          endpoint = `/api/auth/my-bongs?userId=${user.email}`;
           break;
         case "관심 봉사":
-          endpoint = '/api/auth/liked-bongs';
+          endpoint = `/api/auth/liked-bongs?userId=${user.email}`;
           break;
         case "작성 후기":
-          endpoint = '/api/auth/my-feeds';
+          endpoint = `/api/auth/my-feeds?userId=${user.email}`;
           break;
         case "관심 후기":
-          endpoint = '/api/auth/liked-feeds';
+          endpoint = `/api/auth/liked-feeds?userId=${user.email}`;
           break;
       }
       
-      const response = await axios.get(`${config.API_DEV}${endpoint}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const response = await axios.get(`${config.API_DEV}${endpoint}`);
       setData(response.data);
     } catch (error) {
       console.error('데이터 로드 실패:', error);
