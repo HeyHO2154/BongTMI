@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ThumbsUp, MessageCircle } from "lucide-react";
+import { ThumbsUp,  } from "lucide-react";
 import axios from "axios";
 import config from "../config";
 import Loading from "../components/Lodaing";
@@ -11,20 +11,30 @@ import Loading from "../components/Lodaing";
 interface BongData {
   progrmRegistNo: string;
   progrmSj: string;
-  region: string;
-  type: string;
-  date: string;
-  imageUrl: string;
-  from: string;
-  postAdress: string;
   progrmSttusSe: number;
+  progrmBgnde: string;
+  progrmEndde: string;
+  actBeginTm: number;
+  actEndTm: number;
+  noticeBgnde: string;
+  noticeEndde: string;
+  rcritNmpr: number;
+  actWkdy: string;
+  srvcClCode: string;
   adultPosblAt: string;
   yngbgsPosblAt: string;
   grpPosblAt: string;
-  startDate: string;
-  endDate: string;
-  days: string;
-  remainingDays: number;
+  mnnstNm: string;
+  nanmmbyNm: string;
+  actPlace: string;
+  nanmmbyNmAdmn: string;
+  telno: string;
+  fxnum: string;
+  postAdres: string;
+  email: string;
+  progrmCn: string;
+  sidoCd: string;
+  gugunCd: string;
 }
 
 interface FeedData {
@@ -34,11 +44,8 @@ interface FeedData {
   createdAt: string;
   content: string;
   likes: number;
-  comments: number;
-  imageUrl: string;
-  isLiked: boolean;
-  category: number;
   views: number;
+  category: number;
 }
 
 const MyPage: React.FC = () => {
@@ -71,44 +78,21 @@ const MyPage: React.FC = () => {
       
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
       
+      // 봉사 데이터와 피드 데이터 형식 맞추기
       const formattedData = response.data.map((item: any) => {
         if ('progrmRegistNo' in item) {
-          // Search.tsx 스타일의 봉사 데이터 포맷팅
+          // 봉사 데이터 포맷팅
           const endDate = new Date(item.progrmEndde);
           const today = new Date();
           const timeDiff = endDate.getTime() - today.getTime();
           const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-          const source = item.progrmRegistNo.substring(0, 3);
-          let fromValue = item.nanmmbyNmAdmn || "봉틈이";
-          let typeValue = "USER";
-          if (source === "SYO") {
-            fromValue = "1365자원봉사";
-            typeValue = "1365자원봉사";
-          } else if (source === "VMS") {
-            fromValue = "VMS사회복지";
-            typeValue = "VMS사회복지";
-          }
-
           return {
             ...item,
-            region: item.postAdres || "지역 없음",
-            type: typeValue,
-            date: `모집마감일: ${new Date(item.progrmEndde).toLocaleDateString()}`,
-            imageUrl: `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`,
-            from: fromValue,
-            remainingDays: remainingDays > 0 ? remainingDays : 0,
-            days: item.actWkdy || "0000000"
-          };
-        } else {
-          // Feed.tsx 스타일의 피드 데이터 포맷팅
-          return {
-            ...item,
-            imageUrl: `${config.API_DEV}/api/bong/image/0/Bong.png`,
-            comments: 0, // 댓글 수는 백엔드에서 받아와야 함
-            isLiked: false // 좋아요 상태는 백엔드에서 받아와야 함
+            remainingDays: remainingDays > 0 ? remainingDays : 0
           };
         }
+        return item; // 피드 데이터는 그대로 반환
       });
 
       setData(formattedData);
@@ -154,57 +138,48 @@ const MyPage: React.FC = () => {
               navigate(`/feed/${item.feedID}`);
             }
           }}>
-            <CardImage style={{ backgroundImage: `url(${item.imageUrl})` }} />
-            <CardContent>
-              {'progrmRegistNo' in item ? (
-                // 봉사 카드 내용 (Search.tsx 스타일)
-                <>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                    <Badge from={item.from}>{item.from}</Badge>
-                    <div style={{
-                      backgroundColor: "rgb(204, 16, 16)",
-                      color: "white",
-                      padding: "4px 10px",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}>
-                      {`D-${item.remainingDays}`}
-                    </div>
+            {'progrmRegistNo' in item ? (
+              // 봉사 카드
+              <>
+                <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1)` }} />
+                <CardContent>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                    <Badge>{item.nanmmbyNm}</Badge>
+                    <DDay>{`D-${item.remainingDays}`}</DDay>
                   </div>
                   <CardTitle>{item.progrmSj}</CardTitle>
-                  <CardDescription>
-                    {item.postAdres.split(' ').slice(0, 2).join(' ')}
-                  </CardDescription>
-                  <DateText>{item.date}</DateText>
-                </>
-              ) : (
-                // 피드 카드 내용 (Feed.tsx 스타일)
-                <>
-                  <UserInfo>
-                    <ProfileImage src="/assets/DC.png" alt="프로필" />
-                    <UserInfoText>
+                  <CardDescription>{item.actPlace}</CardDescription>
+                  <DateText>{`모집기간: ${new Date(item.noticeBgnde).toLocaleDateString()} ~ ${new Date(item.noticeEndde).toLocaleDateString()}`}</DateText>
+                </CardContent>
+              </>
+            ) : (
+              // 피드 카드
+              <>
+                <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/bong/image/0/Bong.png)` }} />
+                <CardContent>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                    <UserInfo>
                       <UserName>{item.author}</UserName>
                       <PostDate>{timeAgo(item.createdAt)}</PostDate>
-                    </UserInfoText>
+                    </UserInfo>
                     <CategoryBadge category={item.category}>
                       {getCategoryLabel(item.category)}
                     </CategoryBadge>
-                  </UserInfo>
-                  <ContentTitle>{item.title}</ContentTitle>
-                  <Actions>
-                    <ActionItem>
-                      <ThumbsUp />
+                  </div>
+                  <CardTitle>{item.title}</CardTitle>
+                  <CardDescription>{item.content}</CardDescription>
+                  <Stats>
+                    <StatItem>
+                      <ThumbsUp size={16} />
                       <span>{item.likes}</span>
-                    </ActionItem>
-                    <ActionItem>
-                      <MessageCircle />
-                      <span>{item.comments}</span>
-                    </ActionItem>
-                  </Actions>
-                </>
-              )}
-            </CardContent>
+                    </StatItem>
+                    <StatItem>
+                      <span>조회수 {item.views}</span>
+                    </StatItem>
+                  </Stats>
+                </CardContent>
+              </>
+            )}
           </Card>
         ))}
       </CardGrid>
@@ -415,15 +390,12 @@ const CardDescription = styled.p`
   line-height: 1.5;
 `;
 
-const Badge = styled.div<{ from: string }>`
+const Badge = styled.div`
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: bold;
-  background-color: ${props => 
-    props.from === "1365자원봉사" ? "#4CAF50" :
-    props.from === "VMS사회복지" ? "#2196F3" :
-    "#FF9800"};
+  background-color: #4CAF50;
   color: white;
 `;
 
@@ -447,17 +419,6 @@ const UserInfo = styled.div`
   margin-bottom: 12px;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-const UserInfoText = styled.div`
-  flex: 1;
-`;
-
 const PostDate = styled.div`
   font-size: 12px;
   color: #666;
@@ -479,18 +440,6 @@ const CategoryBadge = styled.span<{ category: number }>`
   }}
 `;
 
-const Actions = styled.div`
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-`;
-
-const ActionItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #666;
-`;
 
 const DateText = styled.div`
   font-size: 14px;
@@ -498,12 +447,6 @@ const DateText = styled.div`
   margin-top: 8px;
 `;
 
-const ContentTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #343a40;
-  margin: 0 0 8px 0;
-`;
 
 // timeAgo 함수 추가
 const timeAgo = (dateString: string) => {
@@ -524,3 +467,28 @@ const timeAgo = (dateString: string) => {
   if (minutes > 0) return `${minutes}분 전`;
   return "방금 전";
 };
+
+// DDay 스타일 컴포넌트 추가
+const DDay = styled.div`
+  background-color: rgb(204, 16, 16);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+// Stats 스타일 컴포넌트 추가
+const Stats = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+`;
+
+// StatItem 스타일 컴포넌트 추가
+const StatItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+`;
