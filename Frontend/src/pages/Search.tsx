@@ -366,7 +366,9 @@ const Search: React.FC = () => {
                   </div>
                 </div>
                 <Label>{card.label}</Label>
-                <Context>{card.region}</Context>
+                <Context>
+                  {card.region.split(' ').slice(0, 2).join(' ')} {/* 주소를 처음 두 부분만 표시 */}
+                </Context>
                 <DateCss>{card.date}</DateCss>
               </CardText>
             </Card>
@@ -553,8 +555,8 @@ const Label = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
-  margin-bottom: 8px;  // 아래 여백 추가
-  min-height: 2.8em;   // 최소 높이 설정 (line-height * 2줄)
+  margin-bottom: 4px;  // 8px에서 4px로 줄임
+  min-height: 2.8em;
 `;
 
 const Context = styled.div`
