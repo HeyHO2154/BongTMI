@@ -10,7 +10,30 @@ import Loading from "../components/Lodaing";
 interface BongData {
   progrmRegistNo: string;
   progrmSj: string;
+  progrmSttusSe: number;
+  progrmBgnde: string;
+  progrmEndde: string;
+  actBeginTm: number;
+  actEndTm: number;
+  noticeBgnde: string;
+  noticeEndde: string;
+  rcritNmpr: number;
+  actWkdy: string;
+  srvcClCode: string;
+  adultPosblAt: string;
+  yngbgsPosblAt: string;
+  grpPosblAt: string;
+  mnnstNm: string;
+  nanmmbyNm: string;
   actPlace: string;
+  nanmmbyNmAdmn: string;
+  telno: string;
+  fxnum: string;
+  postAdres: string;
+  email: string;
+  progrmCn: string;
+  sidoCd: string;
+  gugunCd: string;
 }
 
 interface FeedData {
