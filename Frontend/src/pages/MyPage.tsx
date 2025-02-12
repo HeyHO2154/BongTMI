@@ -76,7 +76,31 @@ const MyPage: React.FC = () => {
       }
       
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
-      setData(response.data);
+      
+      // 봉사 데이터와 피드 데이터 형식 맞추기
+      const formattedData = response.data.map((item: any) => {
+        if ('progrmRegistNo' in item) {
+          // 봉사 데이터 포맷팅
+          const endDate = new Date(item.progrmEndde);
+          const today = new Date();
+          const timeDiff = endDate.getTime() - today.getTime();
+          const remainingDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+          return {
+            ...item,
+            remainingDays: remainingDays > 0 ? remainingDays : 0,
+            imageUrl: `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`
+          };
+        } else {
+          // 피드 데이터 포맷팅
+          return {
+            ...item,
+            imageUrl: `${config.API_DEV}/api/bong/image/0/Bong.png`
+          };
+        }
+      });
+
+      setData(formattedData);
     } catch (error) {
       console.error('데이터 로드 실패:', error);
     } finally {
@@ -111,7 +135,7 @@ const MyPage: React.FC = () => {
 
     return (
       <CardGrid>
-        {data.map((item, index) => (
+        {data.map((item: any, index) => (
           <Card key={index} onClick={() => {
             if ('progrmRegistNo' in item) {
               navigate(`/bong/${item.progrmRegistNo}`);
@@ -119,25 +143,40 @@ const MyPage: React.FC = () => {
               navigate(`/feed/${item.feedID}`);
             }
           }}>
-            <CardImage 
-              src={
-                'progrmRegistNo' in item
-                  ? `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`
-                  : `${config.API_DEV}/api/feed/image/${item.feedID}/1`
-              } 
-              alt={
-                'progrmRegistNo' in item
-                  ? item.progrmSj
-                  : item.title
-              }
-            />
+            <CardImage style={{ backgroundImage: `url(${item.imageUrl})` }} />
             <CardContent>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                {'progrmRegistNo' in item && (
+                  <>
+                    <Badge from={item.nanmmbyNm || "봉틈이"}>{item.nanmmbyNm || "봉틈이"}</Badge>
+                    <div style={{
+                      backgroundColor: "rgb(204, 16, 16)",
+                      color: "white",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}>
+                      {`D-${item.remainingDays}`}
+                    </div>
+                  </>
+                )}
+              </div>
               <CardTitle>
                 {'progrmRegistNo' in item ? item.progrmSj : item.title}
               </CardTitle>
               <CardDescription>
-                {'progrmRegistNo' in item ? item.actPlace : item.content}
+                {'progrmRegistNo' in item 
+                  ? item.actPlace 
+                  : `${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}`}
               </CardDescription>
+              {'feedID' in item && (
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
+                  <span>좋아요 {item.likes}</span>
+                  <span style={{ margin: "0 8px" }}>•</span>
+                  <span>조회수 {item.views}</span>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
@@ -323,10 +362,12 @@ const Card = styled.div`
   }
 `;
 
-const CardImage = styled.img`
+const CardImage = styled.div`
   width: 100%;
   height: 180px;
-  object-fit: cover;
+  background-image: url(${props => props.style?.backgroundImage});
+  background-size: cover;
+  background-position: center;
 `;
 
 const CardContent = styled.div`
@@ -345,4 +386,16 @@ const CardDescription = styled.p`
   color: #868e96;
   margin: 0;
   line-height: 1.5;
+`;
+
+const Badge = styled.div<{ from: string }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: ${props => 
+    props.from === "1365자원봉사" ? "#4CAF50" :
+    props.from === "VMS사회복지" ? "#2196F3" :
+    "#FF9800"};
+  color: white;
 `;
