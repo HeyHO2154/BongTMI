@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // LoginRequest를 내부 클래스로 정의  
+    // LoginRequest를 내부 클래스로 정의
     private static class LoginRequest {
         private String email;
         private String password;
