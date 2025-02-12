@@ -304,7 +304,8 @@ const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  padding: 16px;
+  padding-bottom: 80px; // NavBar 높이만큼 여백 추가
   width: 100%;
   max-width: 600px;
 `;
@@ -500,13 +501,16 @@ const CategoryContainer = styled.div`
   display: flex;
   gap: 8px;
   padding: 16px;
-  height: 60px; // 고정 높이 추가
-  min-height: 60px; // 최소 높이 설정
+  height: 60px; // 고정 높이
+  min-height: 60px; // 최소 높이
   background: white;
   border-bottom: 1px solid #eee;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  align-items: center; // 세로 중앙 정렬
+  align-items: center;
+  position: sticky; // 추가: 스크롤 시 고정
+  top: 60px; // 추가: TopBar 높이만큼 아래에 고정 (TopBar가 60px 높이라고 가정)
+  z-index: 10; // 추가: 다른 컨텐츠 위에 표시
   
   /* 스크롤바 숨기기 */
   &::-webkit-scrollbar {
