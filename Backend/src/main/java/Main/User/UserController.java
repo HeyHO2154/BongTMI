@@ -1,14 +1,21 @@
 package Main.User;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import Main.Bong.Bong;
+import Main.Feed.Feed;
 
 @RestController
 @CrossOrigin(
@@ -111,6 +118,37 @@ public class UserController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/my-bongs")
+    public ResponseEntity<List<Bong>> getMyBongs(@RequestHeader("Authorization") String token) {
+        String userId = getUserIdFromToken(token);
+        return ResponseEntity.ok(userService.getMyBongs(userId));
+    }
+
+    @GetMapping("/liked-bongs")
+    public ResponseEntity<List<Bong>> getLikedBongs(@RequestHeader("Authorization") String token) {
+        String userId = getUserIdFromToken(token);
+        return ResponseEntity.ok(userService.getLikedBongs(userId));
+    }
+
+    @GetMapping("/my-feeds")
+    public ResponseEntity<List<Feed>> getMyFeeds(@RequestHeader("Authorization") String token) {
+        String userId = getUserIdFromToken(token);
+        return ResponseEntity.ok(userService.getMyFeeds(userId));
+    }
+
+    @GetMapping("/liked-feeds")
+    public ResponseEntity<List<Feed>> getLikedFeeds(@RequestHeader("Authorization") String token) {
+        String userId = getUserIdFromToken(token);
+        return ResponseEntity.ok(userService.getLikedFeeds(userId));
+    }
+
+    private String getUserIdFromToken(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        throw new RuntimeException("Invalid token format");
     }
 
     private static class FindAccountRequest {
