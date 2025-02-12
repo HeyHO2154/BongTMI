@@ -36,7 +36,7 @@ const FeedAdd: React.FC = () => {
     }
 
   // 관리자 여부 확인
-  const isAdmin = user?.email === "junma97@naver.com";
+  const isAdmin = user?.email === config.ADMIN_EMAIL;
 
   // 카테고리 목록 필터링 - 관리자가 아니면 공지 카테고리 제외
   const availableCategories = categories.filter(category => 
@@ -69,7 +69,7 @@ const FeedAdd: React.FC = () => {
     e.preventDefault();
 
     // 공지 카테고리 선택 시 관리자 체크
-    if (category === 1 && user?.email !== "junma97@naver.com") {
+    if (category === 1 && user?.email !== config.ADMIN_EMAIL) {
       alert("공지사항은 관리자만 작성할 수 있습니다.");
       return;
     }
