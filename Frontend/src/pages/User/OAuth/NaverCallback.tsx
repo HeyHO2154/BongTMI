@@ -32,9 +32,9 @@ const NaverCallback = () => {
 
   // 로딩 컴포넌트로 변경
   return (
-    <Container>
-      <Loading />
-    </Container>
+    <div>
+      <Loading fullScreen={true} />
+    </div>
   );
 };
 

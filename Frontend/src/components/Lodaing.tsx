@@ -4,9 +4,10 @@ import styled, { keyframes } from "styled-components";
 
 interface LoadingProps {
   size?: number; // 로딩 스피너 크기 (기본값: 80)
+  fullScreen?: boolean; // 전체 화면 여부를 결정하는 prop 추가
 }
 
-const Loading: React.FC<LoadingProps> = ({ size = 80 }) => {
+const Loading: React.FC<LoadingProps> = ({ size = 80, fullScreen = false }) => {
   // 🔹 로딩 문구 리스트
   const messages = [
     "잠시만 기다려주세요...",
@@ -37,7 +38,7 @@ const Loading: React.FC<LoadingProps> = ({ size = 80 }) => {
   }, []); // 최초 마운트 시 실행
 
   return (
-    <Overlay>
+    <Overlay fullScreen={fullScreen}>
       <LoadingContainer>
         <BongTMIIcon size={size} src="/BongTMI.png" alt="봉틈이" />
         <LoadingMessage>{message}</LoadingMessage>
@@ -58,12 +59,12 @@ const bounce = keyframes`
   }
 `;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 60px;
+const Overlay = styled.div<{ fullScreen: boolean }>`
+  position: ${props => props.fullScreen ? 'fixed' : 'absolute'};
+  top: ${props => props.fullScreen ? '0' : '60px'};
   left: 0;
   right: 0;
-  bottom: 60px;
+  bottom: ${props => props.fullScreen ? '0' : '60px'};
   background: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
