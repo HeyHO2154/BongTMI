@@ -39,10 +39,10 @@ const FeedAdd: React.FC = () => {
   const isAdmin = user?.email === "junma97@naver.com";
 
   // 카테고리 목록 필터링
-  const availableCategories = categories.filter(category => 
-    // 공지(1) 카테고리는 관리자만 보이도록
-    category.id === 1 ? isAdmin : true
-  );
+  // const availableCategories = categories.filter(category => 
+  //   // 공지(1) 카테고리는 관리자만 보이도록
+  //   category.id === 1 ? isAdmin : true
+  // );
 
   // 이미지 업로드 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
