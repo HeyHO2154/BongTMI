@@ -265,7 +265,7 @@ const MyPage: React.FC = () => {
             />
             <UserDetails>
               <UserName>{user.nickname}</UserName>
-              <UserEmail>{user.email}</UserEmail>
+              {/* <UserEmail>{user.email}</UserEmail> */}
               <ActionButtons>
                 <IconButton onClick={() => navigate("/user/report")}>
                   <BarChartOutlined />
@@ -582,8 +582,8 @@ const UserName = styled.div`
   color: #333;
 `;
 
-const UserEmail = styled.p`
-  font-size: 1.1rem;
-  color: #868e96;
-  margin: 0;
-`;
+// const UserEmail = styled.p`
+//   font-size: 1.1rem;
+//   color: #868e96;
+//   margin: 0;
+// `;
