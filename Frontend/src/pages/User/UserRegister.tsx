@@ -186,7 +186,6 @@ const Register: React.FC = () => {
                 </VerifyButton>
               )}
             </InputWithButton>
-            {isCodeSent && <Message isError={false}>인증번호가 이메일로 전송되었습니다.</Message>}
           </InputGroup>
 
           {isCodeSent && !isVerified && (
@@ -204,9 +203,7 @@ const Register: React.FC = () => {
                   인증확인
                 </VerifyButton>
               </InputWithButton>
-              {message && message.includes("인증") && (
-                <Message isError={!isSuccess}>{message}</Message>
-              )}
+              {isCodeSent && <Message isError={false}>인증번호가 이메일로 전송되었습니다.</Message>}
             </InputGroup>
           )}
 
