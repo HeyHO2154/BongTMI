@@ -172,7 +172,7 @@ const FindAccount: React.FC = () => {
               비밀번호 변경하기
             </FindButton>
           ) : (
-            <BackButton onClick={() => navigate("/login")}>
+            <BackButton onClick={() => navigate("/user/login")}>
               로그인으로 돌아가기
             </BackButton>
           )}
