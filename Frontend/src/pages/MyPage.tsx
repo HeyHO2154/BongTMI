@@ -56,9 +56,6 @@ const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("작성 봉사");
   const [data, setData] = useState<Array<BongData | FeedData>>([]);
   const [loading, setLoading] = useState(false);
-  const [hasMore,] = useState(true);
-  const observerRef = useRef<IntersectionObserver>();
-  const lastCardRef = useRef<HTMLDivElement>(null);
 
   const loadData = async (tab: string) => {
     if (!user) return;
@@ -117,38 +114,21 @@ const MyPage: React.FC = () => {
     }
   };
 
+  // 사용자 정보 로드
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      console.log("저장된 사용자 정보:", parsedUser); // 사용자 정보 확인
       setUser(parsedUser);
     } else {
       navigate("/user/login");
     }
   }, [navigate]);
 
+  // 탭 변경 시 데이터 로드
   useEffect(() => {
     loadData(activeTab);
   }, [activeTab, user]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && !loading && hasMore) {
-          loadData(activeTab);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observerRef.current = observer;
-
-    if (lastCardRef.current) {
-      observer.observe(lastCardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [loading, hasMore, activeTab]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -167,7 +147,6 @@ const MyPage: React.FC = () => {
         {data.map((item: any, index) => (
           <Card 
             key={index} 
-            ref={index === data.length - 1 ? lastCardRef : null}
             onClick={() => {
               if ('progrmRegistNo' in item) {
                 navigate(`/detail/${item.progrmRegistNo}`);
