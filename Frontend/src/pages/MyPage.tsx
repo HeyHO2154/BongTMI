@@ -14,10 +14,14 @@ interface BongData {
 }
 
 interface FeedData {
-  feedId: string;
+  feedID: string;
   title: string;
   content: string;
-  imageUrl: string;
+  author: string;
+  createdAt: string;
+  category: number;
+  likes: number;
+  views: number;
 }
 
 const MyPage: React.FC = () => {
@@ -88,15 +92,15 @@ const MyPage: React.FC = () => {
           <Card key={index} onClick={() => {
             if ('progrmRegistNo' in item) {
               navigate(`/bong/${item.progrmRegistNo}`);
-            } else if ('feedId' in item) {
-              navigate(`/feed/${item.feedId}`);
+            } else if ('feedID' in item) {
+              navigate(`/feed/${item.feedID}`);
             }
           }}>
             <CardImage 
               src={
                 'progrmRegistNo' in item
                   ? `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`
-                  : item.imageUrl
+                  : `${config.API_DEV}/api/feed/image/${item.feedID}/1`
               } 
               alt={
                 'progrmRegistNo' in item
