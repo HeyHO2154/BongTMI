@@ -85,14 +85,14 @@ const MyPage: React.FC = () => {
           <Button type={activeTab === "작성 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성 봉사")}>
             작성 봉사
           </Button>
-          <Button type={activeTab === "신청 봉사" ? "primary" : "default"} onClick={() => setActiveTab("신청 봉사")}>
-            신청 봉사
-          </Button>
-          <Button type={activeTab === "좋아 봉사" ? "primary" : "default"} onClick={() => setActiveTab("좋아 봉사")}>
-            좋아 봉사
+          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
           </Button>
           <Button type={activeTab === "작성 후기" ? "primary" : "default"} onClick={() => setActiveTab("작성 후기")}>
             작성 후기
+          </Button>
+          <Button type={activeTab === "관심 후기" ? "primary" : "default"} onClick={() => setActiveTab("관심 후기")}>
+            관심 후기
           </Button>
         </ButtonGroup>
       </Header>
