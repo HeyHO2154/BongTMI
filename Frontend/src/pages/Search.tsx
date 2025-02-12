@@ -554,7 +554,7 @@ const Label = styled.div`
   text-overflow: ellipsis;
   word-break: break-word;
   line-height: 1.4;  /* 줄 간격 조정 */
-  max-height: 4em;  /* font-size * line-height * 2줄 = 1.2rem * 1.4 * 2 */
+  max-height: 6em;  /* font-size * line-height * 2줄 = 1.2rem * 1.4 * 2 */
 `;
 
 const Context = styled.div`
