@@ -160,7 +160,7 @@ const MyPage: React.FC = () => {
       }
       return (
         <NoDataMessage>
-          <span>😅 {message}</span>
+          <span>😢 {message}</span>
         </NoDataMessage>
       );
     }
@@ -323,12 +323,12 @@ const UserDetails = styled.div`
 
 const UserName = styled.div`
   font-weight: bold;
-  font-size: 14px;
+  font-size: 1.3rem;
   color: #333;
 `;
 
 const UserEmail = styled.p`
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #868e96;
   margin: 0;
 `;
@@ -359,7 +359,7 @@ const IconButton = styled.button`
 `;
 
 const ButtonLabel = styled.span`
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 `;
 
 const TabsContainer = styled.div`
@@ -375,7 +375,7 @@ const TabButton = styled.button<{ $active: boolean }>`
   border-radius: 12px;
   background: ${props => props.$active ? '#ff6b6b' : '#f1f3f5'};
   color: ${props => props.$active ? 'white' : '#495057'};
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: ${props => props.$active ? '600' : '400'};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -425,14 +425,14 @@ const CardContent = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: #343a40;
   margin: 0 0 8px 0;
 `;
 
 const CardDescription = styled.p`
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #868e96;
   margin: 0;
   line-height: 1.5;
@@ -441,7 +441,7 @@ const CardDescription = styled.p`
 const Badge = styled.div`
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: bold;
   background-color: #4CAF50;
   color: white;
@@ -468,14 +468,14 @@ const UserInfo = styled.div`
 `;
 
 const PostDate = styled.div`
-  font-size: 12px;
+  font-size: 1rem;
   color: #666;
 `;
 
 const CategoryBadge = styled.span<{ category: number }>`
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: bold;
   ${props => {
     switch (props.category) {
@@ -490,7 +490,7 @@ const CategoryBadge = styled.span<{ category: number }>`
 
 
 const DateText = styled.div`
-  font-size: 14px;
+  font-size: 1.1rem;
   color: #666;
   margin-top: 8px;
 `;
@@ -522,7 +522,7 @@ const DDay = styled.div`
   color: white;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 1.1rem;
   font-weight: bold;
 `;
 
@@ -537,8 +537,9 @@ const Stats = styled.div`
 const StatItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   color: #666;
+  font-size: 1.1rem;
 `;
 
 // 스타일 추가
@@ -547,7 +548,7 @@ const NoDataMessage = styled.div`
   justify-content: center;
   align-items: center;
   height: 200px;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   color: #868e96;
   text-align: center;
   background: white;
