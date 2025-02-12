@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import config from "../../../config";
 import Loading from "../../../components/Lodaing";
 
 const NaverCallback = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -44,12 +42,3 @@ const NaverCallback = () => {
 
 export default NaverCallback;
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
-  padding: 40px 20px;
-  overflow-y: auto;
-  height: calc(100vh - 160px); /* TopBar 높이 제외 */
-`;
