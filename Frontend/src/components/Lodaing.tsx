@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 
 interface LoadingProps {
-  size?: number; // 로딩 스피너 크기 (기본값: 50)
+  size?: number; // 로딩 스피너 크기 (기본값: 80)
 }
 
-const Loading: React.FC<LoadingProps> = ({ size = 50 }) => {
+const Loading: React.FC<LoadingProps> = ({ size = 80 }) => {
   // 🔹 로딩 문구 리스트
   const messages = [
     "잠시만 기다려주세요...",
@@ -39,7 +39,7 @@ const Loading: React.FC<LoadingProps> = ({ size = 50 }) => {
   return (
     <Overlay>
       <LoadingContainer>
-        <Spinner size={size} />
+        <BongTMIIcon size={size} src="/assets/BongTMI.png" alt="봉틈이" />
         <LoadingMessage>{message}</LoadingMessage>
       </LoadingContainer>
     </Overlay>
@@ -49,6 +49,15 @@ const Loading: React.FC<LoadingProps> = ({ size = 50 }) => {
 export default Loading;
 
 // 🔹 스타일 정의
+const bounce = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+`;
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -70,23 +79,14 @@ const LoadingContainer = styled.div`
   justify-content: center;
 `;
 
-// 🔹 스피너 애니메이션
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
-
-const Spinner = styled.div<{ size: number }>`
-  width: ${(props) => props.size}px;
-  height: ${(props) => props.size}px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #007bff;
-  border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+const BongTMIIcon = styled.img<{ size: number }>`
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
+  animation: ${bounce} 1s ease-in-out infinite;
 `;
 
 const LoadingMessage = styled.p`
-  margin-top: 10px;
+  margin-top: 20px;
   font-size: 16px;
   font-weight: 500;
   color: #555;
