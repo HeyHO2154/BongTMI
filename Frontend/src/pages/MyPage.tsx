@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { Avatar,   Button } from "antd";
+import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -54,61 +54,50 @@ const MyPage: React.FC = () => {
       <Header>
         <ProfileSection>
           <ProfileInfo>
-            <Avatar size={80} icon={<UserOutlined />} className="user-avatar" />
+            <Avatar size={86} icon={<UserOutlined />} className="user-avatar" />
             <UserDetails>
               <UserName>{user.nickname}</UserName>
               <UserEmail>{user.email}</UserEmail>
-              <StatsRow>
-                <StatItem>
-                  <StatNumber>12</StatNumber>
-                  <StatLabel>작성 봉사</StatLabel>
-                </StatItem>
-                <StatDivider />
-                <StatItem>
-                  <StatNumber>25</StatNumber>
-                  <StatLabel>관심 봉사</StatLabel>
-                </StatItem>
-                <StatDivider />
-                <StatItem>
-                  <StatNumber>8</StatNumber>
-                  <StatLabel>후기</StatLabel>
-                </StatItem>
-              </StatsRow>
+              <ActionButtons>
+                <IconButton onClick={() => navigate("/user/report")}>
+                  <BarChartOutlined />
+                  <ButtonLabel>통계</ButtonLabel>
+                </IconButton>
+                <IconButton onClick={handleLogout}>
+                  <LogoutOutlined />
+                  <ButtonLabel>로그아웃</ButtonLabel>
+                </IconButton>
+              </ActionButtons>
             </UserDetails>
           </ProfileInfo>
-          <ActionButtons>
-            <StyledButton onClick={() => navigate("/user/report")} icon={<BarChartOutlined />}>
-              통계
-            </StyledButton>
-            <StyledButton onClick={handleLogout} icon={<LogoutOutlined />}>
-              로그아웃
-            </StyledButton>
-          </ActionButtons>
         </ProfileSection>
 
         <TabsContainer>
-          {["작성 봉사", "관심 봉사", "작성 후기", "관심 후기"].map((tab) => (
-            <TabButton
-              key={tab}
-              $active={activeTab === tab}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </TabButton>
-          ))}
+          <TabButton $active={activeTab === "작성 봉사"} onClick={() => setActiveTab("작성 봉사")}>
+            작성 봉사
+          </TabButton>
+          <TabButton $active={activeTab === "관심 봉사"} onClick={() => setActiveTab("관심 봉사")}>
+            관심 봉사
+          </TabButton>
+          <TabButton $active={activeTab === "작성 후기"} onClick={() => setActiveTab("작성 후기")}>
+            작성 후기
+          </TabButton>
+          <TabButton $active={activeTab === "관심 후기"} onClick={() => setActiveTab("관심 후기")}>
+            관심 후기
+          </TabButton>
         </TabsContainer>
       </Header>
 
       <Content>
         <CardGrid>
           {dummyData.map((item, index) => (
-            <ContentCard key={index}>
+            <Card key={index}>
               <CardImage src={item.image} alt={item.title} />
               <CardContent>
                 <CardTitle>{item.title}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
               </CardContent>
-            </ContentCard>
+            </Card>
           ))}
         </CardGrid>
       </Content>
@@ -123,16 +112,21 @@ export default MyPage;
 // --------------------
 
 const Container = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  min-height: calc(100vh - 120px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
   background: #f8f9fa;
 `;
 
 const Header = styled.div`
   background: white;
-  padding: 24px 20px;
+  padding: 20px;
   border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 `;
 
 const ProfileSection = styled.div`
@@ -142,12 +136,11 @@ const ProfileSection = styled.div`
 const ProfileInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 20px;
+  gap: 20px;
 
   .user-avatar {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
   }
 `;
 
@@ -156,82 +149,68 @@ const UserDetails = styled.div`
 `;
 
 const UserName = styled.h2`
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #343a40;
   margin: 0 0 4px 0;
 `;
 
 const UserEmail = styled.p`
-  font-size: 14px;
-  color: #7f8c8d;
-  margin: 0 0 16px 0;
-`;
-
-const StatsRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const StatItem = styled.div`
-  text-align: center;
-`;
-
-const StatNumber = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  color: #2c3e50;
-`;
-
-const StatLabel = styled.div`
-  font-size: 12px;
-  color: #7f8c8d;
-  margin-top: 4px;
-`;
-
-const StatDivider = styled.div`
-  width: 1px;
-  height: 24px;
-  background: #eee;
+  font-size: 0.9rem;
+  color: #868e96;
+  margin: 0;
 `;
 
 const ActionButtons = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  gap: 16px;
+  margin-top: 12px;
 `;
 
-const StyledButton = styled(Button)`
+const IconButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #495057;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 8px 12px;
   border-radius: 8px;
-  height: 36px;
-  
+  transition: all 0.2s ease;
+
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #f1f3f5;
+    color: #ff6b6b;
   }
 `;
 
+const ButtonLabel = styled.span`
+  font-size: 0.9rem;
+`;
+
 const TabsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   gap: 8px;
-  padding: 0 4px;
+  margin-top: 20px;
 `;
 
 const TabButton = styled.button<{ $active: boolean }>`
+  flex: 1;
   padding: 12px;
   border: none;
-  border-radius: 8px;
-  background: ${props => props.$active ? '#3498db' : '#f8f9fa'};
-  color: ${props => props.$active ? 'white' : '#7f8c8d'};
-  font-size: 14px;
+  border-radius: 12px;
+  background: ${props => props.$active ? '#ff6b6b' : '#f1f3f5'};
+  color: ${props => props.$active ? 'white' : '#495057'};
+  font-size: 0.9rem;
   font-weight: ${props => props.$active ? '600' : '400'};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.$active ? '#3498db' : '#eee'};
+    background: ${props => props.$active ? '#ff6b6b' : '#e9ecef'};
+    transform: translateY(-1px);
   }
 `;
 
@@ -241,26 +220,26 @@ const Content = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 `;
 
-const ContentCard = styled.div`
+const Card = styled.div`
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
 `;
 
 const CardImage = styled.img`
   width: 100%;
-  height: 160px;
+  height: 180px;
   object-fit: cover;
 `;
 
@@ -269,15 +248,15 @@ const CardContent = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #343a40;
   margin: 0 0 8px 0;
 `;
 
 const CardDescription = styled.p`
-  font-size: 14px;
-  color: #7f8c8d;
+  font-size: 0.9rem;
+  color: #868e96;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
