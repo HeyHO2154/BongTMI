@@ -76,9 +76,11 @@ const MyPage: React.FC = () => {
           break;
       }
       
+      console.log("요청 URL:", `${config.API_DEV}${endpoint}`); // URL 확인
+
       const response = await axios.get(`${config.API_DEV}${endpoint}`);
+      console.log("받은 데이터:", response.data); // 받은 데이터 확인
       
-      // 봉사 데이터와 피드 데이터 형식 맞추기
       const formattedData = response.data.map((item: any) => {
         if ('progrmRegistNo' in item) {
           // 봉사 데이터 포맷팅
@@ -92,10 +94,12 @@ const MyPage: React.FC = () => {
             remainingDays: remainingDays > 0 ? remainingDays : 0
           };
         }
-        return item; // 피드 데이터는 그대로 반환
+        return item;
       });
 
+      console.log("가공된 데이터:", formattedData); // 가공된 데이터 확인
       setData(formattedData);
+
     } catch (error) {
       console.error('데이터 로드 실패:', error);
     } finally {
@@ -126,6 +130,8 @@ const MyPage: React.FC = () => {
   }
 
   const renderContent = () => {
+    console.log("현재 data 상태:", data); // 렌더링 시점의 데이터 확인
+    
     if (loading) return <Loading />;
 
     return (
