@@ -249,7 +249,7 @@ const fetchFeedsByCategory = async (categoryId: number) => {
               {/* 게시글 내용 */}
               <FeedContent>
                 <ContentTitle>{feed.title}</ContentTitle>
-                {/* <ContentText>{feed.content}</ContentText> */}
+                <ContentText>{feed.content}</ContentText>
               </FeedContent>
 
               {/* 버튼 */}
@@ -434,15 +434,15 @@ const ContentTitle = styled.h3`
   -webkit-box-orient: vertical;
 `;
 
-// const ContentText = styled.p`
-//   font-size: 14px;
-//   color: #333;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   display: -webkit-box;
-//   -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
-//   -webkit-box-orient: vertical;
-// `;
+const ContentText = styled.p`
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 3줄 이상 넘어가면 ... 표시 */
+  -webkit-box-orient: vertical;
+`;
 
 const FloatingButton = styled.button`
   position: absolute; /* FeedWrapper 내부에서 배치 */
