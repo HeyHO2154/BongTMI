@@ -1,44 +1,76 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, } from "react";
 import styled from "styled-components";
 import { Avatar } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import config from "../config";
+import Loading from "../components/Lodaing";
 
+interface BongData {
+  progrmRegistNo: string;
+  progrmSj: string;
+  actPlace: string;
+}
 
-const dummyData = [
-  {
-    title: "2024-01-15 아름다운가게 봉사",
-    description: "도움이 필요한 사람들에게 나눔을 실천할 수 있어 기뻤습니다.",
-    image: "https://picsum.photos/300?random=1",
-  },
-  {
-    title: "2024-01-10 지역사회 환경정화 활동",
-    description: "쓰레기를 줍고 깨끗한 환경을 만드는 데 동참했습니다.",
-    image: "https://picsum.photos/300?random=2",
-  },
-  {
-    title: "2024-01-10 지역사회 환경정화 활동",
-    description: "쓰레기를 줍고 깨끗한 환경을 만드는 데 동참했습니다.",
-    image: "https://picsum.photos/300?random=3",
-  },
-];
+interface FeedData {
+  feedId: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+}
 
 const MyPage: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ nickname: string; email: string } | null>(null);
-  const [activeTab, setActiveTab] = useState(() => "작성 봉사"); // ✅ 초기값 보장
-  const hasNavigated = useRef(false); // ✅ navigate 중복 실행 방지
+  const [activeTab, setActiveTab] = useState("작성 봉사");
+  const [data, setData] = useState<Array<BongData | FeedData>>([]);
+  const [loading, setLoading] = useState(false);
+
+  // 데이터 로드
+  const loadData = async (tab: string) => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      let endpoint = '';
+      switch(tab) {
+        case "작성 봉사":
+          endpoint = '/api/auth/my-bongs';
+          break;
+        case "관심 봉사":
+          endpoint = '/api/auth/liked-bongs';
+          break;
+        case "작성 후기":
+          endpoint = '/api/auth/my-feeds';
+          break;
+        case "관심 후기":
+          endpoint = '/api/auth/liked-feeds';
+          break;
+      }
+      
+      const response = await axios.get(`${config.API_DEV}${endpoint}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setData(response.data);
+    } catch (error) {
+      console.error('데이터 로드 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-    } else if (!hasNavigated.current) {
-      hasNavigated.current = true;
+    } else {
       navigate("/user/login");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    loadData(activeTab);
+  }, [activeTab, user]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -48,6 +80,45 @@ const MyPage: React.FC = () => {
   if (!user) {
     return null;
   }
+
+  const renderContent = () => {
+    if (loading) return <Loading />;
+
+    return (
+      <CardGrid>
+        {data.map((item, index) => (
+          <Card key={index} onClick={() => {
+            if ('progrmRegistNo' in item) {
+              navigate(`/bong/${item.progrmRegistNo}`);
+            } else if ('feedId' in item) {
+              navigate(`/feed/${item.feedId}`);
+            }
+          }}>
+            <CardImage 
+              src={
+                'progrmRegistNo' in item
+                  ? `${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1`
+                  : item.imageUrl
+              } 
+              alt={
+                'progrmRegistNo' in item
+                  ? item.progrmSj
+                  : item.title
+              }
+            />
+            <CardContent>
+              <CardTitle>
+                {'progrmRegistNo' in item ? item.progrmSj : item.title}
+              </CardTitle>
+              <CardDescription>
+                {'progrmRegistNo' in item ? item.actPlace : item.content}
+              </CardDescription>
+            </CardContent>
+          </Card>
+        ))}
+      </CardGrid>
+    );
+  };
 
   return (
     <Container>
@@ -89,17 +160,7 @@ const MyPage: React.FC = () => {
       </Header>
 
       <Content>
-        <CardGrid>
-          {dummyData.map((item, index) => (
-            <Card key={index}>
-              <CardImage src={item.image} alt={item.title} />
-              <CardContent>
-                <CardTitle>{item.title}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </CardGrid>
+        {renderContent()}
       </Content>
     </Container>
   );
