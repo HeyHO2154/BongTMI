@@ -1,7 +1,6 @@
 package Main.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,10 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import Main.Bong.Bong;
-import Main.Bong.BongRepository;
-import Main.Feed.Feed;
-import Main.Feed.FeedRepository;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
@@ -25,12 +20,6 @@ public class UserService {
 
     @Autowired
     private JavaMailSender emailSender;
-
-    @Autowired
-    private BongRepository bongRepository;
-
-    @Autowired
-    private FeedRepository feedRepository;
 
     // 인증번호 저장을 위한 임시 저장소 (실제로는 Redis 등을 사용하는 것이 좋습니다)
     private Map<String, VerificationData> verificationCodes = new ConcurrentHashMap<>();
@@ -172,21 +161,5 @@ public class UserService {
         if (!data.code.equals(code)) {
             throw new RuntimeException("인증번호가 일치하지 않습니다.");
         }
-    }
-
-    public List<Bong> getMyBongs(String userId) {
-        return userRepository.findLikedBongs(userId);
-    }
-
-    public List<Bong> getLikedBongs(String userId) {
-        return userRepository.findLikedBongs(userId);
-    }
-
-    public List<Feed> getMyFeeds(String userId) {
-        return userRepository.findFeedsByUserId(userId);
-    }
-
-    public List<Feed> getLikedFeeds(String userId) {
-        return userRepository.findLikedFeeds(userId);
     }
 }
