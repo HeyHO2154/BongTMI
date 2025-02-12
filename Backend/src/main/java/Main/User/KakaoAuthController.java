@@ -106,11 +106,15 @@ public class KakaoAuthController {
             Map<String, Object> kakaoAccount = (Map<String, Object>) response.get("kakao_account");
             if (kakaoAccount != null) {
                 user.setEmail((String) kakaoAccount.get("email"));
+                user.setGender((String) kakaoAccount.get("gender"));
+                user.setAgeRange((String) kakaoAccount.get("age_range"));
+                user.setBirthday((String) kakaoAccount.get("birthday"));
             }
 
             Map<String, Object> properties = (Map<String, Object>) response.get("properties");
             if (properties != null) {
                 user.setNickname((String) properties.get("nickname"));
+                user.setProfileImage((String) properties.get("profile_image"));
             }
 
             return user;

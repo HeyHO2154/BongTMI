@@ -21,31 +21,31 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String profileImage; // 프로필 이미지 URL
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = true)
     private String ageRange; // 연령대 (예: "20-29")
 
-    @Column(length = 1)
+    @Column(length = 1, nullable = true)
     private String gender; // 성별 (M: 남성, F: 여성, U: 기타)
 
     @Column(length = 255)
     private String email; // 이메일 (중복 방지)
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = true)
     private String mobile; // 휴대폰 번호
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = true)
     private String mobileE164; // 국제 표준화된 휴대폰 번호 (+82)
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = true)
     private String name; // 실명
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = true)
     private String birthday; // 생일 (월-일, 예: "10-13")
 
-    @Column(length = 4)
+    @Column(length = 4, nullable = true)
     private String birthyear; // 태어난 연도 (예: "1997")
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = true)
     private String password; // 비밀번호 필드 추가
 
 	public String getId() {

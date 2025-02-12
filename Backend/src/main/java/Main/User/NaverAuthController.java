@@ -112,6 +112,11 @@ public class NaverAuthController {
             user.setId(userResponse.get("id").toString());
             user.setEmail((String) userResponse.get("email"));
             user.setNickname((String) userResponse.get("nickname"));
+            user.setName((String) userResponse.get("name"));
+            user.setGender((String) userResponse.get("gender"));
+            user.setBirthday((String) userResponse.get("birthday"));
+            user.setProfileImage((String) userResponse.get("profile_image"));
+            user.setMobile((String) userResponse.get("mobile"));
             return user;
         } else {
             throw new RuntimeException("Failed to retrieve user info");
