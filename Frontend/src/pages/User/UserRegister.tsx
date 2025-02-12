@@ -28,7 +28,7 @@ const Register: React.FC = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
-  const [, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // 입력값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
