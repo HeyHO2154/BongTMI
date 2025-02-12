@@ -370,7 +370,7 @@ const TabsContainer = styled.div`
 
 const TabButton = styled.button<{ $active: boolean }>`
   flex: 1;
-  padding: 12px;
+  padding: 6px;
   border: none;
   border-radius: 12px;
   background: ${props => props.$active ? '#ff6b6b' : '#f1f3f5'};
