@@ -158,11 +158,12 @@ export default DetailBong;
 
 // 스타일 정의
 const Container = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
+  position: relative;
   height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
-  overflow-y: auto; /* 스크롤 가능 */
 `;
 
 // Footer: 신청 버튼 고정
