@@ -46,6 +46,7 @@ interface FeedData {
   likes: number;
   views: number;
   category: number;
+  images: string[];
 }
 
 const MyPage: React.FC = () => {
@@ -188,7 +189,15 @@ const MyPage: React.FC = () => {
             ) : (
               // 피드 카드
               <>
-                <CardImage style={{ backgroundImage: `url(${config.API_DEV}/api/feed/image/${item.feedID}/1)` }} />
+                <CardImage 
+                  style={{ 
+                    backgroundImage: 'progrmRegistNo' in item
+                      ? `url(${config.API_DEV}/api/bong/image/${item.progrmRegistNo}/1)`
+                      : item.images && item.images.length > 0
+                        ? `url(${config.API_DEV}/api/feed/image/${item.feedID}/${item.images[0]})`
+                        : `url(${config.API_DEV}/api/bong/image/0/Feed.png)`
+                  }} 
+                />
                 <CardContent>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
                     <UserInfo>
