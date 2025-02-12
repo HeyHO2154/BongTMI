@@ -41,7 +41,7 @@ const DetailBong: React.FC = () => {
   const { progrmRegistNo } = useParams<{ progrmRegistNo: string }>();
   const [bongData, setBongData] = useState<Bong | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 보이는 이미지 인덱스
 
   const handleImageSlide = (direction: "left" | "right") => {
@@ -111,10 +111,27 @@ const DetailBong: React.FC = () => {
     }
   };
 
-  // 로딩 중일 때 Loading 컴포넌트 표시
-  if (loading) return <Loading />;
-  if (error) return <div>{error}</div>;
-  if (!bongData) return <div>progrmRegistNo: {progrmRegistNo}, 데이터가 없습니다.</div>;
+  // 로딩 중일 때도 Container 안에 Loading 컴포넌트 표시
+  if (loading) {
+    return (
+      <Container>
+        <Loading />
+      </Container>
+    );
+  }
+
+  if (!bongData) {
+    return (
+      <Container>
+        <NoResultsWrapper>
+          <NoResultsMessage>
+            <span>봉사 정보를 찾을 수 없습니다 😢</span>
+            <span>다른 봉사를 찾아보시는 건 어떨까요?</span>
+          </NoResultsMessage>
+        </NoResultsWrapper>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -163,7 +180,7 @@ const Container = styled.div`
   flex-direction: column;
   overflow-y: auto; /* ✅ 스크롤 가능하도록 추가 */
   position: relative;
-  min-height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
+  height: calc(100vh - 160px); /* TopBar + NavBar 높이 제외 */
 `;
 
 // Footer: 신청 버튼 고정
@@ -278,4 +295,32 @@ const Description = styled.p`
   font-size: 16px;
   color: #444;
   line-height: 1.5;
+`;
+
+// 스타일 추가
+const NoResultsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
+const NoResultsMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-align: center;
+
+  span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  span:last-child {
+    font-size: 1rem;
+    color: #888;
+  }
 `;
