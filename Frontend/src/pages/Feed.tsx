@@ -90,45 +90,62 @@ const Feed: React.FC = () => {
   // ✅ API 데이터 불러오기
 const fetchFeedsByCategory = async (categoryId: number) => {
   setIsSearching(true);
+  setNoResults(false);
+  setIsLoading(true);
   try {
     const userId = getUserId();
+    let response;
     
-    // 피드 정보 가져오기
-    const feedResponse = await axios.get(`${config.API_DEV}/api/feed/list`, {
-      params: { category: categoryId === -1 ? null : categoryId }
-    });
+    if (categoryId === -1) {
+      // 전체 카테고리 선택 시
+      response = await axios.get(`${config.API_DEV}/api/feed/all`);
+    } else {
+      // 특정 카테고리 선택 시
+      response = await axios.get(`${config.API_DEV}/api/feed/category`, {
+        params: { category: categoryId }
+      });
+    }
 
-    // 각 피드의 추가 정보(조회수, 좋아요 상태, 댓글 수) 가져오기
-    const feedsWithDetails = await Promise.all(
-      feedResponse.data.map(async (feed: FeedData) => {
-        const [viewResponse, likeStatusRes, commentsCount] = await Promise.all([
-          axios.get(`${config.API_DEV}/api/feed/view/${feed.feedID}/count`),
+    const allFeeds = response.data.map((feed: FeedData) => ({
+      ...feed,
+      imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
+      isLiked: userId ? false : false,
+    }));
+
+    // 좋아요 상태와 댓글 개수, 조회수 가져오기
+    const updatedFeeds = await Promise.all(
+      allFeeds.map(async (feed: FeedData) => {
+        const [likeStatusRes, commentsCount, viewCount] = await Promise.all([
           userId
             ? axios.get(`${config.API_DEV}/api/feed/like-status`, {
                 params: { userId, feedId: feed.feedID },
               })
             : Promise.resolve({ data: { isLiked: false } }),
-          fetchCommentCount(feed.feedID)
+          fetchCommentCount(feed.feedID),
+          axios.get(`${config.API_DEV}/api/feed/view/${feed.feedID}/count`)
         ]);
 
         return {
           ...feed,
-          imageUrl: `${config.API_DEV}/api/bong/image/${feed.feedID}/1`,
-          views: viewResponse.data,
           isLiked: likeStatusRes.data.isLiked,
-          comments: commentsCount
+          comments: commentsCount,
+          views: viewCount.data
         };
       })
     );
 
-    setAllCards(feedsWithDetails);
-    setVisibleCards(feedsWithDetails.slice(0, limit));
+    if (updatedFeeds.length === 0) {
+      setNoResults(true);
+    }
+
+    setAllCards(updatedFeeds);
+    setVisibleCards(updatedFeeds.slice(0, limit));
     setOffset(limit);
-    setNoResults(feedsWithDetails.length === 0);
   } catch (error) {
-    console.error("피드 로드 실패:", error);
+    console.error("데이터 로드 실패:", error);
     setNoResults(true);
   } finally {
+    setIsLoading(false);
     setIsSearching(false);
   }
 };
