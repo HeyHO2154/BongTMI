@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { Card, Avatar, Typography, Row, Col, Button, List } from "antd";
+import { Avatar,   Button } from "antd";
 import { UserOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-const { Title, Text } = Typography;
 
 const dummyData = [
   {
@@ -53,67 +52,66 @@ const MyPage: React.FC = () => {
   return (
     <Container>
       <Header>
-        <ProfileCard>
-          <Row align="middle" justify="space-between">
-            <Col span={16}>
-              <ProfileInfo>
-                <Avatar size={64} icon={<UserOutlined />} className="user-avatar" />
-                <UserDetails>
-                  <Title level={4} className="user-name">{user.nickname}</Title>
-                  <Text className="user-email" type="secondary">{user.email}</Text>
-                </UserDetails>
-              </ProfileInfo>
-            </Col>
-
-            <Col span={8} className="user-actions">
-              <Button type="default" icon={<BarChartOutlined />} onClick={() => navigate("/user/report")}>
-                통계
-              </Button>
-            <Button
-              type="default"
-              size="middle"
-              icon={<LogoutOutlined />}
-              onClick={handleLogout}
-            >
+        <ProfileSection>
+          <ProfileInfo>
+            <Avatar size={80} icon={<UserOutlined />} className="user-avatar" />
+            <UserDetails>
+              <UserName>{user.nickname}</UserName>
+              <UserEmail>{user.email}</UserEmail>
+              <StatsRow>
+                <StatItem>
+                  <StatNumber>12</StatNumber>
+                  <StatLabel>작성 봉사</StatLabel>
+                </StatItem>
+                <StatDivider />
+                <StatItem>
+                  <StatNumber>25</StatNumber>
+                  <StatLabel>관심 봉사</StatLabel>
+                </StatItem>
+                <StatDivider />
+                <StatItem>
+                  <StatNumber>8</StatNumber>
+                  <StatLabel>후기</StatLabel>
+                </StatItem>
+              </StatsRow>
+            </UserDetails>
+          </ProfileInfo>
+          <ActionButtons>
+            <StyledButton onClick={() => navigate("/user/report")} icon={<BarChartOutlined />}>
+              통계
+            </StyledButton>
+            <StyledButton onClick={handleLogout} icon={<LogoutOutlined />}>
               로그아웃
-            </Button>
-            </Col>
-          </Row>
-        </ProfileCard>
-        {/* 버튼 4개 유지 & 선택된 버튼만 파란색 */}
-        <ButtonGroup>
-          <Button type={activeTab === "작성 봉사" ? "primary" : "default"} onClick={() => setActiveTab("작성 봉사")}>
-            작성 봉사
-          </Button>
-          <Button type={activeTab === "관심 봉사" ? "primary" : "default"} onClick={() => setActiveTab("관심 봉사")}>
-            관심 봉사
-          </Button>
-          <Button type={activeTab === "작성 후기" ? "primary" : "default"} onClick={() => setActiveTab("작성 후기")}>
-            작성 후기
-          </Button>
-          <Button type={activeTab === "관심 후기" ? "primary" : "default"} onClick={() => setActiveTab("관심 후기")}>
-            관심 후기
-          </Button>
-        </ButtonGroup>
+            </StyledButton>
+          </ActionButtons>
+        </ProfileSection>
+
+        <TabsContainer>
+          {["작성 봉사", "관심 봉사", "작성 후기", "관심 후기"].map((tab) => (
+            <TabButton
+              key={tab}
+              $active={activeTab === tab}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </TabButton>
+          ))}
+        </TabsContainer>
       </Header>
+
       <Content>
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={dummyData}
-          renderItem={(item) => (
-            <List.Item>
-              <VolunteerCard cover={<img alt={item.title} src={item.image} />}>
-                <Card.Meta
-                  title={item.title}
-                  description={<Text type="secondary">{item.description}</Text>}
-                />
-              </VolunteerCard>
-            </List.Item>
-          )}
-        />
+        <CardGrid>
+          {dummyData.map((item, index) => (
+            <ContentCard key={index}>
+              <CardImage src={item.image} alt={item.title} />
+              <CardContent>
+                <CardTitle>{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </CardContent>
+            </ContentCard>
+          ))}
+        </CardGrid>
       </Content>
-      
     </Container>
   );
 };
@@ -125,77 +123,161 @@ export default MyPage;
 // --------------------
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 160px); /* TopBar(60px) + Navbar(60px) */
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: calc(100vh - 120px);
+  background: #f8f9fa;
 `;
 
 const Header = styled.div`
-  flex: 0 0 auto;
-  padding: 15px 20px;
-  background-color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 0px 0px;
+  background: white;
+  padding: 24px 20px;
+  border-bottom: 1px solid #eee;
 `;
 
-const ProfileCard = styled(Card)`
-  margin-bottom: 10px;
-  padding: 0px 15px;
-  border-radius: 10px;
-  background-color: #f5f5f5;
-  box-shadow: none;
+const ProfileSection = styled.div`
+  margin-bottom: 20px;
 `;
 
 const ProfileInfo = styled.div`
   display: flex;
   align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
 
   .user-avatar {
-    background-color: #f56a00;
-    margin-right: 15px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const UserDetails = styled.div`
-  .user-name {
-    margin: 0;
-    font-size: 18px;
-  }
+  flex: 1;
+`;
 
-  .user-email {
-    font-size: 14px;
-    color: #888;
+const UserName = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+`;
+
+const UserEmail = styled.p`
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0 0 16px 0;
+`;
+
+const StatsRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
+
+const StatItem = styled.div`
+  text-align: center;
+`;
+
+const StatNumber = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+`;
+
+const StatLabel = styled.div`
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 4px;
+`;
+
+const StatDivider = styled.div`
+  width: 1px;
+  height: 24px;
+  background: #eee;
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+`;
+
+const StyledButton = styled(Button)`
+  border-radius: 8px;
+  height: 36px;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 `;
 
-const ButtonGroup = styled.div`
-  display: flex; /* 버튼을 Flexbox로 배치 */
-  justify-content: center; /* 버튼을 가로 중앙에 정렬 */
-  gap: 10px; /* 버튼 간 간격 설정 */
-  margin-top: 10px;
+const TabsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 4px;
+`;
 
-  button {
-    font-size: 14px;
-    padding: 10px 15px;
+const TabButton = styled.button<{ $active: boolean }>`
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: ${props => props.$active ? '#3498db' : '#f8f9fa'};
+  color: ${props => props.$active ? 'white' : '#7f8c8d'};
+  font-size: 14px;
+  font-weight: ${props => props.$active ? '600' : '400'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.$active ? '#3498db' : '#eee'};
   }
 `;
 
 const Content = styled.div`
-  flex: 1 1 auto;
-  overflow-y: auto;
   padding: 20px;
 `;
 
-const VolunteerCard = styled(Card)`
-  margin-bottom: 20px;
-  border-radius: 10px;
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+`;
 
-  img {
-    border-radius: 10px;
-    height: 150px;
-    object-fit: cover;
+const ContentCard = styled.div`
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+`;
+
+const CardContent = styled.div`
+  padding: 16px;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+`;
+
+const CardDescription = styled.p`
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0;
+  line-height: 1.4;
 `;
