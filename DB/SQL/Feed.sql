@@ -2,6 +2,7 @@ USE hsj;
 
 DROP TABLE IF EXISTS Feed;
 DROP TABLE IF EXISTS Comment;
+DROP TABLE IF EXISTS LikeFeed;
 
 -- 후기 테이블
 CREATE TABLE Feed (
@@ -23,6 +24,15 @@ CREATE TABLE Comment (
     nickname VARCHAR(100),                      -- 사용자 닉네임
     content TEXT NOT NULL,                      -- 댓글 내용
     created_at DATETIME DEFAULT NOW()           -- 작성시간
+);
+
+-- 좋아요 테이블
+CREATE TABLE LikeFeed (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    feedID VARCHAR(100) NOT NULL,
+    userId VARCHAR(100) NOT NULL,
+    FOREIGN KEY (feedID) REFERENCES Feed(FeedID),
+    FOREIGN KEY (userId) REFERENCES User(UserID)
 );
 
 SELECT COUNT(*) AS total_count FROM Feed;
