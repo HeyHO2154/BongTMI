@@ -509,7 +509,7 @@ const CategoryContainer = styled.div`
   -webkit-overflow-scrolling: touch;
   align-items: center;
   position: sticky; // 추가: 스크롤 시 고정
-  top: 60px; // 추가: TopBar 높이만큼 아래에 고정 (TopBar가 60px 높이라고 가정)
+  top: 10px; // 추가: TopBar 높이만큼 아래에 고정 (TopBar가 60px 높이라고 가정)
   z-index: 10; // 추가: 다른 컨텐츠 위에 표시
   
   /* 스크롤바 숨기기 */
