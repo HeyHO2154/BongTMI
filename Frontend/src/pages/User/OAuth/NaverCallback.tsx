@@ -32,7 +32,7 @@ const NaverCallback = () => {
 
   return (
     <Container>
-      <Loading fullScreen={true} />
+      <Loading />
     </Container>
   );
 };

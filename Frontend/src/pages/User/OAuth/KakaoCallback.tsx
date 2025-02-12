@@ -32,7 +32,7 @@ const KakaoCallback = () => {
 
   return (
     <Container>
-      <Loading fullScreen={true} />
+      <Loading />
     </Container>
   );
 };
