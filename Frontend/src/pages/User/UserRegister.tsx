@@ -186,6 +186,7 @@ const Register: React.FC = () => {
                 </VerifyButton>
               )}
             </InputWithButton>
+            {isCodeSent && <Message isError={false}>인증번호가 이메일로 전송되었습니다.</Message>}
           </InputGroup>
 
           {isCodeSent && !isVerified && (
@@ -203,6 +204,9 @@ const Register: React.FC = () => {
                   인증확인
                 </VerifyButton>
               </InputWithButton>
+              {message && message.includes("인증") && (
+                <Message isError={!isSuccess}>{message}</Message>
+              )}
             </InputGroup>
           )}
 
@@ -262,7 +266,9 @@ const Register: React.FC = () => {
             />
           </InputGroup>
 
-          {message && <Message isError={message.includes('실패')}>{message}</Message>}
+          {message && !message.includes("인증") && (
+            <Message isError={!isSuccess}>{message}</Message>
+          )}
 
           <RegisterButton onClick={handleRegister}>
             회원가입 완료
