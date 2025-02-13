@@ -224,7 +224,7 @@ const FeedDetail: React.FC = () => {
       <FeedContent>
         {/* 작성자 및 날짜 */}
         <FeedHeader>
-          <ProfileImage src="/assets/DC.png" alt="프로필 이미지" />
+          {/* <ProfileImage src="/assets/DC.png" alt="프로필 이미지" /> */}
           <ProfileInfo>
             <Author>{feed.author}</Author>
             <TimeAgoText>{timeAgo(feed.createdAt)}</TimeAgoText>
@@ -333,12 +333,12 @@ const FeedHeader = styled.div`
   margin-bottom: 12px;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
+// const ProfileImage = styled.img`
+//   width: 40px;
+//   height: 40px;
+//   border-radius: 50%;
+//   margin-right: 10px;
+// `;
 
 const ProfileInfo = styled.div`
   display: flex;

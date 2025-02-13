@@ -232,7 +232,7 @@ const fetchFeedsByCategory = async (categoryId: number) => {
               {/* 사용자 정보 */}
               <FeedHeader>
                 <UserInfo>
-                  <ProfileImage src={feed.authorProfileImage || "/assets/DC.png"} alt="프로필" />
+                  {/* <ProfileImage src={feed.authorProfileImage || "/assets/DC.png"} alt="프로필" /> */}
                   <UserInfoText>
                     <UserName>{feed.author}</UserName>
                     <PostDate>{timeAgo(feed.createdAt)}</PostDate>
@@ -345,12 +345,12 @@ const UserInfo = styled.div`
   gap: 12px;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
+// const ProfileImage = styled.img`
+//   width: 40px;
+//   height: 40px;
+//   border-radius: 50%;
+//   object-fit: cover;
+// `;
 
 const UserInfoText = styled.div`
   display: flex;
