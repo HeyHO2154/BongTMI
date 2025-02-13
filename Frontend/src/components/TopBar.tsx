@@ -14,7 +14,8 @@ const TopBar: React.FC = () => {
     <BarWrapper>
       {/* 🏪 오른쪽 상점 아이콘 */}
       <IconWrapper onClick={toShop}>
-        <Store size={28} />
+      {/* 원래는 28 */}
+        <Store size={0} />     
       </IconWrapper>
 
       {/* 🏠 중앙 로고 */}
@@ -22,7 +23,7 @@ const TopBar: React.FC = () => {
 
       {/* 🔔 왼쪽 알람 아이콘 */}
       <IconWrapper onClick={toNotifications}>
-        <Bell size={28} />
+        <Bell size={0} />
       </IconWrapper>
     </BarWrapper>
   );
