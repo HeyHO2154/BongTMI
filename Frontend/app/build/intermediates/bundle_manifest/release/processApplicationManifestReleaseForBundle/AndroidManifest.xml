@@ -23,7 +23,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hsj.powerclicker"
-    android:versionCode="570003"
+    android:versionCode="570004"
     android:versionName="BongTMI" >
 
     <uses-sdk

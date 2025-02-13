@@ -11,7 +11,7 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 570003,
+      "versionCode": 570004,
       "versionName": "BongTMI",
       "outputFile": "app-release-unsigned.apk"
     }

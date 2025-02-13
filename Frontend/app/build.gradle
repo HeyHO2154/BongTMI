@@ -57,7 +57,7 @@ android {
         applicationId "com.hsj.powerclicker"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 570003
+        versionCode 570004
         versionName "BongTMI"
 
         // The name for the application
