@@ -11,7 +11,7 @@
     <color name="navigationDividerColorDark">#000000</color>
     <color name="shortcut_background">#F5F5F5</color>
     <integer name="splashScreenFadeOutDuration">300</integer>
-    <string name="appName" translatable="false">BongTMI</string>
+    <string name="appName" translatable="false">봉틈이</string>
     <string name="assetStatements">
     [{
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
@@ -27,7 +27,7 @@
     <string name="generatorApp" translatable="false">bubblewrap-cli</string>
     <string name="hostName" translatable="false">praven.kro.kr</string>
     <string name="launchUrl" translatable="false">https://praven.kro.kr/</string>
-    <string name="launcherName" translatable="false">BongTMI</string>
+    <string name="launcherName" translatable="false">봉틈이</string>
     <string name="orientation" translatable="false">default</string>
     <string name="providerAuthority" translatable="false">com.hsj.powerclicker.fileprovider</string>
     <string name="webManifestUrl" translatable="false">https://praven.kro.kr/manifest.json</string>

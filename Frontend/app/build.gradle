@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'com.hsj.powerclicker',
     hostName: 'praven.kro.kr', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'BongTMI', // The application name.
-    launcherName: 'BongTMI', // The name shown on the Android Launcher.
+    name: '봉틈이', // The application name.
+    launcherName: '봉틈이', // The name shown on the Android Launcher.
     themeColor: '#FFFFFF', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
@@ -57,8 +57,8 @@ android {
         applicationId "com.hsj.powerclicker"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 570004
-        versionName "BongTMI"
+        versionCode 570006
+        versionName "57007"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
