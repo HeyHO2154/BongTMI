@@ -18,16 +18,26 @@ export default AdBanner;
 
 const AdFitWrapper = styled.div`
   position: fixed;
-  right: 20px;
-  top: 100px;
-  width: 300px;
-  height: 250px;
   z-index: 1000;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 1200px) {
-    display: none;
+  /* 데스크톱 */
+  @media (min-width: 1200px) {
+    right: 20px;
+    top: 100px;
+    width: 300px;
+    height: 250px;
+  }
+
+  /* 모바일 */
+  @media (max-width: 1199px) {
+    right: 10px;
+    top: 80px;
+    width: 300px;
+    height: 250px;
+    transform: scale(0.8); // 크기를 약간 줄임
+    transform-origin: top right; // 오른쪽 상단 기준으로 크기 조절
   }
 `; 
