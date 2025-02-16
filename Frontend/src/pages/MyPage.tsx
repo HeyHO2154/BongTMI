@@ -299,6 +299,16 @@ const MyPage: React.FC = () => {
       <Content>
         {renderContent()}
       </Content>
+
+      <AdFitWrapper>
+        <ins 
+          className="kakao_ad_area" 
+          style={{ display: "block" }}
+          data-ad-unit="DAN-ZSqt2LGCgKELa710"
+          data-ad-width="300"
+          data-ad-height="250"
+        />
+      </AdFitWrapper>
     </Container>
   );
 };
@@ -313,10 +323,11 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 120px); // TopBar + NavBar 높이 제외
-  min-height: calc(100vh - 120px); // 최소 높이 추가
+  height: calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
   background: #f8f9fa;
-  overflow: hidden;
+  position: relative;
+  overflow-x: hidden;
 `;
 
 const Header = styled.div`
@@ -586,4 +597,21 @@ const UserEmail = styled.p`
   font-size: 1.1rem;
   color: #868e96;
   margin: 0;
+`;
+
+// 스타일 추가
+const AdFitWrapper = styled.div`
+  position: fixed;
+  right: 20px;
+  top: 100px;
+  width: 300px;
+  height: 250px;
+  z-index: 100;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
 `;
