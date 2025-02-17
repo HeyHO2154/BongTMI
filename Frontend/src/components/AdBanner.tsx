@@ -9,13 +9,13 @@ declare global {
 }
 
 const AdBanner = () => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  if (!isVisible) return null;
-
   return (
-    <AdFitWrapper>
-      <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
+    <div style={{ 
+      position: 'fixed',
+      right: '20px',
+      top: '100px',
+      zIndex: 1000
+    }}>
       <ins 
         className="kakao_ad_area" 
         style={{ display: "none" }}
@@ -23,7 +23,7 @@ const AdBanner = () => {
         data-ad-width="300"
         data-ad-height="250"
       />
-    </AdFitWrapper>
+    </div>
   );
 };
 
