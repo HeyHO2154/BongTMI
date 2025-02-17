@@ -23,7 +23,6 @@ const AdBanner = () => {
       <AdWrapper>
         <ins 
           className="kakao_ad_area" 
-          style={{ display: "none" }}
           data-ad-unit="DAN-ZSqt2LGCgKELa710"
           data-ad-width="300"
           data-ad-height="250"
@@ -43,12 +42,11 @@ const AdContainer = styled.div`
     right: 50%;
     transform: translateX(50%);
     top: auto;
-    bottom: 80px; // NavBar 위에 위치하도록
+    bottom: 300px; // NavBar 위에 위치하도록
   }
 `;
 
-const AdWrapper = styled.div`
-  width: 300px;
+const AdWrapper = styled.div`  width: 300px;
   height: 250px;
   background: white;
   border-radius: 8px;
@@ -98,4 +96,5 @@ const CloseButton = styled.button`
 `;
 
 export default AdBanner;
+
 
