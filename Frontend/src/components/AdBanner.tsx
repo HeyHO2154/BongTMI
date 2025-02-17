@@ -12,15 +12,14 @@ const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // kakaoAdfit 초기화
-    if (!window.kakaoAdfit) {
-      window.kakaoAdfit = [];
-    }
-    
-    // 광고 로드 - 약간의 지연 추가
-    setTimeout(() => {
-      window.kakaoAdfit.push({});
-    }, 100);
+    const checkAdfit = setInterval(() => {
+      if (window.kakaoAdfit) {
+        window.kakaoAdfit.push({});
+        clearInterval(checkAdfit); // 광고 로딩되면 setInterval 중지
+      }
+    }, 500); // 0.5초마다 확인
+
+    return () => clearInterval(checkAdfit);
   }, []);
 
   if (!isVisible) return null;
@@ -28,8 +27,9 @@ const AdBanner = () => {
   return (
     <AdFitWrapper>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
-      <ins 
+      <ins
         className="kakao_ad_area"
+        style={{ display: "block" }}
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
