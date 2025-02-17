@@ -17,7 +17,7 @@ const AdBanner = () => {
 
   useEffect(() => {
     let attempts = 0;
-    const maxAttempts = 10; // 최대 시도 횟수
+    let delay = 1000; // 초기 지연시간 1초
     
     const initAd = () => {
       const ins = document.querySelector('.kakao_ad_area');
@@ -26,7 +26,7 @@ const AdBanner = () => {
           try {
             ins.removeAttribute('style');
             (window.kakaoAdFit as any).display();
-            console.log('광고 초기화 성공');
+            console.log(`광고 초기화 성공 (시도: ${attempts}번)`);
           } catch (error) {
             console.error('광고 초기화 실패:', error);
             retryInit();
@@ -38,19 +38,17 @@ const AdBanner = () => {
     };
 
     const retryInit = () => {
-      if (attempts < maxAttempts) {
-        attempts++;
-        console.log(`광고 초기화 재시도 (${attempts}/${maxAttempts})`);
-        setTimeout(initAd, 1000); // 1초 간격으로 재시도
-      }
+      attempts++;
+      // 시도 횟수가 늘어날수록 지연시간도 증가 (최대 5초)
+      delay = Math.min(delay * 1.5, 5000);
+      console.log(`광고 초기화 재시도 ${attempts}번째 (${delay}ms 후)`);
+      setTimeout(initAd, delay);
     };
 
     // 첫 시도 시작
     initAd();
 
-    return () => {
-      attempts = maxAttempts; // cleanup: 더 이상의 시도 중단
-    };
+    // cleanup은 제거 (무한 시도 허용)
   }, [isVisible]);
 
   if (!isVisible) return null;
