@@ -12,20 +12,15 @@ const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "//t1.daumcdn.net/kas/static/ba.min.js";
-    script.async = true;
-    script.onload = () => {
-      if (window.kakaoAdfit) {
-        window.kakaoAdfit.push({});
-      }
-    };
-    document.body.appendChild(script);
-
-    // 컴포넌트 언마운트 시 스크립트 제거
-    return () => {
-      document.body.removeChild(script);
-    };
+    // kakaoAdfit 초기화
+    if (!window.kakaoAdfit) {
+      window.kakaoAdfit = [];
+    }
+    
+    // 광고 로드 - 약간의 지연 추가
+    setTimeout(() => {
+      window.kakaoAdfit.push({});
+    }, 100);
   }, []);
 
   if (!isVisible) return null;
@@ -33,9 +28,8 @@ const AdBanner = () => {
   return (
     <AdFitWrapper>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
-      <ins
+      <ins 
         className="kakao_ad_area"
-        style={{ display: "block" }}
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
