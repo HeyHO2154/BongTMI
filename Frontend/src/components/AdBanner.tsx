@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 // kakaoAdFit 타입 선언 추가 
@@ -14,6 +14,24 @@ declare global {
 
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    // 광고 영역이 준비되면 초기화 시도
+    const initAd = () => {
+      const ins = document.querySelector('.kakao_ad_area');
+      if (ins && window.kakaoAdFit?.cmd) {
+        window.kakaoAdFit.cmd.push(() => {
+          console.log('광고 초기화 시도');
+        });
+      } else {
+        setTimeout(initAd, 100);
+      }
+    };
+
+    if (isVisible) {
+      initAd();
+    }
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
@@ -42,7 +60,7 @@ const AdContainer = styled.div`
     right: 50%;
     transform: translateX(50%);
     top: auto;
-    bottom: 300px; // NavBar 위에 위치하도록
+    bottom: 250px; // NavBar 위에 위치하도록
   }
 `;
 
@@ -70,7 +88,7 @@ const AdWrapper = styled.div`  width: 300px;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: -30px;
+  top: -40px;
   right: 0;
   width: 24px;
   height: 24px;
