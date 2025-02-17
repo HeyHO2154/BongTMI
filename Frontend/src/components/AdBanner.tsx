@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-// kakaoAdfit 타입 선언 추가 
+// kakaoAdFit 타입 선언 추가 
 declare global {
   interface Window {
-    kakaoAdfit: any[];
+    kakaoAdFit: {
+      cmd: {
+        push: (arg: any) => void;
+      };
+    };
   }
 }
 
 const AdBanner = () => {
+  useEffect(() => {
+    // 광고 초기화
+    if (window.kakaoAdFit && window.kakaoAdFit.cmd) {
+      window.kakaoAdFit.cmd.push({});
+    }
+  }, []);
+
   return (
     <div style={{ 
       position: 'fixed',
