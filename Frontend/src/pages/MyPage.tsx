@@ -153,7 +153,7 @@ const MyPage: React.FC = () => {
   }
 
   const renderContent = () => {
-    if (loading && data.length === 0) {
+    if (loading) {
       return (
         <LoadingWrapper>
           <Loading />
