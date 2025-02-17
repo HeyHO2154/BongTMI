@@ -14,45 +14,25 @@ declare global {
 
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    let attempts = 0;
-    let delay = 1000;
-    
-    const initAd = () => {
-      if (window.kakaoAdFit?.cmd) {
-        window.kakaoAdFit.cmd.push(() => {
-          try {
-            // 직접 display() 호출하지 않고 cmd queue에 작업 추가
-            const ins = document.querySelector('.kakao_ad_area');
-            if (ins) {
-              ins.removeAttribute('style');
-              console.log(`광고 초기화 시도 (${attempts}번째)`);
-            }
-          } catch (error) {
-            console.error('광고 초기화 실패:', error);
-            retryInit();
-          }
-        });
-      } else {
-        retryInit();
-      }
-    };
-
-    const retryInit = () => {
-      attempts++;
-      delay = Math.min(delay * 1.5, 5000);
-      console.log(`광고 재시도 ${attempts}번째 (${delay}ms 후)`);
-      setTimeout(initAd, delay);
-    };
-
-    initAd();
-  }, [isVisible]);
+    // 광고 스크립트 로드 확인
+    if (window.kakaoAdFit?.cmd) {
+      window.kakaoAdFit.cmd.push(() => {
+        const ins = document.querySelector('.kakao_ad_area');
+        if (ins) {
+          ins.removeAttribute('style');
+          setIsLoaded(true);
+        }
+      });
+    }
+  }, []);
 
   if (!isVisible) return null;
 
   return (
-    <AdContainer>
+    <AdContainer style={{ opacity: isLoaded ? 1 : 0 }}>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
       <AdWrapper>
         <ins 
