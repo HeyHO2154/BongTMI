@@ -275,6 +275,10 @@ const MyPage: React.FC = () => {
                   <LogoutOutlined />
                   <ButtonLabel>로그아웃</ButtonLabel>
                 </IconButton>
+                <IconButton>
+                  <span style={{ fontSize: '18px' }}>💰</span>
+                  <ButtonLabel>광고제거</ButtonLabel>
+                </IconButton>
               </ActionButtons>
             </UserDetails>
           </ProfileInfo>
