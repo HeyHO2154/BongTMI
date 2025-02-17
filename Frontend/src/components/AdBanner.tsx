@@ -20,6 +20,12 @@ const AdBanner = () => {
         localStorage.removeItem('adHiddenTime');
       }
     }
+
+    // 광고 초기화
+    let ins = document.querySelector(".kakao_ad_area");
+    if (ins && window.kakaoAdfit) {
+      window.kakaoAdfit.push({});
+    }
   }, []);
 
   const handleClose = () => {
