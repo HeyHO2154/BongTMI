@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useEffect } from "react";
+
 
 // kakaoAdFit 타입 선언 추가 
 declare global {
@@ -40,37 +40,3 @@ const AdBanner = () => {
 
 export default AdBanner;
 
-const AdFitWrapper = styled.div`
-  position: fixed;
-  z-index: 1000;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  right: 20px;
-  top: 100px;
-  width: 300px;
-  height: 250px;
-`;
-
-// 닫기 버튼 스타일
-const CloseButton = styled.button`
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #666;
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 1001;
-  
-  &:hover {
-    background: #444;
-  }
-`; 
