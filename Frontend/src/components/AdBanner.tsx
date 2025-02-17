@@ -12,53 +12,26 @@ const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // 저장된 시간 확인
-    const hiddenTime = localStorage.getItem('adHiddenTime');
-    if (hiddenTime) {
-      const diff = Date.now() - parseInt(hiddenTime);
-      // 5분(300000ms) 이내라면 광고 숨김
-      if (diff < 300000) {
-        setIsVisible(false);
-        // 남은 시간만큼 타이머 설정
-        const remainingTime = 300000 - diff;
-        setTimeout(() => setIsVisible(true), remainingTime);
-      } else {
-        // 5분이 지났다면 저장된 시간 삭제
-        localStorage.removeItem('adHiddenTime');
-      }
+    // 광고 초기화를 위한 배열 생성
+    if (!window.kakaoAdfit) {
+      window.kakaoAdfit = [];
     }
-
-    // 광고 초기화
-    let ins = document.querySelector(".kakao_ad_area");
-    if (ins && window.kakaoAdfit) {
-      window.kakaoAdfit.push({});
-    }
+    
+    // 광고 로드
+    window.kakaoAdfit.push({});
   }, []);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    // 현재 시간 저장
-    localStorage.setItem('adHiddenTime', Date.now().toString());
-    // 5분 후 다시 표시
-    setTimeout(() => setIsVisible(true), 300000);
-  };
 
   if (!isVisible) return null;
 
   return (
     <AdFitWrapper>
-      <CloseButton onClick={handleClose}>✕</CloseButton>
+      <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
       <ins 
         className="kakao_ad_area" 
         style={{ display: "none" }}
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
-      />
-      <script 
-        type="text/javascript" 
-        src="//t1.daumcdn.net/kas/static/ba.min.js" 
-        async
       />
     </AdFitWrapper>
   );
