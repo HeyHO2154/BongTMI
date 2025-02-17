@@ -10,6 +10,11 @@ const Footer = () => {
           이메일: jun****@naver.com
           웹사이트: praven.kro.kr
         </OperatorInfo>
+        {/* <PolicyLinks>
+          <a href="/terms">이용약관</a>
+          <Divider>|</Divider>
+          <a href="/privacy">개인정보처리방침</a>
+        </PolicyLinks> */}
       </FooterContent>
     </FooterWrapper>
   );
@@ -35,23 +40,23 @@ const OperatorInfo = styled.div`
   line-height: 1.5;
 `;
 
-const PolicyLinks = styled.div`
-  margin-top: 12px;
-  font-size: 0.8rem;
+// const PolicyLinks = styled.div`
+//   margin-top: 12px;
+//   font-size: 0.8rem;
 
-  a {
-    color: #666;
-    text-decoration: none;
+//   a {
+//     color: #666;
+//     text-decoration: none;
     
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
+//     &:hover {
+//       text-decoration: underline;
+//     }
+//   }
+// `;
 
-const Divider = styled.span`
-  margin: 0 8px;
-  color: #ddd;
-`;
+// const Divider = styled.span`
+//   margin: 0 8px;
+//   color: #ddd;
+// `;
 
 export default Footer; 
