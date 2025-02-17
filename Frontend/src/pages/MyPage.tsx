@@ -395,9 +395,10 @@ const TabButton = styled.button<{ $active: boolean }>`
 `;
 
 const Content = styled.div`
-  padding: 20px;
   flex: 1;
+  padding: 20px;
   overflow-y: auto;
+  background: #f8f9fa;
 `;
 
 const CardGrid = styled.div`
@@ -567,6 +568,7 @@ const LoadingWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  min-height: calc(100vh - 400px); // Header 높이를 고려한 조정
 `;
 
 // 누락된 스타일 컴포넌트 추가
