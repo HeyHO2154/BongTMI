@@ -25,8 +25,8 @@ import Alarm from "./pages/Bong/Alarm";
 
 import Report from "./pages/User/Report";
 import Shop from "./pages/Bong/Shop";
-import AdBanner from "./components/AdBanner";
-import Footer from "./components/Footer";
+// import AdBanner from "./components/AdBanner";
+// import Footer from "./components/Footer";
 
 const App: React.FC = () => {
   const [isTouching, setIsTouching] = useState(false);
@@ -92,9 +92,9 @@ const App: React.FC = () => {
             <Route path="/bong/alarm" element={<Alarm />} />
             <Route path="/bong/shop" element={<Shop />} />
           </Routes>
-          <Footer />
+          {/* <Footer /> */}
           <NavBar />
-          <AdBanner />
+          {/* <AdBanner /> */}
         </div>
       </Router>
     </>
