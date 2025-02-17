@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-
+import styled from "styled-components";
 
 // kakaoAdFit 타입 선언 추가 
 declare global {
@@ -29,15 +29,7 @@ const AdBanner = () => {
   }, []);
 
   return (
-    <div style={{ 
-      position: 'fixed',
-      right: '20px',
-      top: '100px',
-      zIndex: 1000,
-      width: '300px',
-      height: '250px',
-      background: 'transparent'
-    }}>
+    <AdFitWrapper>
       <ins 
         className="kakao_ad_area" 
         style={{ display: "none" }}
@@ -45,9 +37,22 @@ const AdBanner = () => {
         data-ad-width="300"
         data-ad-height="250"
       />
-    </div>
+    </AdFitWrapper>
   );
 };
+
+const AdFitWrapper = styled.div`
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  top: 100px;
+  width: 300px;
+  height: 250px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;  // iframe이 컨테이너를 벗어나지 않도록
+`;
 
 export default AdBanner;
 
