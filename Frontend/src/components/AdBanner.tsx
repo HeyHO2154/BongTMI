@@ -17,16 +17,18 @@ const AdBanner = () => {
 
   useEffect(() => {
     let attempts = 0;
-    let delay = 1000; // 초기 지연시간 1초
+    let delay = 1000;
     
     const initAd = () => {
-      const ins = document.querySelector('.kakao_ad_area');
-      if (ins && window.kakaoAdFit?.cmd) {
+      if (window.kakaoAdFit?.cmd) {
         window.kakaoAdFit.cmd.push(() => {
           try {
-            ins.removeAttribute('style');
-            (window.kakaoAdFit as any).display();
-            console.log(`광고 초기화 성공 (시도: ${attempts}번)`);
+            // 직접 display() 호출하지 않고 cmd queue에 작업 추가
+            const ins = document.querySelector('.kakao_ad_area');
+            if (ins) {
+              ins.removeAttribute('style');
+              console.log(`광고 초기화 시도 (${attempts}번째)`);
+            }
           } catch (error) {
             console.error('광고 초기화 실패:', error);
             retryInit();
@@ -39,16 +41,12 @@ const AdBanner = () => {
 
     const retryInit = () => {
       attempts++;
-      // 시도 횟수가 늘어날수록 지연시간도 증가 (최대 5초)
       delay = Math.min(delay * 1.5, 5000);
-      console.log(`광고 초기화 재시도 ${attempts}번째 (${delay}ms 후)`);
+      console.log(`광고 재시도 ${attempts}번째 (${delay}ms 후)`);
       setTimeout(initAd, delay);
     };
 
-    // 첫 시도 시작
     initAd();
-
-    // cleanup은 제거 (무한 시도 허용)
   }, [isVisible]);
 
   if (!isVisible) return null;
