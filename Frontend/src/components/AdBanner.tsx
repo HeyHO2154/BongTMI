@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 // kakaoAdFit 타입 선언 추가 
@@ -13,36 +13,26 @@ declare global {
 }
 
 const AdBanner = () => {
-  const [isVisible, setIsVisible] = useState(true);
-
   useEffect(() => {
-    const loadAd = () => {
+    // 광고 초기화 시도
+    const initAd = () => {
       if (window.kakaoAdFit?.cmd) {
-        window.kakaoAdFit.cmd.push(function() {
-          try {
-            console.log('광고 초기화 시도');
-            const ins = document.querySelector('.kakao_ad_area');
-            if (ins) {
-              console.log('광고 영역 찾음');
-            } else {
-              console.log('광고 영역을 찾을 수 없음');
-            }
-          } catch (error) {
-            console.error('광고 초기화 실패:', error);
+        window.kakaoAdFit.cmd.push(() => {
+          const ins = document.querySelector('.kakao_ad_area');
+          if (ins) {
+            // display: none을 block으로 변경
+            ins.setAttribute('style', 'display: block');
+            console.log('광고 영역 초기화 완료');
           }
         });
       } else {
-        console.log('kakaoAdFit not found, retrying...');
-        setTimeout(loadAd, 500);
+        // 스크립트가 아직 로드되지 않았다면 재시도
+        setTimeout(initAd, 100);
       }
     };
 
-    if (isVisible) {
-      loadAd();
-    }
-  }, [isVisible]);
-
-  if (!isVisible) return null;
+    initAd();
+  }, []);
 
   return (
     <AdContainer>
@@ -55,7 +45,7 @@ const AdBanner = () => {
           data-ad-height="250"
         />
       </AdFitWrapper>
-      <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
+      <CloseButton onClick={() => console.log('광고 닫기')}>✕</CloseButton>
     </AdContainer>
   );
 };
