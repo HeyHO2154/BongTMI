@@ -34,7 +34,7 @@ const FooterContent = styled.div`
 `;
 
 const OperatorInfo = styled.div`
-  margin-top: 10px;
+  margin-top: 0px;
   font-size: 0.8rem;
   line-height: 1.5;
 `;
