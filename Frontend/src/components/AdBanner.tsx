@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 // kakaoAdfit 타입 선언 추가
@@ -11,18 +11,6 @@ declare global {
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // NO-AD 콜백 함수
-  const handleAdFail = (elm: HTMLElement) => {
-    console.log('광고 로드 실패');
-    setIsVisible(false);
-  };
-
-  useEffect(() => {
-    // kakaoAdfit 명시적 초기화
-    window.kakaoAdfit = window.kakaoAdfit || [];
-    window.kakaoAdfit.push({});
-  }, []);
-
   if (!isVisible) return null;
 
   return (
@@ -30,11 +18,10 @@ const AdBanner = () => {
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
       <ins 
         className="kakao_ad_area" 
-        style={{ display: "none", width: "100%" }}  // width: 100% 추가
+        style={{ display: "none" }}
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
-        data-ad-onfail="handleAdFail"  // NO-AD 콜백 추가
       />
     </AdFitWrapper>
   );
