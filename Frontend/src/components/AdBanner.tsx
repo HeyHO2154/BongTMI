@@ -50,10 +50,15 @@ const AdBanner = () => {
       <CloseButton onClick={handleClose}>✕</CloseButton>
       <ins 
         className="kakao_ad_area" 
-        style={{ display: "block" }}
+        style={{ display: "none" }}
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
+      />
+      <script 
+        type="text/javascript" 
+        src="//t1.daumcdn.net/kas/static/ba.min.js" 
+        async
       />
     </AdFitWrapper>
   );
