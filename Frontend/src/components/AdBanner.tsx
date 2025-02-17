@@ -18,13 +18,12 @@ const AdBanner = () => {
   useEffect(() => {
     const loadAd = () => {
       if (window.kakaoAdFit?.cmd) {
-        window.kakaoAdFit.cmd.push(function() {  // 함수로 변경
+        window.kakaoAdFit.cmd.push(function() {
           try {
             console.log('광고 초기화 시도');
             const ins = document.querySelector('.kakao_ad_area');
             if (ins) {
               console.log('광고 영역 찾음');
-              (window.kakaoAdFit as any).push({});  // 실제 광고 요청
             } else {
               console.log('광고 영역을 찾을 수 없음');
             }
@@ -46,32 +45,40 @@ const AdBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <AdFitWrapper>
+    <AdContainer>
+      <AdFitWrapper>
+        <ins 
+          className="kakao_ad_area" 
+          style={{ display: "none" }}
+          data-ad-unit="DAN-ZSqt2LGCgKELa710"
+          data-ad-width="300"
+          data-ad-height="250"
+        />
+      </AdFitWrapper>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
-      <ins 
-        className="kakao_ad_area" 
-        style={{ display: "none" }}
-        data-ad-unit="DAN-ZSqt2LGCgKELa710"
-        data-ad-width="300"
-        data-ad-height="250"
-      />
-    </AdFitWrapper>
+    </AdContainer>
   );
 };
 
-const AdFitWrapper = styled.div`
+// 전체 컨테이너
+const AdContainer = styled.div`
   position: fixed;
   z-index: 1000;
   right: 20px;
   top: 100px;
+`;
+
+// 광고 래퍼
+const AdFitWrapper = styled.div`
   width: 300px;
   height: 250px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;  // iframe이 컨테이너를 벗어나지 않도록
+  overflow: hidden;
 `;
 
+// 닫기 버튼 (위치 조정)
 const CloseButton = styled.button`
   position: absolute;
   top: -8px;
