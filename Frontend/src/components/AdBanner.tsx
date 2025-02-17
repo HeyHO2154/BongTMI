@@ -12,13 +12,23 @@ const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const checkAdfit = setInterval(() => {
-      if (window.kakaoAdfit) {
-        window.kakaoAdfit.push({});
-        clearInterval(checkAdfit); // 광고 로딩되면 setInterval 중지
-      }
-    }, 500); // 0.5초마다 확인
+    // kakaoAdfit 명시적 초기화
+    window.kakaoAdfit = window.kakaoAdfit || [];
 
+    const checkAdfit = setInterval(() => {
+      // kakaoAdfit이 존재하고 push 메서드가 있는지 확인
+      if (window.kakaoAdfit && typeof window.kakaoAdfit.push === 'function') {
+        try {
+          window.kakaoAdfit.push({});
+          console.log('AdFit 광고 요청 성공');
+          clearInterval(checkAdfit);
+        } catch (error) {
+          console.error('AdFit 광고 요청 실패:', error);
+        }
+      }
+    }, 1000); // 1초마다 확인
+
+    // cleanup
     return () => clearInterval(checkAdfit);
   }, []);
 
