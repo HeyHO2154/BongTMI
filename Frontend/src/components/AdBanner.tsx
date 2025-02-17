@@ -21,15 +21,32 @@ const AdBanner = () => {
       const ins = document.querySelector('.kakao_ad_area');
       if (ins && window.kakaoAdFit?.cmd) {
         window.kakaoAdFit.cmd.push(() => {
-          console.log('광고 초기화 시도');
+          try {
+            // display: none 제거
+            ins.removeAttribute('style');
+            // 광고 영역 초기화
+            (window.kakaoAdFit as any).display();
+            console.log('광고 초기화 시도');
+          } catch (error) {
+            console.error('광고 초기화 실패:', error);
+            // 실패시 재시도
+            setTimeout(initAd, 500);
+          }
         });
       } else {
-        setTimeout(initAd, 100);
+        // 더 긴 간격으로 재시도
+        setTimeout(initAd, 1000);
       }
     };
 
-    if (isVisible) {
-      initAd();
+    // 여러 번 시도
+    const retryCount = 3;
+    for(let i = 0; i < retryCount; i++) {
+      setTimeout(() => {
+        if (isVisible) {
+          initAd();
+        }
+      }, i * 2000); // 0초, 2초, 4초 후에 시도
     }
   }, [isVisible]);
 
@@ -88,7 +105,7 @@ const AdWrapper = styled.div`  width: 300px;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: -40px;
+  top: -30px;
   right: 0;
   width: 24px;
   height: 24px;
@@ -104,7 +121,7 @@ const CloseButton = styled.button`
   z-index: 1001;
   
   @media screen and (max-width: 768px) {
-    top: -24px;
+    top: -30px;
     right: 10px;
   }
   
