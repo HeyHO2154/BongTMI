@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState,  } from "react";
 import styled from "styled-components";
 
 // kakaoAdFit 타입 선언 추가 
