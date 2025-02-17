@@ -314,10 +314,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 120px);
-  min-height: calc(100vh - 120px);
   background: #f8f9fa;
-  position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -398,7 +396,7 @@ const Content = styled.div`
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background: #f8f9fa;
+  position: relative;
 `;
 
 const CardGrid = styled.div`
@@ -564,11 +562,15 @@ const NoDataMessage = styled.div`
 
 // 스타일 추가
 const LoadingWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  min-height: calc(100vh - 400px); // Header 높이를 고려한 조정
+  background: #f8f9fa;
 `;
 
 // 누락된 스타일 컴포넌트 추가
