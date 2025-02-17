@@ -74,10 +74,11 @@ const AdContainer = styled.div`
   top: 100px;
 
   @media screen and (max-width: 768px) {
+    position: absolute;
     right: 50%;
     transform: translateX(50%);
     top: auto;
-    bottom: 250px; // NavBar 위에 위치하도록
+    bottom: 250px;
   }
 `;
 

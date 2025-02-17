@@ -111,7 +111,6 @@ const App: React.FC = () => {
   return (
     <>
       <GlobalStyle />
-      <AdBanner />
       <Router basename="/">
         <div className="app-container">
           <TopBar />
@@ -140,6 +139,7 @@ const App: React.FC = () => {
           </Routes>
           <Footer />
           <NavBar />
+          <AdBanner />
         </div>
       </Router>
     </>
