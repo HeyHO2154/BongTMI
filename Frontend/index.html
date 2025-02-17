@@ -12,13 +12,12 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-4725119578294745" crossorigin="anonymous"></script>
     
-    <!-- 카카오 애드핏 SDK - async 대신 defer 사용 -->
-    <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
-    
     <title>봉틈이</title>
   </head>
   <body>
     <div id="root"></div>
+    <!-- 카카오 애드핏 SDK를 body 끝부분으로 이동 -->
+    <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -14,10 +14,18 @@ declare global {
 
 const AdBanner = () => {
   useEffect(() => {
-    // 광고 초기화
-    if (window.kakaoAdFit && window.kakaoAdFit.cmd) {
-      window.kakaoAdFit.cmd.push({});
-    }
+    const loadAd = () => {
+      if (window.kakaoAdFit?.cmd) {
+        window.kakaoAdFit.cmd.push(() => {
+          console.log('광고 초기화 시도');
+        });
+      } else {
+        console.log('kakaoAdFit not found, retrying...');
+        setTimeout(loadAd, 100);
+      }
+    };
+
+    loadAd();
   }, []);
 
   return (
@@ -25,7 +33,10 @@ const AdBanner = () => {
       position: 'fixed',
       right: '20px',
       top: '100px',
-      zIndex: 1000
+      zIndex: 1000,
+      width: '300px',
+      height: '250px',
+      background: 'transparent'
     }}>
       <ins 
         className="kakao_ad_area" 
