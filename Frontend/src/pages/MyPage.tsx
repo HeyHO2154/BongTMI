@@ -394,9 +394,12 @@ const TabButton = styled.button<{ $active: boolean }>`
 
 const Content = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   overflow-y: auto;
-  position: relative;
+  background: #f8f9fa;
+  min-height: calc(100vh - 300px);
 `;
 
 const CardGrid = styled.div`
@@ -547,30 +550,29 @@ const StatItem = styled.div`
 
 // 스타일 추가
 const NoDataMessage = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
-  font-size: 12rem;
+  width: 100%;
+  font-size: 1.2rem;
   color: #868e96;
   text-align: center;
   background: white;
   border-radius: 16px;
-  margin: 20px;
+  margin: 20px 0;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 `;
 
 // 스타일 추가
 const LoadingWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   background: #f8f9fa;
+  margin: 20px 0;
 `;
 
 // 누락된 스타일 컴포넌트 추가
