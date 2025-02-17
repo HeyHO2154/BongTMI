@@ -18,12 +18,23 @@ const AdBanner = () => {
   useEffect(() => {
     const loadAd = () => {
       if (window.kakaoAdFit?.cmd) {
-        window.kakaoAdFit.cmd.push(() => {
-          console.log('광고 초기화 시도');
+        window.kakaoAdFit.cmd.push(function() {  // 함수로 변경
+          try {
+            console.log('광고 초기화 시도');
+            const ins = document.querySelector('.kakao_ad_area');
+            if (ins) {
+              console.log('광고 영역 찾음');
+              (window.kakaoAdFit as any).push({});  // 실제 광고 요청
+            } else {
+              console.log('광고 영역을 찾을 수 없음');
+            }
+          } catch (error) {
+            console.error('광고 초기화 실패:', error);
+          }
         });
       } else {
         console.log('kakaoAdFit not found, retrying...');
-        setTimeout(loadAd, 500); // 시간 늘림
+        setTimeout(loadAd, 500);
       }
     };
 
