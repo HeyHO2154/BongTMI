@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useLocation } from 'react-router-dom';
 
 // kakaoAdFit 타입 선언 추가 
 declare global {
@@ -14,6 +15,31 @@ declare global {
 
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    // 페이지 변경될 때마다 광고 재로드
+    if (isVisible) {
+      const loadAd = () => {
+        if (window.kakaoAdFit?.cmd) {
+          window.kakaoAdFit.cmd.push(() => {
+            try {
+              const ins = document.querySelector('.kakao_ad_area');
+              if (ins) {
+                console.log('광고 영역 초기화');
+              }
+            } catch (error) {
+              console.error('광고 초기화 실패:', error);
+            }
+          });
+        } else {
+          setTimeout(loadAd, 500);
+        }
+      };
+
+      loadAd();
+    }
+  }, [location.pathname, isVisible]); // 페이지 경로가 변경될 때마다 실행
 
   if (!isVisible) return null;
 

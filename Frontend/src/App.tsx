@@ -62,7 +62,16 @@ const App: React.FC = () => {
       window.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
-  
+
+  // 광고 초기화는 앱 시작시 한 번만
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <>
       <GlobalStyle />
@@ -93,7 +102,7 @@ const App: React.FC = () => {
             <Route path="/bong/shop" element={<Shop />} />
           </Routes>
           <Footer />
-          <NavBar /> {/* NavBar를 app-container의 자식으로 포함 */}
+          <NavBar />
           <AdBanner />
         </div>
       </Router>
