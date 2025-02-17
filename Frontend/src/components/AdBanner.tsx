@@ -16,65 +16,41 @@ const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // 모바일 체크
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let attempts = 0;
+    const maxAttempts = 10; // 최대 시도 횟수
     
-    if (isMobile) {
-      // 모바일에서는 즉시 초기화 시도
-      const initAd = () => {
-        const ins = document.querySelector('.kakao_ad_area');
-        if (ins && window.kakaoAdFit?.cmd) {
-          window.kakaoAdFit.cmd.push(() => {
-            try {
-              ins.removeAttribute('style');
-              (window.kakaoAdFit as any).display();
-              console.log('모바일 광고 초기화');
-            } catch (error) {
-              console.error('광고 초기화 실패:', error);
-              setTimeout(initAd, 500);
-            }
-          });
-        } else {
-          setTimeout(initAd, 500);
-        }
-      };
-
-      // 즉시 실행
-      initAd();
-    } else {
-      // PC에서는 기존 방식 유지
-      const initAd = () => {
-        // 광고 영역이 준비되면 초기화 시도
-        const ins = document.querySelector('.kakao_ad_area');
-        if (ins && window.kakaoAdFit?.cmd) {
-          window.kakaoAdFit.cmd.push(() => {
-            try {
-              // display: none 제거
-              ins.removeAttribute('style');
-              // 광고 영역 초기화
-              (window.kakaoAdFit as any).display();
-              console.log('광고 초기화 시도');
-            } catch (error) {
-              console.error('광고 초기화 실패:', error);
-              // 실패시 재시도
-              setTimeout(initAd, 500);
-            }
-          });
-        } else {
-          // 더 긴 간격으로 재시도
-          setTimeout(initAd, 1000);
-        }
-      };
-
-      const retryCount = 3;
-      for(let i = 0; i < retryCount; i++) {
-        setTimeout(() => {
-          if (isVisible) {
-            initAd();
+    const initAd = () => {
+      const ins = document.querySelector('.kakao_ad_area');
+      if (ins && window.kakaoAdFit?.cmd) {
+        window.kakaoAdFit.cmd.push(() => {
+          try {
+            ins.removeAttribute('style');
+            (window.kakaoAdFit as any).display();
+            console.log('광고 초기화 성공');
+          } catch (error) {
+            console.error('광고 초기화 실패:', error);
+            retryInit();
           }
-        }, i * 2000);
+        });
+      } else {
+        retryInit();
       }
-    }
+    };
+
+    const retryInit = () => {
+      if (attempts < maxAttempts) {
+        attempts++;
+        console.log(`광고 초기화 재시도 (${attempts}/${maxAttempts})`);
+        setTimeout(initAd, 1000); // 1초 간격으로 재시도
+      }
+    };
+
+    // 첫 시도 시작
+    initAd();
+
+    return () => {
+      attempts = maxAttempts; // cleanup: 더 이상의 시도 중단
+    };
   }, [isVisible]);
 
   if (!isVisible) return null;
