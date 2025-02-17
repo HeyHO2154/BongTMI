@@ -26,6 +26,7 @@ const FooterWrapper = styled.footer`
   border-top: 1px solid #eee;
   font-size: 0.9rem;
   color: #666;
+  border-radius: 16px 16px 0 0;
 `;
 
 const FooterContent = styled.div`
