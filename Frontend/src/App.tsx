@@ -63,18 +63,49 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // 광고 초기화는 앱 시작시 한 번만
   useEffect(() => {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
-    script.async = true;
-    document.body.appendChild(script);
+    // 모바일 기기 체크
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    const initAdFit = () => {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+      script.async = true;
+      
+      // 스크립트 로드 완료 후 처리
+      script.onload = () => {
+        if (window.kakaoAdFit?.cmd) {
+          window.kakaoAdFit.cmd.push(() => {
+            console.log('AdFit 초기화 완료', isMobile ? '모바일' : 'PC');
+          });
+        }
+      };
+
+      // 에러 처리
+      script.onerror = (error) => {
+        console.error('AdFit 스크립트 로드 실패:', error);
+      };
+
+      document.body.appendChild(script);
+    };
+
+    // 약간의 지연 후 초기화 시도
+    setTimeout(initAdFit, 1000);
+
+    return () => {
+      // cleanup: 기존 스크립트 제거
+      const existingScript = document.querySelector('script[src*="ba.min.js"]');
+      if (existingScript) {
+        document.body.removeChild(existingScript);
+      }
+    };
   }, []);
 
   return (
     <>
       <GlobalStyle />
+      <AdBanner />
       <Router basename="/">
         <div className="app-container">
           <TopBar />
@@ -103,7 +134,6 @@ const App: React.FC = () => {
           </Routes>
           <Footer />
           <NavBar />
-          <AdBanner />
         </div>
       </Router>
     </>
