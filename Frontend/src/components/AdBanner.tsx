@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-// kakaoAdfit 타입 선언 추가
+// kakaoAdfit 타입 선언 추가 
 declare global {
   interface Window {
     kakaoAdfit: any[];
