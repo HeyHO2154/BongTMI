@@ -26,7 +26,6 @@ const FooterWrapper = styled.footer`
   border-top: 1px solid #eee;
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 60px; // NavBar 높이만큼 여백
 `;
 
 const FooterContent = styled.div`
