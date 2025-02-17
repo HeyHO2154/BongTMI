@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
+// kakaoAdfit 타입 선언 추가
+declare global {
+  interface Window {
+    kakaoAdfit: any[];
+  }
+}
+
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
