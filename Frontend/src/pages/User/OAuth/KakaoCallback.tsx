@@ -18,7 +18,6 @@ const KakaoCallback = () => {
       axios
         .post(`${config.API_DEV}/api/auth/kakao/callback`, { code, state })
         .then((res) => {
-          console.log("User Data:", res.data);
           localStorage.setItem("user", JSON.stringify(res.data)); // 사용자 정보 저장
           navigate("/my-page"); // 로그인 완료 후 홈으로 이동
         })
