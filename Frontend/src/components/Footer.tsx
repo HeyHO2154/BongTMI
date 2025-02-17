@@ -6,9 +6,7 @@ const Footer = () => {
       <FooterContent>
         <div>© 2024 봉틈이</div>
         <OperatorInfo>
-          운영자: 프라벤
-          이메일: jun****@naver.com
-          웹사이트: praven.kro.kr
+          법인: 프라벤 | 사업자번호: 839-45-00957 | 대표: 허성준
         </OperatorInfo>
         {/* <PolicyLinks>
           <a href="/terms">이용약관</a>
