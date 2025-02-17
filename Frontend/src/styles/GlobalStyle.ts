@@ -30,8 +30,9 @@ const GlobalStyle = createGlobalStyle`
   .app-container {
     width: 100%;
     max-width: 600px;
-    height: var(--app-height, 100vh); /* 기본적으로 전체 화면 */
-    overflow: hidden;
+    height: var(--app-height, 100vh);
+    overflow-x: hidden;
+    overflow-y: visible;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

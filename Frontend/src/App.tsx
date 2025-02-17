@@ -63,51 +63,6 @@ const App: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // 모바일 기기 체크
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    console.log('환경 체크:', isMobile ? '모바일' : 'PC');
-    
-    const initAdFit = () => {
-      // 기존 스크립트가 있다면 제거
-      const existingScript = document.querySelector('script[src*="ba.min.js"]');
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
-      script.async = true;
-      
-      script.onload = () => {
-        // 모바일에서는 더 긴 지연 시간 적용
-        setTimeout(() => {
-          if (window.kakaoAdFit?.cmd) {
-            window.kakaoAdFit.cmd.push(() => {
-              const ins = document.querySelector('.kakao_ad_area');
-              if (ins) {
-                ins.removeAttribute('style'); // display: none 제거
-                console.log('광고 영역 초기화 시도');
-              }
-            });
-          }
-        }, isMobile ? 2000 : 1000); // 모바일은 2초, PC는 1초 지연
-      };
-
-      document.body.appendChild(script);
-    };
-
-    initAdFit();
-
-    return () => {
-      const existingScript = document.querySelector('script[src*="ba.min.js"]');
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-    };
-  }, []);
-
   return (
     <>
       <GlobalStyle />
