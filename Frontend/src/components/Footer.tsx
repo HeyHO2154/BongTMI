@@ -10,11 +10,6 @@ const Footer = () => {
           이메일: jun****@naver.com
           웹사이트: praven.kro.kr
         </OperatorInfo>
-        <PolicyLinks>
-          <a href="/terms">이용약관</a>
-          <Divider>|</Divider>
-          <a href="/privacy">개인정보처리방침</a>
-        </PolicyLinks>
       </FooterContent>
     </FooterWrapper>
   );
