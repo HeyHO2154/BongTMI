@@ -11,25 +11,16 @@ declare global {
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
+  // NO-AD 콜백 함수
+  const handleAdFail = (elm: HTMLElement) => {
+    console.log('광고 로드 실패');
+    setIsVisible(false);
+  };
+
   useEffect(() => {
     // kakaoAdfit 명시적 초기화
     window.kakaoAdfit = window.kakaoAdfit || [];
-
-    const checkAdfit = setInterval(() => {
-      // kakaoAdfit이 존재하고 push 메서드가 있는지 확인
-      if (window.kakaoAdfit && typeof window.kakaoAdfit.push === 'function') {
-        try {
-          window.kakaoAdfit.push({});
-          console.log('AdFit 광고 요청 성공');
-          clearInterval(checkAdfit);
-        } catch (error) {
-          console.error('AdFit 광고 요청 실패:', error);
-        }
-      }
-    }, 1000); // 1초마다 확인
-
-    // cleanup
-    return () => clearInterval(checkAdfit);
+    window.kakaoAdfit.push({});
   }, []);
 
   if (!isVisible) return null;
@@ -37,12 +28,13 @@ const AdBanner = () => {
   return (
     <AdFitWrapper>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
-      <ins
-        className="kakao_ad_area"
-        style={{ display: "block" }}
+      <ins 
+        className="kakao_ad_area" 
+        style={{ display: "none", width: "100%" }}  // width: 100% 추가
         data-ad-unit="DAN-ZSqt2LGCgKELa710"
         data-ad-width="300"
         data-ad-height="250"
+        data-ad-onfail="handleAdFail"  // NO-AD 콜백 추가
       />
     </AdFitWrapper>
   );
