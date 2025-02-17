@@ -14,25 +14,13 @@ declare global {
 
 const AdBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile] = useState(() => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
 
-  useEffect(() => {
-    // 광고 스크립트 로드 확인
-    if (window.kakaoAdFit?.cmd) {
-      window.kakaoAdFit.cmd.push(() => {
-        const ins = document.querySelector('.kakao_ad_area');
-        if (ins) {
-          ins.removeAttribute('style');
-          setIsLoaded(true);
-        }
-      });
-    }
-  }, []);
-
-  if (!isVisible) return null;
+  // 모바일이면 아예 렌더링하지 않음
+  if (isMobile || !isVisible) return null;
 
   return (
-    <AdContainer style={{ opacity: isLoaded ? 1 : 0 }}>
+    <AdContainer>
       <CloseButton onClick={() => setIsVisible(false)}>✕</CloseButton>
       <AdWrapper>
         <ins 
