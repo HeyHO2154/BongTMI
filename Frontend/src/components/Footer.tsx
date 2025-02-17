@@ -19,7 +19,7 @@ const Footer = () => {
 };
 
 const FooterWrapper = styled.footer`
-  padding: 20px;
+  padding: 10px;
   background: white;
   border-top: 1px solid #eee;
   font-size: 0.9rem;
