@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <FooterWrapper>
       <FooterContent>
-        <div>© 2024 봉틈이</div>
+        {/* <div>© 2024 봉틈이</div> */}
         <OperatorInfo>
           법인: 프라벤 | 사업자번호: 839-45-00957 | 대표: 허성준
         </OperatorInfo>
