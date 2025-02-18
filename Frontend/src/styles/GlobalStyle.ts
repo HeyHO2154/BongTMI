@@ -31,8 +31,7 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     max-width: 600px;
     height: var(--app-height, 100vh);
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
