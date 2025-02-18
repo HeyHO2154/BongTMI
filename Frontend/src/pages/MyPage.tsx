@@ -273,7 +273,7 @@ const MyPage: React.FC = () => {
                 </IconButton>
                 <IconButton onClick={handleLogout}>
                   <LogoutOutlined />
-                  <ButtonLabel>로그아웃</ButtonLabel>
+                  <ButtonLabel>로그아웃</ButtonLabel> 
                 </IconButton>
               </ActionButtons>
             </UserDetails>
