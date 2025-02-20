@@ -1,13 +1,14 @@
 {
-    "name": "BongTMI",
-    "short_name": "BongTMI",
+    "name": "봉틈이",
+    "short_name": "봉틈이",
+    "description": "봉사활동 매칭 서비스",
     "start_url": "/",
-    "display": "fullscreen",
+    "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
     "icons": [
       {
-        "src": "/icons/icon-192x192.png",
+        "src": "/봉틈이.png",
         "sizes": "192x192",
         "type": "image/png"
       },
