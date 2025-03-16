@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
-import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로
+import TopBar from "./components/TopBar"; // TopBar 컴포넌트 경로2
 import NavBar from "./components/NavBar";
 import Swipe from "./pages/Swipe";
 import Search from "./pages/Search";
